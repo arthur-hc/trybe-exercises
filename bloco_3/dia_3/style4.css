@@ -23,6 +23,6 @@ div:nth-of-type(5) {
     color: pink;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-div:nth-child(odd){
+div:nth-of-type(odd){
     font-style: italic;
 }
