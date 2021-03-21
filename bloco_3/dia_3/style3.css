@@ -1,0 +1,15 @@
+h1,p {
+    text-align: center;
+}
+
+li:active {
+    font-style: italic;
+}
+
+li:hover {
+        background-color: grey;}
+
+.lista {
+    list-style: none;
+
+}
