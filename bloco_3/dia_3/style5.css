@@ -31,7 +31,7 @@ ul.lp li:nth-of-type(2){
 }
 ul.lp li:nth-of-type(3){
     color: blue;
-    background-color: pink;
+    background-color: ;
 }
 ul li.stack:hover {
     background-color: orange;
@@ -48,3 +48,6 @@ ul li.dev:hover {
 ul li.trybe:hover {
     background-color: green;
 }
+li[value^="java"]{
+    background-color: pink;
+} 
