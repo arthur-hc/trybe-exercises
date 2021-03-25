@@ -27,3 +27,4 @@ if (a1>0 && a2>0 && a3>0 && (a1+a2+a3)==180) {
 } else {
     console.log ('Não é um triângulo')
 }
+//*Verificar o gabarito pra novas soluções//
