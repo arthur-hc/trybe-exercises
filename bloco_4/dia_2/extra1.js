@@ -3,3 +3,5 @@ numbers.sort(function(a, b) {
     return a - b;
   });
   console.log(numbers);
+
+  //Ordene o array numbers em ordem crescente e imprima seus valores;//
