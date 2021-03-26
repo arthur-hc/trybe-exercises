@@ -1,4 +1,4 @@
-n = 5
+ let n = 5
  let asteriscos = '*'
  let linhaAsteriscos = ''
 
