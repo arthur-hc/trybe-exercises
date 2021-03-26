@@ -7,3 +7,5 @@ for (let index =0; index < numbers.length; index +=1) {
     }
 }
 console.log (lowerNumber)
+
+//Utilizando for , descubra qual o menor valor contido no array e imprima-o;//
