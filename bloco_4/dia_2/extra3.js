@@ -3,9 +3,9 @@ let arrayMultiplication = []
 
 for (let index = 0; index < numbers.length; index +=1) {
     if (index < numbers.length -1) {
-        arrayMultiplication.push (numbers[index]*numbers[index+1])
+        arrayMultiplication.push (numbers[index] * numbers[index+1])
     } else {
-    arrayMultiplication.push (numbers[index]*2)
+    arrayMultiplication.push (numbers[index] * 2)
     }
 }
 
