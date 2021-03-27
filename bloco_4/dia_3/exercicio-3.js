@@ -1,10 +1,24 @@
 let n = 5
 let asteriscos = '*'
 let linhaAsteriscos = ''
+let numeroAsteriscos = 1
 
-for(index =1; index <= n; index +=1) {
-    linhaAsteriscos += asteriscos
-    console.log (linhaAsteriscos)
+for (let numeroAsteriscos = 1; numeroAsteriscos <= n ; numeroAsteriscos +=1) {
+linhaAsteriscos = ''
+
+for(index = 0; index < n; index +=1) {
+    if (n - numeroAsteriscos > index) {
+        linhaAsteriscos += ' '
+    } else {
+        linhaAsteriscos += '*'
+    }
+}
+console.log (linhaAsteriscos)
 }
 
-// linhaAsteriscos += espacos (n-index) + asteriscos (index)//
+
+// linhaAsteriscos += espacos (n-index) + asteriscos (index)
+//'    *'
+//'   **'
+//'  ***'
+//' ****'
