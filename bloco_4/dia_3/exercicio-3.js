@@ -1,5 +1,10 @@
-let p1 = 'ola'
-let p2 = 'bom dia'
-let espaco = ' '
+let n = 5
+let asteriscos = '*'
+let linhaAsteriscos = ''
 
-console.log (p1+espaco+espaco+espaco+p2)
+for(index =1; index <= n; index +=1) {
+    linhaAsteriscos += asteriscos
+    console.log (linhaAsteriscos)
+}
+
+// linhaAsteriscos += espacos (n-index) + asteriscos (index)//
