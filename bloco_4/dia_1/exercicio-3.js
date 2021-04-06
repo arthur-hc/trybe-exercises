@@ -11,3 +11,5 @@ if (n1>n2 && n1>n3) {
 } else {
     console.log ('Não há um número maior')
 }
+
+//Faça um programa que retorne o maior de três números. Defina no começo do programa três variáveis com os valores que serão comparados.

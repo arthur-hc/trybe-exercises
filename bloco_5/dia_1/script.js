@@ -1,0 +1,5 @@
+document.querySelectorAll('h1')[0].style.backgroundColor = 'red'
+document.querySelector('div').style.backgroundColor = 'Black'
+document.querySelectorAll('h3')[1].style.backgroundColor = 'Blue'
+document.querySelectorAll ('h3')[2].style.color = 'red'
+document.querySelectorAll ('h3')[3].style.color = 'purple'
