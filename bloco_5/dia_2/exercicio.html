@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Exercício 5.2</title>
+    <style>
+      div {
+        border-color: black;
+        border-style: solid;
+      }
+
+      .title {
+        text-align: center;
+      }
+
+      .main-content {
+        background-color: yellow;
+      }
+
+      .main-content .center-content {
+        background-color: red;
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .main-content .center-content p {
+        font-style: italic;
+      }
+
+      .main-content .left-content {
+        background-color: green;
+        width: 60%;
+        margin-left: 0;
+        margin-right: auto;
+      }
+
+      .main-content .left-content .small-image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 100%;
+      }
+
+      .main-content .right-content {
+        background-color: blue;
+        width: 60%;
+        margin-left: auto;
+        margin-right: 0;
+      }
+
+      .main-content .description {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // COLOQUE SEU CÓDIGO AQUI
+      
+      //exercicio1.1
+      let exercicio1 = document.createElement('h1');
+      exercicio1.innerText = 'Exercício 5.2 - JavaScript DOM';
+      let body = document.body;
+      body.appendChild(exercicio1);
+      
+      //exercicio1.2
+      let exercicio2 = document.createElement('div');
+      exercicio2.className = 'main-content';
+      // let body = document.body; ->> Já foi criado no exercicio 1      
+      body.appendChild(exercicio2);
+
+      //exercicio1.3
+      let exercicio3 = document.createElement('div');
+      exercicio3.className = 'center-content';
+      exercicio2.appendChild(exercicio3);
+
+      //exercicio1.4
+      let exercicio4 = document.createElement('p');
+      exercicio4.innerText = 'algum texto com algum texto';
+      exercicio3.appendChild(exercicio4);
+
+      //exercicio1.5
+      let exercicio5 = document.createElement('div');
+      exercicio5.className = 'left-content';
+      exercicio2.appendChild(exercicio5);
+
+      //exercicio1.6
+      let exercicio6 = document.createElement('div');
+      exercicio6.className = 'right-content';
+      exercicio2.appendChild(exercicio6);
+
+      //exercicio1.7
+      let exercicio7 = document.createElement('img')
+      exercicio7.src = "https://picsum.photos/200";
+      exercicio7.className = 'small-image'
+      exercicio5.appendChild(exercicio7);
+
+      //exercicio1.8
+      let exercicio8 = document.createElement('ul');
+      exercicio6.appendChild(exercicio8);
+      let exercicio8l1 = document.createElement('li');
+      exercicio8l1.innerText = '1'
+      exercicio8.appendChild(exercicio8l1);
+      let exercicio8l2 = document.createElement('li');
+      exercicio8l2.innerText = '2'
+      exercicio8.appendChild(exercicio8l2);
+      let exercicio8l3 = document.createElement('li');
+      exercicio8l3.innerText = '3'
+      exercicio8.appendChild(exercicio8l3);
+      let exercicio8l4 = document.createElement('li');
+      exercicio8l4.innerText = '4'
+      exercicio8.appendChild(exercicio8l4);
+      let exercicio8l5 = document.createElement('li');
+      exercicio8l5.innerText = '5'
+      exercicio8.appendChild(exercicio8l5);
+      let exercicio8l6 = document.createElement('li');
+      exercicio8l6.innerText = '6'
+      exercicio8.appendChild(exercicio8l6);
+      let exercicio8l7 = document.createElement('li');
+      exercicio8l7.innerText = '7'
+      exercicio8.appendChild(exercicio8l7);
+      let exercicio8l8 = document.createElement('li');
+      exercicio8l8.innerText = '8'
+      exercicio8.appendChild(exercicio8l8);
+      let exercicio8l9 = document.createElement('li');
+      exercicio8l9.innerText = '9'
+      exercicio8.appendChild(exercicio8l9);
+      let exercicio8l10 = document.createElement('li');
+      exercicio8l10.innerText = '10'
+      exercicio8.appendChild(exercicio8l10);
+
+      //exercicio1.9
+      let exercicio9p1 = document.createElement('h3');
+      let exercicio9p2 = document.createElement('h3');
+      let exercicio9p3 = document.createElement('h3');
+      exercicio2.appendChild(exercicio9p1);
+      exercicio2.appendChild(exercicio9p2);
+      exercicio2.appendChild(exercicio9p3);
+
+      //exercicio2.1
+      exercicio1.className = 'title';
+
+      //exercicio2.2
+      exercicio9p1.className = 'description';
+      exercicio9p2.className = 'description';
+      exercicio9p3.className = 'description';
+
+      //exercicio2.3
+      //Remova o div criado no passo 5 (aquele que possui a classe left-content ). Utilize a função .removeChild();
+      exercicio2.removeChild(exercicio5);
+
+      //exercicio2.4
+      //Centralize o div criado no passo 6 (aquele que possui a classe right-content ). Dica: para centralizar, basta configurar o margin-right: auto do div 
+      exercicio6.style.marginRight = 'auto';
+
+      //exercicio2.5
+      //Troque a cor de fundo do elemento pai da div criada no passo 3 (aquela que possui a classe center-content ) para a cor verde;
+      exercicio2.style.backgroundColor = 'green';
+
+      //exercicio2.6
+      //Remova os dois últimos elementos ( nove e dez ) da lista criada no passo 8.
+      exercicio8.removeChild(exercicio8l10);
+      exercicio8.removeChild(exercicio8l9);
+    </script>
+  </body>
+</html>
