@@ -47,15 +47,28 @@ function createHollidayButton() {
 createHollidayButton ()
 
 //exercicio 3
-let hollidayButton = document.querySelector('#btn-holiday'); //captura o botão Feriados
-hollidayButton.addEventListener('click', function() {
-    let holidays = document.querySelectorAll('.holiday') //captura os dias que possuem a classe holiday e armazena na variável holidays
-    for(let index = 0; index < holidays.length; index += 1) {
-        if(holidays[index].style.backgroundColor == ''){
-            holidays[index].style.backgroundColor = 'red'
-        } else {
-            holidays[index].style.backgroundColor = ''
+function clickHolidays() {
+    let hollidayButton = document.querySelector('#btn-holiday'); //captura o botão Feriados
+    hollidayButton.addEventListener('click', function() {
+        let holidays = document.querySelectorAll('.holiday') //captura os dias que possuem a classe holiday e armazena na variável holidays em forma de array
+        for(let index = 0; index < holidays.length; index += 1) {
+            if(holidays[index].style.backgroundColor == ''){
+                holidays[index].style.backgroundColor = 'rgb(199,199,199)';
+            } else {
+                holidays[index].style.backgroundColor = ''
+            }
         }
-    }
-    
-})
+        //Faz um loop no array que tem os dias feriados capturados, atribuindo a eles uma cor caso não tenha, ou removendo caso já tenha
+    })
+}
+clickHolidays ()
+
+//exercicio 4
+function createFridays () {
+    let fridayButton = document.createElement('button'); //cria a váriavel que armazena um botão
+    fridayButton.innerText = 'Sexta-feira'; //adiciona texto no botão
+    fridayButton.id = 'btn-friday'; //adiciona id ao botão
+    let buttonsContainer = document.querySelector('.buttons-container'); //captura o container pai dos botões
+    buttonsContainer.appendChild(fridayButton) //insere o botão sexta-feira criado no container pai dos botões
+}
+createFridays ()
