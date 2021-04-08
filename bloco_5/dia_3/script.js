@@ -72,3 +72,24 @@ function createFridays () {
     buttonsContainer.appendChild(fridayButton) //insere o botão sexta-feira criado no container pai dos botões
 }
 createFridays ()
+
+
+//exercicio 5
+let recoveryFridays = []; // cria um array e armazena os dias que possuem a classe friday
+for(let index = 0; index < document.getElementsByClassName('friday').length; index += 1){
+    recoveryFridays.push(document.getElementsByClassName('friday')[index].innerText)
+}
+function clickFridays () {
+    let fridayButton = document.querySelector('#btn-friday'); //captura o botão Sexta-feira
+    fridayButton.addEventListener('click',function() {
+        let fridays = document.getElementsByClassName('friday')
+        for(let index = 0; index < fridays.length; index += 1) {
+           if(fridays[index].innerText == recoveryFridays[index]) {
+               fridays[index].innerText = 'SEXTOU!!!'
+           } else {
+                fridays[index].innerText = recoveryFridays[index]
+           }
+        }    
+    })
+}
+clickFridays ()
