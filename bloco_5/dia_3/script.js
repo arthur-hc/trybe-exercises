@@ -45,3 +45,17 @@ function createHollidayButton() {
     buttonsContainer.appendChild(hollidayButton); //Insere o botão criado no container 
 }
 createHollidayButton ()
+
+//exercicio 3
+let hollidayButton = document.querySelector('#btn-holiday'); //captura o botão Feriados
+hollidayButton.addEventListener('click', function() {
+    let holidays = document.querySelectorAll('.holiday') //captura os dias que possuem a classe holiday e armazena na variável holidays
+    for(let index = 0; index < holidays.length; index += 1) {
+        if(holidays[index].style.backgroundColor == ''){
+            holidays[index].style.backgroundColor = 'red'
+        } else {
+            holidays[index].style.backgroundColor = ''
+        }
+    }
+    
+})
