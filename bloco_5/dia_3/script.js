@@ -33,6 +33,15 @@ function createDaysOfTheMonth() {
         }
         monthDaysList.appendChild(monthDaysListItem) //coloca dentro da ul a li com o texto dia da semana
     }
-
 }
 createDaysOfTheMonth ()
+
+//exercicio 2
+function createHollidayButton() {
+    let hollidayButton = document.createElement ('button'); // cria a variável que é responsável pelo botão criado
+    hollidayButton.innerText = 'Feriados'; //adciona texto ao botão
+    hollidayButton.id = 'btn-holiday'; //adiciona id ao botão
+    let buttonsContainer = document.querySelector('.buttons-container'); // captura a <div> buttons-container e armazena em uma variável
+    buttonsContainer.appendChild(hollidayButton); //Insere o botão criado no container 
+}
+createHollidayButton ()
