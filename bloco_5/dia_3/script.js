@@ -95,6 +95,7 @@ function clickFridays () {
 clickFridays ()
 
 //exercicio 6 - DAR ZOOM QUANDO PASSAR O MOUSE POR CIMA DOS DIAS E TIRAR QUANDO O MOUSE SAIR DE CIMA
+//NESSE EXERCICIO, PODERIA SER USADO FUNCTION(EVENT) E DEPOIS EVENT.TARGET.STYLE... PARA NÃO SER NECESSÁRIO O LOOP
 function mouseOverOrLeave () {
     let monthDaysListItem = document.querySelectorAll('.days') //captura todas li days e armazena em uma variável
     for (let index = 0; index < monthDaysListItem.length; index += 1){ //cria loop para aplicar a função em todas li days armazenadas na variável
