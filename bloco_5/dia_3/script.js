@@ -75,19 +75,19 @@ createFridays ()
 
 
 //exercicio 5
-let recoveryFridays = []; // cria um array e armazena os dias que possuem a classe friday
+let recoveryFridays = []; // cria um array e armazena os dias que possuem a classe friday através de um loop
 for(let index = 0; index < document.getElementsByClassName('friday').length; index += 1){
     recoveryFridays.push(document.getElementsByClassName('friday')[index].innerText)
 }
 function clickFridays () {
     let fridayButton = document.querySelector('#btn-friday'); //captura o botão Sexta-feira
-    fridayButton.addEventListener('click',function() {
-        let fridays = document.getElementsByClassName('friday')
-        for(let index = 0; index < fridays.length; index += 1) {
-           if(fridays[index].innerText == recoveryFridays[index]) {
+    fridayButton.addEventListener('click',function() { //adiciona um evento ao botão Sexta-feira
+        let fridays = document.getElementsByClassName('friday') //captura todas os elementos com classe friday
+        for(let index = 0; index < fridays.length; index += 1) { //abre loop para comparar
+           if(fridays[index].innerText == recoveryFridays[index]) { //verifica se o atual item[index] é equivalente ao outro array semelhante [index]
                fridays[index].innerText = 'SEXTOU!!!'
            } else {
-                fridays[index].innerText = recoveryFridays[index]
+                fridays[index].innerText = recoveryFridays[index] //devolve a condição inicial se estiver como 'SEXTOU!!!'
            }
         }    
     })
