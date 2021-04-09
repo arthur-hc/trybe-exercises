@@ -15,7 +15,7 @@ createDaysOfTheWeek();
 
 // Escreva seu código abaixo.
 
-//Exercicio 1
+//Exercicio 1 - ADICIONAR OS DIAS DO MÊS
 function createDaysOfTheMonth() {
     const dezDays = [29, 30, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
     let monthDaysList = document.querySelector('#days'); //captura ul pai da lista dias mensais
@@ -36,7 +36,7 @@ function createDaysOfTheMonth() {
 }
 createDaysOfTheMonth ()
 
-//exercicio 2
+//exercicio 2 - CRIAR UM BOTÃO COM O TEXTO FERIADOS
 function createHollidayButton() {
     let hollidayButton = document.createElement ('button'); // cria a variável que é responsável pelo botão criado
     hollidayButton.innerText = 'Feriados'; //adciona texto ao botão
@@ -46,7 +46,7 @@ function createHollidayButton() {
 }
 createHollidayButton ()
 
-//exercicio 3
+//exercicio 3 - AO APERTAR O BOTÃO FERIADOS, DESTACAR OS DIAS DO MÊS QUE SÃO FERIADO
 function clickHolidays() {
     let hollidayButton = document.querySelector('#btn-holiday'); //captura o botão Feriados
     hollidayButton.addEventListener('click', function() {
@@ -63,7 +63,7 @@ function clickHolidays() {
 }
 clickHolidays ()
 
-//exercicio 4
+//exercicio 4 - CRIAR UM BOTÃO COM O TEXTO SEXTA-FEIRA
 function createFridays () {
     let fridayButton = document.createElement('button'); //cria a váriavel que armazena um botão
     fridayButton.innerText = 'Sexta-feira'; //adiciona texto no botão
@@ -74,7 +74,7 @@ function createFridays () {
 createFridays ()
 
 
-//exercicio 5
+//exercicio 5 - AO APERTAR O BOTÃO SEXTA-FEIRA, MODIFICAR OS DIAS DO MÊS QUE SÃO SEXTA-FEIRA PARA SEXTOU
 let recoveryFridays = []; // cria um array e armazena os dias que possuem a classe friday através de um loop
 for(let index = 0; index < document.getElementsByClassName('friday').length; index += 1){
     recoveryFridays.push(document.getElementsByClassName('friday')[index].innerText)
@@ -93,3 +93,18 @@ function clickFridays () {
     })
 }
 clickFridays ()
+
+//exercicio 6 - DAR ZOOM QUANDO PASSAR O MOUSE POR CIMA DOS DIAS E TIRAR QUANDO O MOUSE SAIR DE CIMA
+function mouseOverOrLeave () {
+    let monthDaysListItem = document.querySelectorAll('.days') //captura todas li days e armazena em uma variável
+    for (let index = 0; index < monthDaysListItem.length; index += 1){ //cria loop para aplicar a função em todas li days armazenadas na variável
+        monthDaysListItem[index].addEventListener('mouseover',function() { //cria um evento ao passar o mouse por cima das li
+            monthDaysListItem[index].style.fontSize = '30px'
+        })
+        monthDaysListItem[index].addEventListener('mouseleave',function() { //cria um evento ao tirar o mouse de cima das li
+            monthDaysListItem[index].style.fontSize = '20px'
+        
+        })
+    }
+}
+mouseOverOrLeave ()
