@@ -7,18 +7,20 @@
     <title>Pré Aula</title>
 </head>
 <body>
-    <header><h1>Página Login</h1></header>
-    <div>
-        <label>
-            E-mail:
-            <input placeholder="Digite seu email" required autocomplete="off" autofocus>
-            Senha:
-            <input placeholder="Digite sua senha" required>
-            <input type="checkbox"> Lembre-me
-            <button type="submit">Entrar</button>
-        </label>
-
-    </div>
-    
+  <header><h1>Página Login</h1></header>
+  <form action="" method="GET" enctype="multipart/form-data">
+  <div>
+    <label for="email">E-mail:
+      <input type="text" name="email" id="email" placeholder="Digite seu email" required autocomplete="off" autofocus>
+    </label>
+    <label for="password">Senha:
+      <input type="password" name="password" id="password" placeholder="Digite sua senha" required>
+    </label>
+    <label>
+      <input type="checkbox" name="remember" id="checkbox-remember">Lembre-me
+    </label>
+      <button type="submit">Entrar</button>
+  </div>
+</form>
 </body>
 </html>
