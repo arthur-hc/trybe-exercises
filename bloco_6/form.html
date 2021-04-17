@@ -18,24 +18,34 @@
       <label for="cpf">CPF:</label>
       <input type="text" name="cpf" id="input-cpf" maxlength="11" placeholder="CPF sem pontos ou traços" required><br><br>
       <label for="address">Endereço:</label>
-      <input name="address" name="address" id="textarea-address" maxlength="200" placeholder="Digite seu endereço" required>
+      <input name="address" id="textarea-address" maxlength="200" placeholder="Digite seu endereço" required>
       <label for="state">Estado</label>
-      <select name="state" id="select-state" required ch ></select><br><br>
+      <select name="state" id="select-state" required></select><br><br>
       <label for="residencetype">Tipo de Moradia
         <label>
-          <input type="radio" name="residencetype" required>Casa
+          <input type="radio" name="residencetype" value="Casa" required>Casa
         </label>
         <label>
-          <input type="radio" name="residencetype">Apartamento
+          <input type="radio" name="residencetype" value="Apartamento">Apartamento
         </label>
       </label>
-      <button type="submit">Enviar</button>
     </fieldset>
     <fieldset>
       <h2>Informações Técnicas</h2>
-      <textarea cols="50" rows="5"></textarea>
+      <label for="resume">Resumo profissional:</label><br>
+      <textarea cols="50" rows="5" name="resume" id="textarea-resume" maxlength="800" placeholder="Digite um breve resumo profissional sobre sobre você" required></textarea><br><br>
+      <label for="position">Último Cargo:</label><br>
+      <input type="text" name="position" id="input-resume" maxlength="40" placeholder="Digite seu último cargo" required><br><br>
+      <label for="positiondescription">Atividades exercidas:</label><br>
+      <input type="text" name="positiondescription" id="input-descript-pos" maxlength="500" required size="50px"><br><br>
+      <label for="datestarted">Data de ínicio:</label><br>
+      <input type="date" name="datestarted" id="input-datestarted" min="1950-01-01" max="2021-04-16">
+      <button type="submit" id="button-submit">Enviar</button>
+      <button type="reset">Limpar</button>
+      <button type="button" id="button-deleteAll">Limpar currículos</button>
     </fieldset>
-  </form>    
+  </form>
+  <section id="form-data"></section>
+  <script src="script.js"></script>
 </body>
-<script src="script.js"></script>
 </html>
