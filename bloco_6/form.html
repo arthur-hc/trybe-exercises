@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário</title>
+</head>
+<body>
+  <header><h1>Formulário</h1></header>
+  <form>
+    <fieldset>
+      <h2>Informações Gerais</h2>
+      <label for="name">Nome:</label>
+      <input type="text" name="name" id="input-name" maxlength="40" placeholder="Digite seu nome" required><br><br>
+      <label for="email">E-mail:</label>
+      <input type="text" name="email" id="input-email" maxlength="50" placeholder="Digite seu E-mail" required><br><br>
+      <label for="cpf">CPF:</label>
+      <input type="text" name="cpf" id="input-cpf" maxlength="11" placeholder="CPF sem pontos ou traços" required><br><br>
+      <label for="address">Endereço:</label>
+      <input name="address" id="textarea-address" maxlength="200" placeholder="Digite seu endereço" required>
+      <label for="state">Estado</label>
+      <select name="state" id="select-state" required></select><br><br>
+      <label for="residencetype">Tipo de Moradia
+        <label>
+          <input type="radio" name="residencetype" value="Casa" required>Casa
+        </label>
+        <label>
+          <input type="radio" name="residencetype" value="Apartamento">Apartamento
+        </label>
+      </label>
+    </fieldset>
+    <fieldset>
+      <h2>Informações Técnicas</h2>
+      <label for="resume">Resumo profissional:</label><br>
+      <textarea cols="50" rows="5" name="resume" id="textarea-resume" maxlength="800" placeholder="Digite um breve resumo profissional sobre sobre você" required></textarea><br><br>
+      <label for="position">Último Cargo:</label><br>
+      <input type="text" name="position" id="input-resume" maxlength="40" placeholder="Digite seu último cargo" required><br><br>
+      <label for="positiondescription">Atividades exercidas:</label><br>
+      <input type="text" name="positiondescription" id="input-descript-pos" maxlength="500" required size="50px"><br><br>
+      <label for="datestarted">Data de ínicio:</label><br>
+      <input type="date" name="datestarted" id="input-datestarted" min="1950-01-01" max="2021-04-16">
+      <button type="submit" id="button-submit">Enviar</button>
+      <button type="reset">Limpar</button>
+      <button type="button" id="button-deleteAll">Limpar currículos</button>
+    </fieldset>
+  </form>
+  <section id="form-data"></section>
+  <script src="script.js"></script>
+</body>
+</html>
