@@ -40,6 +40,7 @@ function renderCurriculum(event) {
         div.className = 'div-curriculum';
         div.innerHTML = userInput;
         dataUser.appendChild(div);
+        dataUser.classList.add('box')
     }
   }
 }

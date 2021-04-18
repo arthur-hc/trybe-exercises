@@ -1,0 +1,19 @@
+body {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2%;
+    background-color: rgb(238, 238, 238);
+}
+
+.title {
+    text-align: center;
+}
+
+#header {
+    border: solid 1px #48c774;
+    margin-bottom: 3%;
+}
+
+.box {
+    border: solid 1px #48c774;
+}
