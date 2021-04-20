@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+    <title>Formulário</title>
+</head>
+<body>
+  <header id="header" class='section box'>
+    <h1 class="title is-2">Formulário</h1>
+  </header>
+  <form method="GET" class="box">
+    <div class="field">
+      <h2 class="subtitle">Informações Gerais</h2>
+      <div class="field">
+        <label class="label" for="name">Nome:</label>
+        <div class="control">
+          <input type="text" name="name" class="input is-success" id="input-name" maxlength="40" placeholder="Digite seu nome" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label" for="email">E-mail</label>
+        <div class="control">
+          <input type="text" name="email" class="input is-success" id="input-email" maxlength="50" placeholder="Digite seu E-mail" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label" for="cpf">CPF:</label>
+        <div class="control">
+          <input type="text" name="cpf" class="input is-success"id="input-cpf" maxlength="11" placeholder="CPF sem pontos ou traços" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label" for="address">Endereço:</label>
+        <div class="control">
+          <input name="address" class="input is-success" id="textarea-address" maxlength="200" placeholder="Digite seu endereço" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label" for="state">Estado:</label>
+        <div class="control">
+          <div class="select is-success">
+            <select name="state" id="select-state" required>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <label class="label" for="residencetype"> Tipo de Moradia:<br>
+            <label class="radio">
+              <input type="radio" name="residencetype" value="Casa" required>
+              Casa
+            </label>
+            <label class="radio">
+              <input type="radio" name="residencetype" value="Apartamento" required>
+              Apartamento
+            </label>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="field"><br>
+      <h2 class="subtitle">Informações Técnicas</h2>
+      <div class="field">
+        <label class="label" for="resume">Resumo profissional:</label>
+        <div class="control">
+          <textarea cols="50" rows="5" name="resume" class="textarea input is-success has-fixed-size" id="textarea-resume" maxlength="800" placeholder="Digite um breve resumo profissional sobre sobre você" required></textarea>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label" for="position">Último Cargo:</label>
+        <div class="control">
+          <input type= "text" name= "position" class= "input is-success" id= "input-resume" maxlength= "40" placeholder= "Digite seu último cargo" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label" for="positiondescription">Atividades exercidas:</label>
+        <div class="control">
+          <input type= "text" name= "positiondescription" class= "input is-success" id= "input-descript-pos" maxlength= "500" placeholder= "Atividades exercidas no seu último cargo" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label" for="datestarted">Data de ínicio:</label>
+        <div class="control">
+          <input autocomplete="off" data-validate-field="date" type= "text" name= "start-date" class= "input is-success" id= "datepicker" min="1950-01-01" max="2021-04-16"  placeholder="DD/MM/AAAA" required>
+        </div>
+      </div>
+      <button type="submit" class="button is-success" id="button-submit">Enviar</button>
+      <button type="reset" class="button is-warning">Limpar</button>
+      <button type="button" class="button is-danger" id="button-deleteAll">Limpar currículos</button>
+    </div>
+
+  </form>
+  <section id="form-data"></section>
+  <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
