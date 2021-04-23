@@ -1,0 +1,36 @@
+html {
+    box-sizing: border-box;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+@media screen and (max-width: 400px) {
+    * {
+        text-align: center;
+        margin: 1%;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    body {
+        margin: 3%;
+        font-size: large;
+    }
+}
+
+@media screen and (min-width: 801px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0 auto;
+        padding: 5%;
+        max-width: 1200px;
+        font-size: x-large;
+    }
+}
