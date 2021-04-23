@@ -1,0 +1,17 @@
+html {
+    box-sizing: border-box;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+@media screen and (max-width: 400px) {
+    * {
+        text-align: center;
+        margin: 5%;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+}
