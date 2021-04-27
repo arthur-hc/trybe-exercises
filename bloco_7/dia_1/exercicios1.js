@@ -26,8 +26,7 @@ const testingScope = escopo => {
     }
 }
 testingScope(false);
-// 
-// 
+
 // Criar função com template literals para devolver o array em ordem crescente
 const oddsAndEvens = [13, 3, 4, 10, 7, 2];
 const sort = () => {
@@ -36,3 +35,4 @@ const sort = () => {
 // Seu código aqui.
 
 console.log(`Os números ${sort()} se encontram ordenados de forma crescente !`);
+
