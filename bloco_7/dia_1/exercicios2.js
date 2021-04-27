@@ -58,3 +58,14 @@ const longestWord = text => {
 
     return result
 }
+
+// Sugestão do gabarito em 1 linha
+// Para mostrar a primeira palavra
+const longestWord = text => text.split(' ').sort((wordA, wordB) => wordB.length - wordA.length)[0]
+
+console.log(longestWord("Antonio foi no banheiro e não sabemos o que aconteceu"))
+
+// Para mostra a última palavra
+const longestWord = text => text.split(' ').sort((wordA, wordB) => wordB.length - wordA.length)[text.split(' ').length -1]
+
+console.log(longestWord("Antonio foi no banheiro e não sabemos o que aconteceu"))
