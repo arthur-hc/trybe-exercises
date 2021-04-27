@@ -22,6 +22,7 @@ const student = {
   // Com Object.values
   console.log(listSkillsWithValues(student));
 
+  // Compilado de informações
   const studentInfo = (student) => {
     const skills = Object.keys(student);
     const level = Object.values(student);
