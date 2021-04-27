@@ -36,7 +36,9 @@ const student1 = {
 
   const esportes = (nome) => {
     const arrayEsportes = Object.keys(nome);
+    const arrayNivel = Object.values(nome)
     console.log(arrayEsportes)
+    console.log(arrayNivel)
     for(index in arrayEsportes) {
         console.log(`${arrayEsportes[index]}, Nível: ${nome[arrayEsportes[index]]}`)
     }
