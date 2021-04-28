@@ -18,15 +18,23 @@ const lesson1 = {
     turno: 'noite',
   };
 
-  // exercicio 1 adiciona propriedade
+  // exercicio 1 - adiciona propriedade ao alvo
   const addTurn = (target, key, property) => {
-      target[key] = property
+      target[key] = property;
   }
   addTurn(lesson2, 'turno', 'manhã');
   console.log(lesson2);
 
-  // exercicio 2
+  // exercicio 2 - lista as keys do objt
   const showKeys = (object) => {
-    console.log(Object.keys(object))
+    console.log(Object.keys(object));
   }
-  showKeys(lesson2)
+  showKeys(lesson2);
+
+  // exercicio 3 - mostra o tamanho do objt
+  const showSize = (object) => {
+    console.log(Object.keys(object).length);
+  }
+  showSize(lesson1);
+
+  // exercicio 4 - mostra os valores do objet
