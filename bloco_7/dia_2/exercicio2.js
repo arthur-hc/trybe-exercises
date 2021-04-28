@@ -60,4 +60,10 @@ const lesson1 = {
     return values[index]
   }
   console.log(getValueByNumber(lesson1, 0));
-  
+
+  // exercicio 8 - verifica se o chave/valor existe na função
+  const verifyKeyValue = (lesson, key, value) => {
+    return lesson[key].includes(value);
+  }
+  console.log(verifyKeyValue(lesson3, 'turno', 'noite'));
+  console.log(verifyKeyValue(lesson3, 'materia', 'Maria Clara'));
