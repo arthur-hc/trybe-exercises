@@ -53,3 +53,11 @@ const lesson1 = {
     return allLessons.lesson1.numeroEstudantes + allLessons.lesson2.numeroEstudantes + allLessons.lesson3.numeroEstudantes
   }
   console.log(studentsTotal())
+
+  // exercicio 7 - retorna o valor da chave selecionada de uma lesson
+  const getValueByNumber = (lesson, index) => {
+    const values = Object.values(lesson)
+    return values[index]
+  }
+  console.log(getValueByNumber(lesson1, 0));
+  
