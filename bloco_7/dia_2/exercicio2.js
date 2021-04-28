@@ -44,6 +44,12 @@ const lesson1 = {
  showValues(lesson3);
 
  // exercicio 5 - agrupa  as lessons em um novo objeto
-const allLessons = {};
-Object.assign(allLessons,{lesson1,lesson2,lesson3});
-console.log(allLessons);
+  const allLessons = {};
+  Object.assign(allLessons,{lesson1,lesson2,lesson3});
+  console.log(allLessons);
+
+  // exercicio 6 - retorna o número total de estudantes
+  const studentsTotal = () => {
+    return allLessons.lesson1.numeroEstudantes + allLessons.lesson2.numeroEstudantes + allLessons.lesson3.numeroEstudantes
+  }
+  console.log(studentsTotal())
