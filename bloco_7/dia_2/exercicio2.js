@@ -38,3 +38,7 @@ const lesson1 = {
   showSize(lesson1);
 
   // exercicio 4 - mostra os valores do objet
+  const showValues = (object) => {
+    console.log(Object.values(object));
+ }
+ showValues(lesson3);
