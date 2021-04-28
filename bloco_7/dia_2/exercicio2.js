@@ -40,5 +40,10 @@ const lesson1 = {
   // exercicio 4 - mostra os valores do objet
   const showValues = (object) => {
     console.log(Object.values(object));
- }
+  }
  showValues(lesson3);
+
+ // exercicio 5 - agrupa  as lessons em um novo objeto
+const allLessons = {};
+Object.assign(allLessons,{lesson1,lesson2,lesson3});
+console.log(allLessons);
