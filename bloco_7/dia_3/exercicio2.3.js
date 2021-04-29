@@ -1,8 +1,8 @@
 const assert = require('assert');
 // escreva a função sumAllNumbers aqui
-const sumAllNumbers = () => {
+const sumAllNumbers = (array) => {
     let total = 0; 
-    for (index in numbers) {
+    for (index in array) {
         total += numbers[index]
     }
     return total
