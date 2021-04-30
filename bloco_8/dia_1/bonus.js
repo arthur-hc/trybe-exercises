@@ -24,4 +24,7 @@ const dragonHit = () => {
   return Math.floor(Math.random() * (dragon.strength - 15 + 1) ) + 15;
 }
 
-console.log(dragonHit());
+const warriorHit = () => {
+  return Math.floor(Math.random() * (warrior.strength * warrior.weaponDmg - warrior.strength + 1) ) + warrior.strength;
+}
+console.log(warriorHit());
