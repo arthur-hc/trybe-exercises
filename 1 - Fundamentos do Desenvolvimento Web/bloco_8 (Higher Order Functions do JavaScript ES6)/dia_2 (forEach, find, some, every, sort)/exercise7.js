@@ -47,7 +47,7 @@ const books = [
     genre: 'Terror',
     author: {
       name: 'Stephen King',
-      birthYear: 1947,
+      birthYear: 1989,
     },
     releaseYear: 1986,
   },
@@ -63,10 +63,30 @@ const books = [
   },
 ];
 
-function authorBornIn1947() {
-  // escreva aqui o seu código
-  return books.find((book) => book.author.birthYear === 1947).author.name;
-}
+const expectedResult = false;
 
-assert.strictEqual(authorBornIn1947(), 'Stephen King');
-// xablau
+function authorUnique() {
+  // escreva seu código aqui
+  let isUnique = true
+  books.forEach((book) => {
+  let birthToCheck = book.author.birthYear
+  let nameToCheck = book.author.name
+  books.some((book) => {
+    if(book.author.birthYear === birthToCheck && book.author.name !== nameToCheck) {
+      isUnique = false
+    }
+  })
+    
+  })
+  return isUnique;
+};
+
+assert.strictEqual(authorUnique(), expectedResult);
+
+//SOLUÇÃO DO GABARITO SE ARMAZENAR VARIÁVEL
+function authorUnique() {
+  return books.every((book) =>
+    !books.some((bookSome) =>
+      (bookSome.author.birthYear === book.author.birthYear)
+      && (bookSome.author.name !== book.author.name)));
+}
