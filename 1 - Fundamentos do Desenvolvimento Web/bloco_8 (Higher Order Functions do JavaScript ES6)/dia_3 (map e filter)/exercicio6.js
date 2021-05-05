@@ -76,3 +76,9 @@ function oldBooks() {
 }
 
 assert.deepStrictEqual(oldBooks(), expectedResult);
+
+// OBTENDO DATA PELO JS
+function oldBooks() {
+  // escreva seu código aqui
+  return (books.filter((book) => new Date().getFullYear() - book.releaseYear > 60)).map((book) => book.name);
+}
