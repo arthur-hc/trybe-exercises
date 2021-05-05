@@ -67,9 +67,13 @@ const expectedResult = 'O Senhor dos Anéis';
 
 function authorWith3DotsOnName() {
   // escreva seu código aqui
-  return String((books.filter((book) => book.author.name.split('.').length > 3)).map((book) => book.name))
+  return String((books.filter((book) => book.author.name.split('.').length > 3)).map((book) => book.name));
 }
+
+assert.deepStrictEqual(authorWith3DotsOnName(), expectedResult);
+
 // SE UTILIZAR O FIND, ELE RETORNARÁ COMO OBJECT, TIRANDO A NECESSIDADE DO STING E MAP
 console.log(books.find((book) => book.author.name.split('.').length > 3).name)
 
-assert.deepStrictEqual(authorWith3DotsOnName(), expectedResult);
+// COM FILTER, DEPOIS DE DIFINIR O INDEX DO OBJETO, É POSSÍVEL ACESSÁ-LO
+console.log(books.filter((book) => book.author.name.split('.').length > 3)[0].name)
