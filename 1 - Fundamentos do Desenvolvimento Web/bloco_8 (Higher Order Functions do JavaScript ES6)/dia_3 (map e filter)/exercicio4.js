@@ -94,3 +94,6 @@ function oldBooks() {
 }
 
 assert.deepStrictEqual(oldBooks(), expectedResult);
+
+//UTILIZANDO CAPTURA DE DATA DO JS
+console.log((books.filter((book) => new Date().getFullYear() - book.releaseYear > 60)).sort((a,b) => a.releaseYear - b.releaseYear))
