@@ -63,11 +63,22 @@ const books = [
   },
 ];
 
-const expectedResult = false;
+const expectedResult = [
+  'O Senhor dos Anéis',
+  'Fundação',
+  'O Chamado de Cthulhu',
+];
 
-function everyoneWasBornOnSecXX() {
+// RETORNE NOME DOS LIVROS COM 60+
+function oldBooks() {
   // escreva seu código aqui
-  return books.every((book) => book.author.birthYear > 1901 && book.author.birthYear <= 2000)
+  return (books.filter((book) => 2021 - book.releaseYear > 60)).map((book) => book.name);
 }
 
-assert.strictEqual(everyoneWasBornOnSecXX(), expectedResult);
+assert.deepStrictEqual(oldBooks(), expectedResult);
+
+// OBTENDO DATA PELO JS
+function oldBooks() {
+  // escreva seu código aqui
+  return (books.filter((book) => new Date().getFullYear() - book.releaseYear > 60)).map((book) => book.name);
+}

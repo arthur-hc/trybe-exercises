@@ -63,11 +63,17 @@ const books = [
   },
 ];
 
-const expectedResult = false;
+const expectedResult = 'O Senhor dos Anéis';
 
-function everyoneWasBornOnSecXX() {
+function authorWith3DotsOnName() {
   // escreva seu código aqui
-  return books.every((book) => book.author.birthYear > 1901 && book.author.birthYear <= 2000)
+  return String((books.filter((book) => book.author.name.split('.').length > 3)).map((book) => book.name));
 }
 
-assert.strictEqual(everyoneWasBornOnSecXX(), expectedResult);
+assert.deepStrictEqual(authorWith3DotsOnName(), expectedResult);
+
+// SE UTILIZAR O FIND, ELE RETORNARÁ COMO OBJECT, TIRANDO A NECESSIDADE DO STING E MAP
+console.log(books.find((book) => book.author.name.split('.').length > 3).name)
+
+// COM FILTER, DEPOIS DE DIFINIR O INDEX DO OBJETO, É POSSÍVEL ACESSÁ-LO
+console.log(books.filter((book) => book.author.name.split('.').length > 3)[0].name)

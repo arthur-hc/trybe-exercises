@@ -63,11 +63,35 @@ const books = [
   },
 ];
 
-const expectedResult = false;
+const expectedResult = [
+  'Frank Herbert',
+  'George R. R. Martin',
+  'Isaac Asimov',
+  'J. R. R. Tolkien',
+];
 
-function everyoneWasBornOnSecXX() {
+//Retorne um filtro em ordem alfabética c/ autores de ficção científica ou fantasia
+function fantasyOrScienceFictionAuthors() {
   // escreva seu código aqui
-  return books.every((book) => book.author.birthYear > 1901 && book.author.birthYear <= 2000)
+  return ((books.filter((book) => book.genre === 'Ficção Científica' || book.genre === 'Fantasia')).map((book) => book.author.name)).sort();
 }
 
-assert.strictEqual(everyoneWasBornOnSecXX(), expectedResult);
+assert.deepStrictEqual(fantasyOrScienceFictionAuthors(), expectedResult);
+
+//SOLUÇÃO DO GABARITO PARA VARRER UM ARRRAY
+function fantasyOrScienceFictionAuthors() {
+  const wantedGenres = ['Fantasia', 'Ficção Científica'];
+  return books
+    .filter((book) => wantedGenres.includes(book.genre))
+    .map((book) => book.author.name).sort();
+}
+
+let teste = [1, 2, 3]
+let tese2 = {
+  num1: 1,
+  num2: 2,
+  num3: 3,
+}
+
+// O MÉTODO INCLUDES SÓ CONSEGUE PROCURAR EM UM ARRAY?
+console.log(teste2.includes(1))

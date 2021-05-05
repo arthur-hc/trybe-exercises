@@ -83,7 +83,7 @@ function authorUnique() {
 
 assert.strictEqual(authorUnique(), expectedResult);
 
-//SOLUÇÃO DO GABARITO SE ARMAZENAR VARIÁVEL
+//SOLUÇÃO DO GABARITO SEM ARMAZENAR VARIÁVEL
 function authorUnique() {
   return books.every((book) =>
     !books.some((bookSome) =>
