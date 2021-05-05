@@ -69,5 +69,7 @@ function authorWith3DotsOnName() {
   // escreva seu código aqui
   return String((books.filter((book) => book.author.name.split('.').length > 3)).map((book) => book.name))
 }
+// SE UTILIZAR O FIND, ELE RETORNARÁ COMO OBJECT, TIRANDO A NECESSIDADE DO STING E MAP
+console.log(books.find((book) => book.author.name.split('.').length > 3).name)
 
 assert.deepStrictEqual(authorWith3DotsOnName(), expectedResult);
