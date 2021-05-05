@@ -77,3 +77,21 @@ function fantasyOrScienceFictionAuthors() {
 }
 
 assert.deepStrictEqual(fantasyOrScienceFictionAuthors(), expectedResult);
+
+//SOLUÇÃO DO GABARITO PARA VARRER UM ARRRAY
+function fantasyOrScienceFictionAuthors() {
+  const wantedGenres = ['Fantasia', 'Ficção Científica'];
+  return books
+    .filter((book) => wantedGenres.includes(book.genre))
+    .map((book) => book.author.name).sort();
+}
+
+let teste = [1, 2, 3]
+let tese2 = {
+  num1: 1,
+  num2: 2,
+  num3: 3,
+}
+
+// O MÉTODO INCLUDES SÓ CONSEGUE PROCURAR EM UM ARRAY?
+console.log(teste2.includes(1))
