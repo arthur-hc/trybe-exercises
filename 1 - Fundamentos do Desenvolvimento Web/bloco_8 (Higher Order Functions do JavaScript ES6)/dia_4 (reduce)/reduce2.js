@@ -74,4 +74,6 @@ const estudantes = [
 ];
 
 // //OBTENHA O MELHOR ALUNO
-console.log(estudantes.map((student) => student.materias))
+console.log(estudantes.map((student) => {
+  return {name: student.nome, materia: student.materias.reduce((acc, current) => current.nota > acc.nota? current : acc).name}
+}));
