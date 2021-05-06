@@ -28,7 +28,7 @@ console.log(y); // 2
 console.log(z); // 0
 
 //PRATICANDO
-const getNationality = ({ firstName, nationality }) => `${firstName} is ${nationality}`;
+const getNationality = ({ firstName, nationality }) => `${firstName} is ${nationality!==undefined? nationality : nationality2}`;
 
 const person = {
     firstName: 'João',
@@ -40,6 +40,7 @@ const otherPerson = {
     lastName: 'Ivanovich',
     nationality: 'Russian',
 };
-const { nationality = 'Brazilian'} = person
+const { nationality2 = 'Brazilian'} = person
 console.log(getNationality(otherPerson)); // Ivan is Russian
 console.log(getNationality(person));
+console.log(person)
