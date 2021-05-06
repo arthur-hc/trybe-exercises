@@ -74,15 +74,15 @@ const estudantes = [
 ];
 
 // //OBTENHA O MELHOR ALUNO
-const getBestClass = (acc, materia) => {
-  if (acc.nota > materia.nota) return acc;
-  return materia;
-};
+// const getBestClass = (acc, materia) => {
+//   if (acc.nota > materia.nota) return acc;
+//   return materia;
+// };
 
-const reportBetter = (students) => students.map((student) => ({
-      name: student.nome,
-      materia: student.materias.reduce(getBestClass).name,
-    }));
+// const reportBetter = (students) => students.map((student) => ({
+//       name: student.nome,
+//       materia: student.materias.reduce(getBestClass).name,
+//     }));
 
 // console.log(reportBetter(estudantes));
 
