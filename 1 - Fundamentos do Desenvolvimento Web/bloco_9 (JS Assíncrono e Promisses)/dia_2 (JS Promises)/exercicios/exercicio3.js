@@ -10,8 +10,7 @@ const promise = new Promise((resolve, reject) => {
   reject(number)
 })
 .then((number) => {
-  const resultArray = []
-  resultArray.push(number/2, number/3, number/5, number/10)
+  resultArray = [2, 3, 5, 10].map((dividedBy) => number/dividedBy)
   console.log(resultArray)
 })
 .catch(() => console.log('É mais de oito mil! Essa promise deve estar quebrada!'));
