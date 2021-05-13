@@ -1,3 +1,4 @@
+// CRIA UMA PROMISE ONDE DEFINE UMA RESOLVE E UM REJECT
 const promise = new Promise((resolve, reject) => {
   let array = [];
   for (let index = 0; index < 10; index += 1) {
