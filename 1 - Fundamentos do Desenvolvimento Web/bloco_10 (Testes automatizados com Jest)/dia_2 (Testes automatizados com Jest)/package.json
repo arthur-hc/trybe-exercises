@@ -1,0 +1,12 @@
+{
+  "name": "dia_2-(testes-automatizados-com-jest)",
+  "version": "1.0.0",
+  "description": "",
+  "main": "testCodAssinc.spec.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
