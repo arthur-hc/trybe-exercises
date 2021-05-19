@@ -7,7 +7,7 @@ test("Não deveria passar!", () => {
   }, 500);
 });
 
-// // // SOLUÇÃO: DONE()
+// SOLUÇÃO: DONE()
 test("Não deveria passar!", done => {
   setTimeout(() => {
     expect(10).toBe(10);
@@ -16,6 +16,7 @@ test("Não deveria passar!", done => {
   }, 500);
 });
 
+// OUTRO EXEMPLO DE TESTE BEM SUCEDIDO
 const SumNumbers = (a, b, callback) => {
   setTimeout(() => {
     const result = a + b;
@@ -30,3 +31,4 @@ test('Testando SumNumbers, soma 5 mais 10', done => {
     done();
   });
 })
+
