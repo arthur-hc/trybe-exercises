@@ -1,4 +1,5 @@
 const {calcArea, catAndMouse, compareTrue, concatName, decode, encode, fizzBuzz, footballPoints, highestCount, splitSentence,} = require('./challenges')
+const { techList, hydrate } = require('./challenges2')
 
 describe('encode e decode tests', () => {
   it('verifica se encode e decode são funções', () => {
@@ -17,3 +18,31 @@ describe('encode e decode tests', () => {
     expect('5 5').toEqual(`${encode('aeiou').length} ${decode('12345').length}`)
   })
 })
+
+describe('techList tests', () => {
+  
+  it('verifica se a techlist retorna um array com objt e techs', () => {
+    expect.assertions(1);
+    expect(techList(['HTML', 'CSS'], 'Arthur')).toEqual([ { tech: 'CSS', name: 'Arthur' }, { tech: 'HTML', name: 'Arthur' } ])
+  })
+  it('verifica se com array vazio, retorna vazio', () => {
+    expect.assertions(1);
+    expect(techList([], 'Arthur')).toEqual('Vazio!')
+  })
+})
+
+describe('Testa a função hydrate', () => {
+  it('Testa se a função hydrate é definida', () => {
+    expect(hydrate).toBeDefined();
+  });
+  it('Testa se hydrate é uma função', () => {
+    expect(typeof hydrate).toBe('function');
+  });
+  it('Ao receber uma string retorne a sugestão de quantos copos de água deve-se beber', () => {
+    expect(hydrate('1 cerveja')).toBe('1 copo de água');
+    expect(hydrate('1 cachaça, 5 cervejas e 1 copo de vinho')).toBe('7 copos de água');
+    expect(hydrate('2 shots de tequila, 2 cervejas e 1 corote')).toBe('5 copos de água');
+    expect(hydrate('1 copo de catuaba, 1 cervejas e 1 copo de vinho')).toBe('3 copos de água');
+    expect(hydrate('4 caipirinhas e 2 cervejas')).toBe('6 copos de água');
+  });
+});
