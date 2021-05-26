@@ -1,0 +1,1 @@
+// OS ARQUIVOS ListaDinamica, Props, PropTypes, Compos-Component são cópias dos arquivos contidos no fixation-exercises-11-2-parte2 e não funcionarão fora de sua pasta origem, sendo apenas para fins didáticos.
