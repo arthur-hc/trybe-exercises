@@ -125,17 +125,31 @@ import React, { Component } from 'react';
 
 class App extends Component {
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
+    this.changeColor1 = this.changeColor1.bind(this)
+    this.changeColor2 = this.changeColor2.bind(this)
+    this.changeColor3 = this.changeColor3.bind(this)
+    this.incrementNum1 = this.incrementNum1.bind(this)
     this.state = {
-      bgColor1: 'Red',
-      bgColor2: 'Red',
-      bgColor3: 'Red',
+      bgColor1: 'Green',
+      bgColor2: 'Green',
+      bgColor3: 'Green',
+      counter1: 0,
+      counter2: 0,
+      counter3: 0,
     }
   }
 
-  changeColor1 = () => {
-    if(this.state.bgColor1 === 'red') {
+  incrementNum1 () {
+    this.setState((previus, _props) => ({
+      counter1: previus.counter1 + 1
+    }))
+  }
+
+  changeColor1 () {
+    this.incrementNum1()
+    if(this.state.counter1 % 2 !== 0) {
       this.setState({
         bgColor1: 'green'
       })
@@ -146,8 +160,15 @@ class App extends Component {
     }
   }
 
-  changeColor2 = () => {
-    if(this.state.bgColor2 === 'red') {
+  incrementNum2 () {
+    this.setState((previus, _props) => ({
+      counter2: previus.counter2 + 1
+    }))
+  }
+
+  changeColor2 () {
+    this.incrementNum2()
+    if(this.state.counter2 % 2 !== 0) {
       this.setState({
         bgColor2: 'green'
       })
@@ -158,8 +179,15 @@ class App extends Component {
     }
   }
 
-  changeColor3 = () => {
-    if(this.state.bgColor3 === 'red') {
+  incrementNum3 () {
+    this.setState((previus, _props) => ({
+      counter3: previus.counter3 + 1
+    }))
+  }
+
+  changeColor3 () {
+    this.incrementNum3()
+    if(this.state.counter3 % 2 !== 0) {
       this.setState({
         bgColor3: 'green'
       })
@@ -173,15 +201,14 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-          <button className="boxClickCss" 
-          style={{backgroundColor: this.state.bgColor1}}
-           onClick={this.changeColor1}>Botão 1</button>
-           <button className="boxClickCss" 
-          style={{backgroundColor: this.state.bgColor2}}
-           onClick={this.changeColor2}>Botão 2</button>
-           <button className="boxClickCss" 
-          style={{backgroundColor: this.state.bgColor3}}
-           onClick={this.changeColor3}>Botão 3</button>
+          <button style={{backgroundColor: this.state.bgColor1}}
+           onClick={this.changeColor1}>{this.state.counter1}</button>
+
+           <button style={{backgroundColor: this.state.bgColor2}}
+           onClick={this.changeColor2}>{this.state.counter2}</button>
+
+           <button style={{backgroundColor: this.state.bgColor3}}
+           onClick={this.changeColor3}>{this.state.counter3}</button>
       </div>
     );
   }
