@@ -80,8 +80,8 @@ class Form extends Component {
     }
   }
   handleChange({ target }) {
-    const { name } = target
-    const value = target.type === 'checkbox'? target.checked : target.value
+    const { name } = target // Será a key enviada p/ state
+    const value = target.type === 'checkbox'? target.checked : target.value // Será o value
     this.setState({ 
       [name]: value 
     })

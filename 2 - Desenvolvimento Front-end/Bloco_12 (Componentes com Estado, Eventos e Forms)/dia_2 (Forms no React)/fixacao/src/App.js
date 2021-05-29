@@ -16,7 +16,7 @@ class App extends Component {
     }
   }
   
-  handleInfo ( {target} ) {
+  handleInfo ( {target} ) { 
     const { name } = target;
     const value = target.type === 'checkbox'? target.checked : target.value;
     this.setState({
