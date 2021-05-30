@@ -4,6 +4,7 @@ import InputComp from './input'
 import SelectPos from './selectPos'
 import InputNumComp from './inputNum'
 import CheckBoxComp from './checkBox'
+import InputFileComp from './inputFile'
 
 class App extends Component {
   constructor (props) {
@@ -16,6 +17,7 @@ class App extends Component {
       pais: '',
       numeroCamisa: undefined,
       goldenBall: 0,
+      foto: '',
     }
   }
   handleInfo ({ target }) {
@@ -32,12 +34,16 @@ class App extends Component {
           My Forms 2
         </header>
         <form>
-            <InputComp keyName={'melhorJogador'} ask={'Melhor jogador de todos os tempos'} handleInfo={this.handleInfo}/>
-            <InputComp keyName={'apelido'} value={this.state.keyName} ask={'Apelido'} handleInfo={this.handleInfo}/>
-            <SelectPos keyName={'posicao'} ask={'Posição'} handleInfo={this.handleInfo}/>
-            <InputComp keyName={'pais'} value={this.state.keyName} ask={'Pais de origem'} handleInfo={this.handleInfo}/>
-            <InputNumComp keyName={'numeroCamisa'} ask={'N Camisa'} handleInfo={this.handleInfo}/>
-            <CheckBoxComp keyName={'goldenBall'} ask={'Foi eleito melhor do mundo?'} handleInfo={this.handleInfo}/>
+            <fieldset>
+              <InputComp keyName={'melhorJogador'} ask={'Melhor jogador de todos os tempos'} handleInfo={this.handleInfo}/>
+              <InputComp keyName={'apelido'} value={this.state.keyName} ask={'Apelido'} handleInfo={this.handleInfo}/>
+              <SelectPos keyName={'posicao'} ask={'Posição'} handleInfo={this.handleInfo}/>
+              <InputComp keyName={'pais'} value={this.state.keyName} ask={'Pais de origem'} handleInfo={this.handleInfo}/>
+              <InputNumComp keyName={'numeroCamisa'} ask={'N Camisa'} handleInfo={this.handleInfo}/>
+              <CheckBoxComp keyName={'goldenBall'} ask={'Foi eleito melhor do mundo?'} handleInfo={this.handleInfo}/>
+              <InputFileComp keyName={'foto'} ask={'Foto do Jogador:'} handleInfo={this.handleInfo}/>
+              <input type="submit"/>
+            </fieldset>
         </form>
       </div>
     );
