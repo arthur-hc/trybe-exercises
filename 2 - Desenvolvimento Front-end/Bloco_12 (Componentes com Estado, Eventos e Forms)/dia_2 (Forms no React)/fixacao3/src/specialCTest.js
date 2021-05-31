@@ -1,13 +1,14 @@
-const { keyName, ask, value, func, type, className, placeholder, maxC, noSpecialC } = this.props
+const { value, noSpecialC } = this.props
 
 let error;
 
 if(value && noSpecialC === true) {
-  const specialC = /[!@#$`º%~^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+  const specialC = /[!@#$`º%~^&*()_+\-=[\]{};':"\\|,.<>/?]+/;
   if(specialC.test(value)){
     error = 'Caractere inválido'
   }
 }
+
 
 
 //FUNC BASE
@@ -21,3 +22,4 @@ if(value && noSpecialC === true) {
 // }
 
 // console.log(specialC)
+console.log(error)

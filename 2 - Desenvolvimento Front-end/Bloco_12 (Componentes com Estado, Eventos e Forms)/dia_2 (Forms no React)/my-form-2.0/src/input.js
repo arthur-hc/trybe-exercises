@@ -13,7 +13,21 @@ class InputComp extends Component {
         error = 'Caractere inválido'
       }
     }
-
+    if(value && type === 'email') {
+      const expected = /^[a-z0-9.]+@[a-z0-9]+\.com+$/
+      if(expected.test(value)){
+      } else {
+        error = 'Email inválido'
+      }
+    }
+    if(value && keyName === 'CPF') {
+      const specialCAndLetters = /^-?[\d.]+(?:e-?\d+)?$/;
+      if(specialCAndLetters.test(value)){
+      } else {
+        error = 'Apenas 11 números'
+      }
+      if(value.length < 11) error= 'CPF Inválido'
+    }
 
     return (
       <label name={keyName}>{ask}
@@ -21,10 +35,13 @@ class InputComp extends Component {
         className={className}
         type={type}
         placeholder={placeholder}
+        value={value}
         name={keyName}
         onChange={func}
+        required
         />
-        <span>{(error? error : '')}</span>
+        <br/>
+        <span className="error">{(error? error : '')}</span>
       </label>
     );
   }
