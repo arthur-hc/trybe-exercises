@@ -10,8 +10,6 @@ class RandomUser extends Component {
       userInfo: undefined,
     }
   }
-  
-
 
   async fetchRandomUser () {
     const data = await fetch('https://api.randomuser.me/')
@@ -21,13 +19,12 @@ class RandomUser extends Component {
     // APENAS UM ITEM NO ARRAY
     this.setState({ userInfo: dataJson.results[0] })
   }
-  
 
   componentDidMount() {
     this.fetchRandomUser()
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(_, nextState) {
     return nextState.userInfo.dob.age <= 50;
   }
 
@@ -57,7 +54,6 @@ class RandomUser extends Component {
             })}
           */}
         </div>
-
       </div>
     );
   }
