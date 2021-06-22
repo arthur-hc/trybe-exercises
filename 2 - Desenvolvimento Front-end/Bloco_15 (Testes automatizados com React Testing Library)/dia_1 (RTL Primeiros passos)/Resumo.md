@@ -72,4 +72,5 @@ expect(emailInput.value).toBe('')
 <!-- Espera-se que o componete contenha esse valor -->
 expect(userEmail.textContent).toBe('Valor: meuEmail@trybe.com')
 
+=> É IMPORTANTE VERIFICAR A REAL EFETIVIDADE DO TESTE, ALTERANDO O CÓDIGO E VERIFICANDO SE NÃO É UM FALSO. 
 
