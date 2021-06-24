@@ -34,3 +34,5 @@ export default renderWithRouter;
 OLHAR TESTES PRE AULA PARA ENTENDER MELHOR
 >>> COM MÉTODO PUSH, "ENVIAMOS" A URL A PATH DESEJADA
 >>> COM history.location.pathname TEMOS O CAMINHO DA URL
+>>> PARA EXECUTAR SOMENTE O COMPONENTE, UTILIZAR O MESMO MÉTODO RENDERWITHROUTER PASSANDO O COMPONENTE ESPECÍFICO AO INVÉS DO APP (PS: IMPORTAR DO APP "import App, { About } from './App';")
+O About foi importado entre chaves por ser export default
