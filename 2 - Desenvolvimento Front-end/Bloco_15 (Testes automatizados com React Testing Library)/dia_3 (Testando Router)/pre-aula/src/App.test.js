@@ -20,10 +20,13 @@ describe('teste da aplicação toda', () => {
   });
 
   it('deve testar um caminho não existente e a renderização do Not Found', () => {
-    const { getByText, history } = renderWithRouter(<App />);
+    // IMPORTA O CONTAINER TAMBÉM
+    const { getByText, history, container } = renderWithRouter(<App />);
     history.push('/pagina/que-nao-existe/');
     const noMatch = getByText(/Página não encontrada/i);
     expect(noMatch).toBeInTheDocument();
+    // AQUI
+    expect(container.innerHTML).toMatch(/Página não encontrada/)
   });
 
   it('deve renderizar o componente About (apenas componente)', () => {
@@ -32,3 +35,5 @@ describe('teste da aplicação toda', () => {
     expect(aboutOnly).toBeInTheDocument();
   });
 });
+
+// COM CONTAINER É POSSÍVEL VERIFICAR TAMBÉM => AULA DO FRANK
