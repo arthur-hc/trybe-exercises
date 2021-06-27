@@ -2,7 +2,7 @@
 É a ferramente que facilita a transmissão de informações, quebrando a necessidade de se transmitir apenas de pai pra filho, e passando a transmitir de forma direta.
 
 # Store
-Grande peça do reduz onde iremos armazenar as informações do Reduz
+Grande peça onde iremos armazenar as informações do Redux
 
 # Action
 Objeto que representa alguma mudança ou alteração que precisa acontecer no State
@@ -26,4 +26,18 @@ store.dispach(action)
 store.getState()
 
 Função para recuperar o estado armazenado no store
+
+# NA PRÁTICA...
+=> CRIANDO UM STORE...
+- const reducer = (state = 5) => {
+  return state;
+}
+
+- const store = Redux.createStore(reducer);
+
+=> OBTENDO UM ESTADO...
+- const currentStore = store.getState();
+
+=> DEFININDO UMA ACTION...
+- const action= { type: 'LOGIN' }
 
