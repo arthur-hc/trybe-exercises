@@ -50,7 +50,6 @@ function counterReducer(state = 0, action) {
 const store = Redux.createStore(
   counterReducer,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-
   // ** O ÚLTIMO COMANDO PERMITE A UTILIZAÇÃO DA EXTENSãO PARA VISUALIZAR O REDUX NA APLICAÇÃO
 )
 
@@ -114,3 +113,29 @@ const store = Redux.createStore(
   store.subscribe(() => {
     document.querySelector('#value').innerHTML = store.getState();
   })
+
+
+
+
+
+  //=====================================================//====================================//
+  // PASSO A PASSO
+  // #1 -- criar um store
+ const store = Redux.createStore(reducer)
+
+ // #2 -- cria um reducer
+ // OBS: => STATE NORMALMENTE SERÁ UM OBJ. => AS AÇÕES PODEM ESTAR DENTRO DO ESCOPO, Ñ SÓ NO RETURN
+  const tipoDeReducer = (state, action) => {
+   switch (action.type) {
+     case TYPEACTION1:
+       fazIsso
+       return state + fazIsso;
+
+      case TYPEACTION2:
+       fazAquilo
+       return state + fazAquilo;
+   
+     default:
+       return state;
+   }
+ }

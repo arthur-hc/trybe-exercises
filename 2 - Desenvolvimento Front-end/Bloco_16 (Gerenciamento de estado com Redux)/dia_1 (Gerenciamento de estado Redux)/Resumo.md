@@ -41,3 +41,27 @@ Função para recuperar o estado armazenado no store
 => DEFININDO UMA ACTION...
 - const action= { type: 'LOGIN' }
 
+# Combinar reducers
+- combineReducers();
+Essa função recebe um objeto como parâmetro contendo cada um dos seus reducers como elementos, por exemplo:
+
+// Arquivo index.js
+
+import { combineReducers } from 'redux';
+import meuReducer from './meuReducer';
+import meuOutroReducer from './meuOutroReducer';
+
+const reducerCombinado = combineReducers({
+  meuReducer,
+  meuOutroReducer});
+
+export default reducerCombinado;
+
+Agora basta fazer a sua importação no seu store para a mágica acontecer!
+
+import { createStore } from 'redux';
+// Importando o reducer combinado que fizemos logo acima
+import reducerCombinado from './reducers/index';
+
+const store = createStore(reducerCombinado);
+...

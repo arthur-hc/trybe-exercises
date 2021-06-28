@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercício</title>
+  <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+</head>
+<body>
+  <div>
+    Counter: <span id="value">0</span>
+    <button id="increment">+</button>
+    <button id="decrement">-</button>
+    <button id="increment-10">Adiciona 10</button>
+    <label for='valueToAdd'>
+      <input name='valueToAdd' id="input-value" type="number" value="0">
+    </label>
+    <button id="btn-increment-value">Incrementar</button>
+    <button id="btn-decrement-value">Decrementar</button>
+    Times Clicked: <span id="clicked">0</span>
+    Used Values: <span id="used-values"></span>
+  </div>
+  <script>
+
+    // CRIA O REDUCER
+    // FUNÇÃO QUE RETORNA O NOVO VALOR DO MEU ESTADO GLOBAL A PARTIR DE UMA ACTION
+    function counterReducer (state = {
+      counter: 0,
+      clicks: 0,
+      values: [],
+    }, action) {
+      switch(action.type) {
+        case 'INCREMENT': {
+          // SEMPRE UTILIZAR O SPREAD OP AO MANIPULAR UM OBJ OU ARRAY
+          // A SERÁ CALCULADO O NOVO VALOR DE COUNTER, ADICIONARÁ CLICK, E SERÁ ARMAZENADO EM UM ARRAY OS VALORES DE CADA OPERAÇÃO
+          return {...state, counter: state.counter + action.payload.amount, clicks: state.clicks += 1, values: [...state.values, action.payload.amount] }
+        }
+        case 'DECREMENT': {
+          return {...state, counter: state.counter + action.payload.amount, clicks: state.clicks += 1, values: [...state.values, action.payload.amount] }
+        }
+        default:
+          return state
+      }
+    }
+
+
+
+    //CRIA O STORE
+    const store = Redux.createStore(
+      counterReducer,
+      // COMANDO PARA UTILIZAR O DEVTOOLS EXTENSION
+      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    );
+
+    
+    
+    //CRIA AS ACTIONS
+
+    //ACTION QUE ADICIONA 1
+    const increment = {
+      type: 'INCREMENT',
+      payload: {
+        amount: 1
+      }
+    }
+
+    //ACTION QUE ADICIONA 10
+    const increment10 = {
+      type: 'INCREMENT',
+      payload: {
+        amount: 10,
+      }
+    }
+
+    //ACTION QUE REMOVE 1
+    const decrement = {
+      type: 'DECREMENT',
+      payload: {
+        amount: - 1,
+      }
+
+    }
+
+    //PS: SERIA POSSÍVEL ADICIONAR DIRETO A ACTION NO ADD.EVENT E CHAMANDO O STORE.DISP, MAS ACHEI MELHOR SEPARAR PRA DEIXAR MAIS CLARO DE INÍCIO. SEGUE O EXEMPLO...
+    // document.querySelector('#increment').addEventListener('click', () => {
+    //   const increment = {
+    //   type: 'INCREMENT',
+    //   payload: {
+    //     amount: 1
+    //   }
+    // }
+    //   store.dispatch(increment)
+    // })
+
+
+    // CAPTURA O BOTÃO QUE AO SER CLICADO FARÁ O DISPATCH COM A ACTION
+    document.querySelector('#increment').addEventListener('click', () => {
+      store.dispatch(increment)
+    })
+
+    // CAPTURA O BOTÃO QUE AO SER CLICADO FARÁ O DISPATCH COM A ACTION
+    document.querySelector('#increment-10').addEventListener('click', () => {
+      store.dispatch(increment10)
+    })
+
+    // CAPTURA O BOTÃO QUE AO SER CLICADO FARÁ O DISPATCH COM A ACTION
+    document.querySelector('#decrement').addEventListener('click', () => {
+      store.dispatch(decrement)
+    })
+
+    // CAPTURA O BOTÃO QUE AO SER CLICADO FARÁ O DISPATCH COM A ACTION 
+    document.querySelector('#btn-increment-value').addEventListener('click', () => {
+      // CAPTURA O INPUT
+      const input = document.querySelector('#input-value')
+      // CONDICIONA A EXECUÇÃO P/ SER MAIOR QUE 0
+      if(input.value >= 0) {
+        // CRIA A ACTION DEFININDO SEU VALOR(AMOUNT) IGUAL AO VALOR DO INPUT
+        const incrementInput = {
+        type: 'INCREMENT',
+        payload: {
+          amount: Number(input.value),
+        }
+      }
+      // DESPACHAR A ACTION
+      store.dispatch(incrementInput)
+      } else {
+        alert('Incremente valores positivos')
+      }
+      
+      input.value = 0
+    })
+
+    document.querySelector('#btn-decrement-value').addEventListener('click', () => {
+      // 
+      const input = document.querySelector('#input-value')
+      if(input.value <= 0) {
+        const incrementInput = {
+        type: 'DECREMENT',
+        payload: {
+          amount: Number(input.value),
+        }
+      }
+      store.dispatch(incrementInput)
+      } else {
+        alert('Decremente valores menores do que 0')
+      }
+      
+      input.value = 0
+    })
+
+    // POR NÃO ESTAR ESTAR NO REACT, É NECESSÁRIO CHAMAR A FUNÇÃO PARA SUBSCREVER O ITEM HTML RECUPERANDO A INFORMAÇÃO DO STORE E DEFININDO E DEFININDO O ITEM HTML COMO ESSE VALOR.
+    store.subscribe(() => {
+      document.querySelector('#value').innerHTML = store.getState().counter;
+      document.querySelector('#clicked').innerHTML = store.getState().clicks;
+      document.querySelector('#used-values').innerHTML = store.getState().values;
+    })
+
+  </script>
+</body>
+</html>
