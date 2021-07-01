@@ -4,7 +4,7 @@ import TaskListComp from './Components/TasksListComp'
 
 function App() {
   return (
-    <div className="div-app">
+    <div className="flex-colum-center">
       <h1>To Do List</h1>
       <InputComp />
       <TaskListComp />

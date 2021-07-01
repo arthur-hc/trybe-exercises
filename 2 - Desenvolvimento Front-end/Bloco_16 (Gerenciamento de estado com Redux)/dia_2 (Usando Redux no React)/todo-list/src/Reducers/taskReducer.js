@@ -37,7 +37,6 @@ function taskReducer(state = INITIAL_STATE, action) {
         } else {
           return INITIAL_STATE;
         }
-        
     default:
       return state;
   }

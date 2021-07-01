@@ -26,20 +26,24 @@ class InputComp extends React.Component {
       add(task, id)
       this.setState({task:''})
     }
+
     const clearAll = () => {
       clear()
       this.setState({task:''})
     }
+
     const clearToDoList = () => {
       clearToDo()
       this.setState({task:''})
     }
+
     const clearCompletedList = () => {
       clearCompleted()
       this.setState({task:''})
     }
+
     return (
-      <div className="div-app">
+      <div className="flex-colum-center">
         <input name="task" onChange={handleChange} value={ task } />
         <div>
           <button onClick={() => submit()}>Add</button>
@@ -51,7 +55,7 @@ class InputComp extends React.Component {
           </select>
           <button onClick={() => clearToDoList()}>Clear 1</button>
           <button onClick={() => clearCompletedList()}>Clear 2</button>
-          <button onClick={() => recover()}>Last</button>
+          <button onClick={() => recover()}>Undo</button>
         </div>
       </div>
     )

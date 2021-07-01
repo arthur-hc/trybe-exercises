@@ -2,23 +2,23 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { doneTaskAction, unDoneTaskAction } from '../Actions'
 
-class TaskListCom extends React.Component {
+class TaskListComp extends React.Component {
   render(){
     const { listToDo, listCompleted, filter, done, unDone } = this.props;
 
     switch (filter) {
       case 'completed':
         return(
-          <div>
+          <div className="flex-colum-center">
             <h2>Completed</h2>
             <ul>
-              {listCompleted.map(({task, id}, index) => <li onDoubleClick={() => unDone(task, id)}  key={index}>{task}</li>)}
+              {listCompleted.map(({task, id}, index) => <li className="done" onDoubleClick={() => unDone(task, id)}  key={index}>{task}</li>)}
             </ul>
           </div>
         );
       case 'toDo':
           return(
-            <div>
+            <div className="flex-colum-center">
               <h2>To Do</h2>
               <ul>
                 {listToDo.map(({task, id}, index) => <li onDoubleClick={() => done(task, id)} key={index}>{task}</li>)}
@@ -27,20 +27,18 @@ class TaskListCom extends React.Component {
           );
       default:
         return(
-          <div>
+          <div className="flex-colum-center">
             <h2>To Do</h2>
             <ul>
               {listToDo.map(({task, id}, index) => <li onDoubleClick={() => done(task, id)} key={index}>{task}</li>)}
             </ul>
             <h2>Completed</h2>
             <ul>
-              {listCompleted.map(({task, id}, index) => <li onDoubleClick={() => unDone(task, id)} key={index}>{task}</li>)}
+              {listCompleted.map(({task, id}, index) => <li className="done" onDoubleClick={() => unDone(task, id)} key={index}>{task}</li>)}
             </ul>
         </div>
         );
     }
-    
-    
   }
 }
 
@@ -55,4 +53,4 @@ const mapDispatchToProps = (dispatch) => ({
   unDone: (task, id) => dispatch(unDoneTaskAction(task, id)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps) (TaskListCom);
+export default connect(mapStateToProps, mapDispatchToProps) (TaskListComp);
