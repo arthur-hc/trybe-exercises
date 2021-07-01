@@ -1,7 +1,7 @@
 const INITIAL_STATE = {
   candidates: [],
   previusState: null,
-  filters: '',
+  filter: '',
 }
 
 const REGISTER = 'REGISTER'
