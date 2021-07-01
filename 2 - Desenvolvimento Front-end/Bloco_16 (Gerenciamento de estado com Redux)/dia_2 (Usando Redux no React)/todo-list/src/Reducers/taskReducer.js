@@ -3,6 +3,7 @@ const INITIAL_STATE = {
   tasksCompleted: [],
   filter: '',
   previusState: null,
+  id: 1,
 };
 
 const ADD_TASK = 'ADD_TASK';
@@ -17,7 +18,7 @@ const RECOVER = 'RECOVER'
 function taskReducer(state = INITIAL_STATE, action) {
   switch(action.type) {
     case ADD_TASK:
-      return {...state, previusState: state, tasksToDo:[...state.tasksToDo, action.task]};
+      return {...state, previusState: state, tasksToDo:[...state.tasksToDo, {task:action.task, id: action.id}], id: state.id + 1};
     case CLEAR:
       return {...state, previusState: state, tasksToDo:[], tasksCompleted: []}
     case CLEAR_TODO:
@@ -27,11 +28,11 @@ function taskReducer(state = INITIAL_STATE, action) {
     case CHANGE_FILTER:
       return {...state, previusState: state, filter: action.value}
     case DONE_TASK:
-      return {...state, previusState: state, tasksToDo: state.tasksToDo.filter((task) => task !== action.task), tasksCompleted: [...state.tasksCompleted, action.task]}
+      return {...state, previusState: state, tasksToDo: state.tasksToDo.filter((item) => item.id !== action.id), tasksCompleted: [...state.tasksCompleted, {task:action.task, id: action.id}]}
     case UNDONE_TASK:
-      return {...state, previusState: state, tasksCompleted: state.tasksCompleted.filter((task) => task !== action.task), tasksToDo: [...state.tasksToDo, action.task]}
+      return {...state, previusState: state, tasksCompleted: state.tasksCompleted.filter((item) => item.id !== action.id), tasksToDo: [...state.tasksToDo, {task:action.task, id: action.id}]}
       case RECOVER:
-        if(state.previusState !== null) {
+        if(state.previusState) {
           return {...state.previusState}
         } else {
           return INITIAL_STATE;

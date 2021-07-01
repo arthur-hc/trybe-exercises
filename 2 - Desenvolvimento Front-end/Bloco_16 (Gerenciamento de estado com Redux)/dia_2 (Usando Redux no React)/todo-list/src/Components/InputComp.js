@@ -10,7 +10,7 @@ class InputComp extends React.Component {
 
   render() {
     const { task } = this.state;
-    const { add, clear, clearToDo, clearCompleted, chageFilter, recover } = this.props;
+    const { add, clear, clearToDo, clearCompleted, chageFilter, recover, id } = this.props;
 
     const handleChange = ({target}) => {
       const { name } = target
@@ -23,7 +23,7 @@ class InputComp extends React.Component {
     }
 
     const submit = () => {
-      add(task)
+      add(task, id)
       this.setState({task:''})
     }
     const clearAll = () => {
@@ -48,19 +48,18 @@ class InputComp extends React.Component {
             <option value=''>All</option>
             <option value='completed'>Completed</option>
             <option value='toDo'>To Do</option>
-        </select>
-        <button onClick={() => clearToDoList()}>Clear 1</button>
-        <button onClick={() => clearCompletedList()}>Clear 2</button>
-        <button onClick={() => recover()}>Last</button>
+          </select>
+          <button onClick={() => clearToDoList()}>Clear 1</button>
+          <button onClick={() => clearCompletedList()}>Clear 2</button>
+          <button onClick={() => recover()}>Last</button>
         </div>
-        
       </div>
     )
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  add: (task) => dispatch(addTaskAction(task)),
+  add: (task, id) => dispatch(addTaskAction(task, id)),
   clear: () => dispatch(clearAction()),
   clearToDo: () => dispatch(clearTodoAction()),
   clearCompleted: () => dispatch(clearCompletedAction()),
@@ -69,4 +68,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 });
 
-export default connect(null, mapDispatchToProps) (InputComp)
+const mapStateToProps = (state) => ({
+  id: state.taskReducer.id
+})
+
+export default connect(mapStateToProps, mapDispatchToProps) (InputComp)

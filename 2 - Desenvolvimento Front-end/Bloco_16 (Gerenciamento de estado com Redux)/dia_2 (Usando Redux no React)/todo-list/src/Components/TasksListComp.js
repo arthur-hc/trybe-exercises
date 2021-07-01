@@ -12,7 +12,7 @@ class TaskListCom extends React.Component {
           <div>
             <h2>Completed</h2>
             <ul>
-              {listCompleted.map((task, index) => <li onDoubleClick={({target}) => unDone(target.innerText)}  key={index}>{task}</li>)}
+              {listCompleted.map(({task, id}, index) => <li onDoubleClick={() => unDone(task, id)}  key={index}>{task}</li>)}
             </ul>
           </div>
         );
@@ -21,7 +21,7 @@ class TaskListCom extends React.Component {
             <div>
               <h2>To Do</h2>
               <ul>
-                {listToDo.map((task, index) => <li onDoubleClick={({target}) => done(target.innerText)} key={index}>{task}</li>)}
+                {listToDo.map(({task, id}, index) => <li onDoubleClick={() => done(task, id)} key={index}>{task}</li>)}
               </ul>
           </div>
           );
@@ -30,11 +30,11 @@ class TaskListCom extends React.Component {
           <div>
             <h2>To Do</h2>
             <ul>
-              {listToDo.map((task, index) => <li onDoubleClick={({target}) => done(target.innerText)} key={index}>{task}</li>)}
+              {listToDo.map(({task, id}, index) => <li onDoubleClick={() => done(task, id)} key={index}>{task}</li>)}
             </ul>
             <h2>Completed</h2>
             <ul>
-              {listCompleted.map((task, index) => <li onDoubleClick={({target}) => unDone(target.innerText)} key={index}>{task}</li>)}
+              {listCompleted.map(({task, id}, index) => <li onDoubleClick={() => unDone(task, id)} key={index}>{task}</li>)}
             </ul>
         </div>
         );
@@ -51,8 +51,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  done: (task) => dispatch(doneTaskAction(task)),
-  unDone: (task) => dispatch(unDoneTaskAction(task)),
+  done: (task, id) => dispatch(doneTaskAction(task, id)),
+  unDone: (task, id) => dispatch(unDoneTaskAction(task, id)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps) (TaskListCom);
