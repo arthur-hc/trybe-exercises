@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.clientInfo {
+  line-height: 0px;
+}
+
+.clientDiv {
+  margin-bottom: 45px;
+}

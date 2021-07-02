@@ -4,6 +4,7 @@ import { loginAction } from '../Actions'
 import { Redirect } from 'react-router-dom'
 
 class Login extends React.Component {
+
   constructor() {
     super()
     this.state = {
@@ -11,7 +12,7 @@ class Login extends React.Component {
       password: '',
     }
   }
-  
+
   render() {
     const { user, password } = this.state;
     const { logInfo, enter } = this.props;
@@ -23,9 +24,10 @@ class Login extends React.Component {
         [name] : value
       });
     };
+
     const userValidation = () => {
       const {user, password } = this.state;
-      if(user === 'user' && password === '1234') {
+      if(user === 'user' && password === '123') {
         alert('Welcome');
         enter();
       } else {
@@ -36,18 +38,20 @@ class Login extends React.Component {
         });
       };
     };
+
     if(logInfo) {
       return <Redirect to="/clientpage" />
     }
+
     return ( 
       <div>
         <h1>Login</h1>
         <div>
           <form>
-            <label htmlFor='user'> User:
-              <input name='user' value={user} onChange={(e) => handleChange(e)}/>
+            <label htmlFor='user'> User:<br/>
+              <input name='user' value={user} onChange={(e) => handleChange(e)}/><br/>
             </label>
-            <label htmlFor='password'> Password:
+            <label htmlFor='password'> Password:<br/>
               <input name='password' type='password' value={password} onChange={(e) => handleChange(e)}/>
             </label>
           </form>

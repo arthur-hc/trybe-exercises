@@ -16,10 +16,9 @@ class App extends React.Component {
       <div className="App">
        <header>
          <Link to='/'><button>Home</button></Link>
-         <Link to='/login'><button>Login</button></Link>
          <Link to='/clientpage'><button>Clients</button></Link>
          <Link to='/register'><button>Register</button></Link>
-         <Link to='/login' onClick={() => logoff()} ><button>Logout</button></Link>
+         {logInfo? <Link to='/login' onClick={() => logoff()} ><button>Logout</button></Link> : <Link to='/login'><button>Login</button></Link>}
          {logInfo? <p>You're Login</p> : <p>You're Logoff</p> }
        </header>
        <Switch>
