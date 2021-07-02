@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { logoinAction } from '../Actions'
+import { loginAction } from '../Actions'
 import { Redirect } from 'react-router-dom'
 
 class Login extends React.Component {
@@ -63,7 +63,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  enter: () => dispatch(logoinAction())
+  enter: () => dispatch(loginAction())
 })
 
 export default connect (mapStateToProps, mapDispatchToProps) (Login);

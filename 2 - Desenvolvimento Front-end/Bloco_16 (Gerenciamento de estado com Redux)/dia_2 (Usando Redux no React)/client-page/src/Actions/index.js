@@ -1,3 +1,3 @@
 export const logoffAction = () => ({type: 'LOGOFF'});
 
-export const logoinAction = () => ({type: 'LOGIN'});
+export const loginAction = () => ({type: 'LOGIN'});

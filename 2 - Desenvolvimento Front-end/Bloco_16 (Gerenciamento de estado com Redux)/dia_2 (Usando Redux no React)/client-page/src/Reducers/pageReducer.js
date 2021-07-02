@@ -1,6 +1,6 @@
 const INITIAL_STATE = {
-  logged: false,
-  clients: [],
+  logged: true,
+  clients: [{id: 4, name: 'Lucas'}, {id: 5, name: 'Rodrigo'}],
   filter: '',
   previusState: null,
   id: 1,
