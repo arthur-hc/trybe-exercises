@@ -13,7 +13,6 @@ class Register extends React.Component {
     return ( 
       <div>
         <h1>Register</h1>
-        <p>{logInfo}</p>
       </div>
     );
   }

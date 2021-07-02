@@ -7,10 +7,11 @@ import Login from './Pages/Login'
 import Clients from './Pages/Clients'
 import Register from './Pages/Register'
 import { connect } from 'react-redux';
+import { logoffAction } from './Actions'
 
 class App extends React.Component {
   render() {
-    const { logInfo } = this.props;
+    const { logInfo, logoff } = this.props;
     return (
       <div className="App">
        <header>
@@ -18,7 +19,7 @@ class App extends React.Component {
          <Link to='/login'><button>Login</button></Link>
          <Link to='/clientpage'><button>Clients</button></Link>
          <Link to='/register'><button>Register</button></Link>
-         <Link to='/login'><button>Logout</button></Link>
+         <Link to='/login' onClick={() => logoff()} ><button>Logout</button></Link>
          {logInfo? <p>You're Login</p> : <p>You're Logoff</p> }
        </header>
        <Switch>
@@ -36,4 +37,8 @@ const mapStateToProps = (state) => ({
   logInfo: state.pageReducer.logged,
 })
 
-export default connect(mapStateToProps, null) (App);
+const mapDispatchToProps = (dispatch) => ({
+  logoff: () => dispatch(logoffAction())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps) (App);

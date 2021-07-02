@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-  logged: true,
+  logged: false,
   clients: [],
   filter: '',
   previusState: null,

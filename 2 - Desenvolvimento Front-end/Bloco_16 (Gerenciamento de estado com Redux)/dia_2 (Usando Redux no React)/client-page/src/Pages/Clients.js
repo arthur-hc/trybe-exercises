@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
-import { logoffAction } from '../Actions'
+import {  } from '../Actions'
+
 
 class Clients extends React.Component {
   
@@ -23,8 +24,4 @@ const mapStateToProps = (state) => ({
   logInfo: state.pageReducer.logged,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  logoff: () => dispatch(logoffAction())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps) (Clients);
+export default connect(mapStateToProps) (Clients);
