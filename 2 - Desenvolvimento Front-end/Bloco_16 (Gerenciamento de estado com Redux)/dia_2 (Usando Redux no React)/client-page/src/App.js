@@ -6,6 +6,7 @@ import Home from './Pages/Home'
 import Login from './Pages/Login'
 import Clients from './Pages/Clients'
 import Register from './Pages/Register'
+import EditClient from './Pages/EditClient';
 import { connect } from 'react-redux';
 import { logoffAction } from './Actions'
 
@@ -26,6 +27,7 @@ class App extends React.Component {
          <Route exact path='/login' component={ Login }/>
          <Route exact path='/clientpage' component={ Clients }/>
          <Route exact path='/register' component={ Register }/>
+         <Route path='/edit/:id' render={(props) => <EditClient {...props}/>}/>
        </Switch>
       </div>
     );
