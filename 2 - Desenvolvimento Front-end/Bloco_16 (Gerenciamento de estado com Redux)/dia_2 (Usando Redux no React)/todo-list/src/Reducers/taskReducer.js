@@ -31,12 +31,12 @@ function taskReducer(state = INITIAL_STATE, action) {
       return {...state, previusState: state, tasksToDo: state.tasksToDo.filter((item) => item.id !== action.id), tasksCompleted: [...state.tasksCompleted, {task:action.task, id: action.id}]}
     case UNDONE_TASK:
       return {...state, previusState: state, tasksCompleted: state.tasksCompleted.filter((item) => item.id !== action.id), tasksToDo: [...state.tasksToDo, {task:action.task, id: action.id}]}
-      case RECOVER:
-        if(state.previusState) {
-          return {...state.previusState}
-        } else {
-          return INITIAL_STATE;
-        }
+    case RECOVER:
+      if(state.previusState) {
+        return {...state.previusState}
+      } else {
+        return INITIAL_STATE;
+      }
     default:
       return state;
   }
