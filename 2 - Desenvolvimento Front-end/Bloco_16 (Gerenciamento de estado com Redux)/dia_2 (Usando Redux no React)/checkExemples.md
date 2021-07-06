@@ -2,6 +2,10 @@
 - npx create-react-app my-app-redux;
 - npm install --save redux react-redux;
 - npm install.
+- npm install --save redux-devtools-extension
+- npm install react-router-dom; (SE FOR UTILIZAR MAIS DE UMA PÁGINA)
+- npm i redux redux-thunk (SE FOR UTILIZAR REDUX THUNK)
+
 
 # Criar dentro do diretório src:
 - diretório actions;
@@ -17,10 +21,76 @@ Exemplos de Actions
 - export const doneTaskAction = (task, id) => ({type: 'DONE_TASK', task, id});
 - export const clearTodoAction = () => ({type: 'CLEAR_TODO'});
 
+Exemplos de Actions com async
+- arquivo index.js.
+export const REQUEST_API = 'REQUEST_API';
+export const GET_PICTURE = 'GET_PICTURE';
+
+<!-- Esta primeira action apenas muda o estado para loading: true -->
+- - export const requestAPI = () => ({ type: REQUEST_API });
+<!-- Com esta action, após a resposta da requisição, será armazenado os dados no estado -->
+export const getPicture = (data) => ({ type: GET_PICTURE, data });
+<!-- Cria-se uma nova action que ao iniciar seus processos async deve-se declarar como assincronas, seja com async, seja com  then  -->
+// export function fetchAPI() {
+//   // Desenvolva aqui o código da action assíncrona
+//   return (dispatch) => {
+//     dispatch(requestAPI());
+//     return fetch('https://aws.random.cat/meow')
+//       .then((r) => r.json()
+//         .then(
+//           (json) => dispatch(getPicture(json))
+//         ));
+//   };
+// };
+
+// COM ASYNC
+export const fetchAPI = () => {
+  // Desenvolva aqui o código da action assíncrona
+  return async (dispatch) => {
+    dispatch(requestAPI());
+    const reponse = await fetch('https://aws.random.cat/meow')
+    const json =  await reponse.json();
+    dispatch(getPicture(json));
+  };
+};
+
+// COM ASYNC EM UMA ESTRUTURA MENOR
+export const fetchAPI = () => async (dispatch) => {
+  dispatch(requestAPI());
+  const reponse = await fetch('https://aws.random.cat/meow')
+  const json =  await reponse.json();
+  dispatch(getPicture(json));
+};
+
+// CASO SEJA NECESSÁRIO UTILIZAR PARAMETRO
+export const REQUEST_API = 'REQUEST_API';
+export const GET_POSTS = 'GET_POSTS';
+
+// THIS ACTION ACTION SET isLoading: true
+export const requestApiAction = () => ({type: REQUEST_API});
+
+// THIS ACTION SET data WITH API RESPONSE IN SUCCESS CASE
+export const getPostsAction = (data) => ({type: GET_POSTS, data})
+
+// THIS ACTION COMBINE ACTIONS IN A THANK DURING A REQUEST API PROCESS
+export const fetchAPI = (subject) => {
+  return async (dispatch) => {
+    dispatch(requestApiAction());
+    try {
+      const response = await fetch(`https://www.reddit.com/r/${subject}.json`)
+      const json = await response.json()
+      console.log(json)
+      // dispatch(getPostsAction(json))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
 # Criar dentro do diretório reducers:
 - arquivo index.js.
 Exemplo de index
-import { combineReducers } from "redux";
+import { combineReducers } from 'redux';
 import taskReducer from './taskReducer';
 
 const rootReducer = combineReducers({taskReducer})
@@ -103,10 +173,44 @@ function taskReducer(state = INITIAL_STATE, action) {
 
 export default taskReducer;
 
+EXEMPLO DE REDUCER ASYNC
+- O index terá a mesma estrutrutura combinando os reducers e exportando como rootReducer
+- Exemplo de reducer com async
+import { REQUEST_API, GET_PICTURE } from '../actions';
+
+const INITIAL_STATE = {
+  isLoading: false,
+  imgURL: '',
+  defaultImg: true,
+};
+
+function gallery(state = INITIAL_STATE, action) {
+  switch (action.type) {
+  case REQUEST_API:
+    return {
+      ...state,
+      isLoading: true,
+      defaultImg: true,
+    };
+  case GET_PICTURE:
+    return {
+      ...state,
+      isLoading: false,
+      imgURL: action.data,
+      defaultImg: false,
+    };
+  default:
+    return state;
+  }
+}
+
+export default gallery;
+
+
 # Criar dentro do diretório store:
 - arquivo index.js.
 
-Exemplo de Store
+- Exemplo de Store
 
 import { createStore } from 'redux'
 import rootReducer from '../Reducers'
@@ -117,8 +221,36 @@ const store = createStore(rootReducer,
 
 export default store;
 
-# Em src/index.js: (O EXEMPLO ESTARÁ NO PASSO BROWSER ROUTER)
+- Exemplo de Store com redux Thunk (PARA ESTE PASSO, É NECEŚSARIO NPM I DEVTOOLS indicado no início)
+
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import rootReducer from '../reducers';
+
+const store = createStore(
+  rootReducer, composeWithDevTools(applyMiddleware(thunk)
+));
+
+export default store;
+
+# Em src/index.js: (HÁ UM OUTRO EXEMPLO COM BROWSER ROUTER, QUE ESTARÁ EM SEU RESPECTIVO PASSO)
 - definir o Provider, <Provider store={ store }> , para fornecer os estados à todos os componentes encapsulados em <App /> .
+
+- arquivo src/index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import App from './App';
+import store from './store';
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
+
 
 # Se a sua aplicação não terá outras páginas, não é necessário configurar as rotas. Caso contrário:
 - npm install react-router-dom;
@@ -130,7 +262,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './Store'
@@ -145,12 +276,6 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
-
 
 # No arquivo App.js (COM ROUTES, SWITCH, MAPSTOPROPS E DISPATCH):
 
@@ -388,5 +513,4 @@ const handleChange = ({target}) => {
       const { name } = target
       const value = target.type === 'checkbox' ? target.checked : target.value;
       this.setState({ [name]: value})
-    }
-
+}
