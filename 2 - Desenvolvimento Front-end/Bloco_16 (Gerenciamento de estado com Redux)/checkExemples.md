@@ -234,7 +234,7 @@ const store = createStore(
 
 export default store;
 
-# Em src/index.js: (HÁ UM OUTRO EXEMPLO COM BROWSER ROUTER, QUE ESTARÁ EM SEUS RESPECTIVO PASSO)
+# Em src/index.js: (HÁ UM OUTRO EXEMPLO COM BROWSER ROUTER, QUE ESTARÁ EM SEU RESPECTIVO PASSO)
 - definir o Provider, <Provider store={ store }> , para fornecer os estados à todos os componentes encapsulados em <App /> .
 
 - arquivo src/index.js
@@ -261,10 +261,10 @@ Exemplo:
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import store from './Store'
+import App from './App';
+import store from './store'
 
 ReactDOM.render(
   <React.StrictMode>
