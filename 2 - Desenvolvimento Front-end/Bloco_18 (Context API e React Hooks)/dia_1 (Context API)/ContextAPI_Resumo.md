@@ -356,3 +356,6 @@ class TrafficSignal extends Component {
 TrafficSignal.contextType = MyContext
 
 export default TrafficSignal;
+
+
+VERIFICAR STRING COM NUMBER(STRING)

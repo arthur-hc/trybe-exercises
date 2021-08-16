@@ -15,7 +15,7 @@ function App() {
 
 export default App;
 
-- Caso necessário, as props são recebidas como parâmetr0 o. ex: function App(props)
+- Caso necessário, as props são recebidas como parâmetr0 o. ex: function App({props})
 - O estado da aplicação passa a ser com const [nomeItemDoEstado, setNomeItemDoEstado] = useState(valor default)
 - this será removido, assim como constructor, super...
 

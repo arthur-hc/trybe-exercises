@@ -99,7 +99,7 @@ export default useAbility;
 
 <!-- ------------------------------------------------------------------------------------------- -->
 
-// src/App.js/useAbility.js
+// src/App.js
 <!-- REPARE QUE AGORA, AO IMPORTAR useAbility, ESTE COMPONENTE CONSEGUE ACESSO TANTO AS INFORMAÇÕES CONTIDAS NAQUELE COMPONENTE (abilities), QUANTO CONTROLE  DE DETERMINADA CHAVE DO ESTADO (setPokeUrl), QUE SERÁ ATIVADA AO CLICAR EM DETERMINADO POKE E RETORNARÁ AS abilities DO MESMO -->
 import React, { useEffect, useState } from 'react';
 import useAbility from './hooks/useAbility';
