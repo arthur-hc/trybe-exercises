@@ -1,0 +1,148 @@
+Fixação...
+
+***SELECT***
+
+Exibir campos criados e indicados
+SELECT 'Arthur' AS nome, 'Hermann' AS sobrenome, 'São Paulo' AS cidade_natal, 26 AS 'Idade', 13*8 AS result, now() AS data_atual;
+
+Selecionando e exibindo bancos 
+SELECT * FROM sakila.city; (exibe a tabela city do banco sakila)
+SELECT city FROM sakila.city; (exibe apenas a coluna city da tabela city)
+SELECT city, country_id FROM sakila.city; (exibe mais de uma coluna)
+SELECT country_id, city FROM sakila.city; (inverte a ordem para exibir)
+USE sakila; (sakila ficará em negrito, e não será mais necessário selecionar os bancos de dados)
+SELECT country_id FROM city; (não é mais necessário utilizar sakila.tabela, apenas a tabela agora)
+
+***CONCAT***
+P/ concatenar
+SELECT CONCAT (first_name, ' ', last_name) FROM actor; => sem criar coluna
+SELECT CONCAT (first_name, ' ', last_name) AS 'Nome Completo' FROM actor; =>  cria coluna
+
+concatenando filme e seu ano de lançamento em uma coluna chamada Lançamento do filme e outras informações
+SELECT CONCAT (title,  ' ', release_year) AS 'Lançamento do filme' FROM film;
+SELECT CONCAT (title,  ' ', rating) AS 'Classificação' FROM film;
+SELECT CONCAT (address, ', ', district) AS 'Endereço' FROM address;
+
+***DISTINCT***
+SELECT * FROM actor; => retorna 200
+SELECT DISTINCT first_name, last_name FROM actor; => retorna 199, pois compara first+last
+SELECT DISTINCT first_name FROM actor; => retorna 128, pois compara apenas first
+!!! NÃO REMOVE, APENAS EXIBE !!!
+
+Cria novo banco de dados
+CREATE DATABASE `Escola`;
+CREATE TABLE IF NOT EXISTS Escola.Alunos (
+    `Nome` VARCHAR(7) CHARACTER SET utf8,
+    `Idade` INT
+);
+INSERT INTO Escola.Alunos VALUES
+    ('Rafael', 25),
+    ('Amanda', 30),
+    ('Roberto', 45),
+    ('Carol', 19),
+    ('Amanda', 25);
+    
+USE Escola;
+Exibe únicos relacionando nome+idade (retorna 5)
+SELECT DISTINCT Nome, Idade FROM Alunos;
+
+Exibe únicos relacionando nome (retorna 4)
+SELECT DISTINCT Nome FROM Alunos;
+
+Exibe únicos relacionando idade (retorna 4)
+SELECT DISTINCT Idade FROM Alunos;
+
+*** COUNT ***
+USE sakila;
+
+conta todas as linhas
+SELECT COUNT(*) FROM actor;
+
+conta todas as linhas de first_name
+SELECT COUNT(first_name) FROM actor;
+
+conta todas as linhas diferentes de first_name
+SELECT COUNT(DISTINCT first_name) FROM actor;
+
+first+last
+SELECT COUNT(DISTINCT first_name, last_name) FROM actor;
+
+SELECT COUNT(*) FROM address;
+
+SELECT COUNT(address2) FROM address;
+
+conta todas as linhas de district que são iguais 'Alberta'
+SELECT COUNT(district) FROM address
+WHERE district = 'Alberta';
+
+conta todas as linhas de address2 que são iguais ''
+SELECT COUNT(address2) FROM address
+WHERE address2 = '';
+
+*** LIMIT ***
+SELECT COUNT(*) FROM inventory; => retorna 4581
+SELECT * FROM inventory; => retorna 4581 resultados desde que não limitados
+SELECT * FROM inventory LIMIT 10; => retorna os 10 primeiros resultados
+
+=> PODE LIMITAR PELO combobox do Workbench
+
+*** OFFSET ***
+SELECT * FROM inventory LIMIT 10 OFFSET 4; => retorna os 10 primeiros resultados a partir do 5
+
+*** ORDER BY ***
+Orderna address pela coluna address de forma ASC(Padrão)
+SELECT * FROM address
+ORDER BY address;
+
+Orderna address pela coluna district de forma descendente
+SELECT * FROM address
+ORDER BY district DESC;
+
+Combina mais de uma ordenação e mistura a forma
+SELECT * FROM address
+ORDER BY address DESC, district;
+
+fixação
+USE sakila;
+
+SELECT * FROM film; => retorna todos os filmes com todos os dados
+SELECT title, release_year, rating FROM film; => retorna título, ano de lanç, e classific de todos os filmes
+SELECT COUNT(*) FROM film; => retorna 1000(n filmes)
+
+SELECT DISTINCT last_name from actor; => retorna todos os sobrenomes sem repetir
+SELECT COUNT(DISTINCT last_name) FROM actor; => retorna 121
+SELECT * FROM actor
+ORDER BY last_name, first_name DESC; => retorna a lista de atores ordenada CRESC por sobrenome, DESC pelo primeiro nome. Ordena primeiro por sobrenome de forma ASC, caso seja igual, ordena por primeiro nome de forma DESC
+
+SELECT name FROM language
+WHERE name != 'English' LIMIT 5; => traz todos os idiomas diferentes de inglês, com limite de 5 resultados
+
+Tem o mesmo efeito, porém elimina o inglês, pelo fato de ser o primeiro nome. Caso o primeiro item fosse outra lingua, seria necessário o primeiro método
+SELECT name FROM language LIMIT 5 OFFSET 1;
+
+SELECT title, release_year, rental_duration, rating, replacement_cost FROM sakila.film
+ORDER BY rental_duration DESC, replacement_cost LIMIT 20 => seleciona colunas da table film, ordena, e limita para exibir 20 resultados
+
+
+***TAMBÉM PODE UTILIZAR EXPRESSÕES***
+
+SELECT
+ * FROM Customers
+WHERE City = 'Berlin'
+AND PostalCode = 12209;
+ 
+ SELECT * FROM Customers
+WHERE NOT City = 'Berlin';
+
+SELECT
+ * FROM Customers
+WHERE City = 'Berlin'
+OR City = 'London';
+
+SELECT * FROM movies
+WHERE Year BETWEEN 2000 AND 2010;
+
+SELECT * FROM movies
+WHERE Year NOT BETWEEN 2000 AND 2010;
+
+

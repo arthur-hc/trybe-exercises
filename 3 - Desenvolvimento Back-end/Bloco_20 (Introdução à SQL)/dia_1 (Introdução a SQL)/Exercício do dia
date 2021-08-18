@@ -1,0 +1,13 @@
+1 - P/ pesquisar uma tabela s/ linha de código, devemos clicar com o botão direito em cima e clicar na opção 'Select Rows - Limit 1000'
+
+2 - P/ criar uma tabala s/ linha de código, devemo clicar com o botão diretio em cima do banco de dados e clicar na opção 'Create Table'
+
+3 - Ao iniciar o processo de criar tabela, devemos adicionar as colunas desejadas e suas constraints(PK, NN, UN...)
+
+4 - A coluna contry_id na tabela city faz refência a tabela country, mais específicamente a coluna country_id
+
+5 - Trate-se de uma foreign_key, chave utilizada de outra tabela. Não é possível deletar
+
+6 - A relação entre essas tabelas é de 1:N, ou seja um dado para vários outros, afinal um país (country) pode conter diversas cidades (city)
+
+7 - Outros exemplos: category => film; 
