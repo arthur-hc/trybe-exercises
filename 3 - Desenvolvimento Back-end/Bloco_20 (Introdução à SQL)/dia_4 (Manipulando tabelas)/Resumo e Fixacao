@@ -133,4 +133,77 @@ WHEN length <= 100 THEN 10
 WHEN length > 100 THEN 20
 END);
 
+*** DELETE ***
+
+-- POR NORMAS DE SEGURANÇA, MUITAS VEZES EXCLUIR PODE NA VERDADE TORNAR A INFORMAÇÃO INATIVA, POR SEGURANÇA.
+
+-- DELETE
+DELETE FROM banco_de_dados.tabela
+WHERE coluna = 'valor';
+-- O WHERE é opcional. Porém, sem ele, todas as linhas da tabela seriam excluídas.
+
+DELETE FROM sakila.film_text
+WHERE title = 'ACADEMY DINOSAUR';
+
+-- LEMBRAR DO SAFE_UPDATES
+
+-- QUANDO HÁ primary key ou foreign keys
+-- Rejeita o comando DELETE.
+ON DELETE NO ACTION;
+
+-- Rejeita o comando DELETE.
+ON DELETE RESTRICT;
+
+-- Permite a exclusão dos registros da tabela pai, e seta para NULL os registros da tabela filho.
+ON DELETE SET NULL;
+
+-- Exclui a informação da tabela pai e registros relacionados.
+ON DELETE CASCADE;
+
+-- DÁ ERRO
+DELETE FROM sakila.actor
+WHERE first_name = 'GRACE';
+
+-- SOLUÇÃO...
+-- 1 DELETA A REFERENCIA DA TABELA
+DELETE FROM sakila.film_actor
+WHERE actor_id = 7; -- actor_id = 7 é o Id de GRACE
+
+-- 2 AGORA É POSSÍVEL DELETAR
+DELETE FROM sakila.actor
+WHERE first_name = 'GRACE';
+
+-- TRUCATE para deletar todos os registros de uma tabela (!!!p/ testes ou necessidade!!!)
+TRUNCATE banco_de_dados.tabela;
+
+*** fixação... ***
+
+-- Exclua do banco de dados o ator com o nome de "KARL".
+SELECT * FROM sakila.actor
+WHERE first_name = 'Karl';
+
+DELETE FROM sakila.film_actor
+WHERE actor_id = 12;
+
+DELETE FROM sakila.actor
+WHERE first_name = 'Karl';
+
+-- Exclua do banco de dados os atores com o nome de "MATTHEW".
+SELECT * FROM sakila.actor
+WHERE first_name = 'MATTHEW';
+
+DELETE FROM sakila.film_actor
+WHERE actor_id IN (8, 103, 181);
+
+DELETE FROM sakila.actor
+WHERE first_name = 'MATTHEW';
+
+-- Exclua da tabela film_text todos os registros que possuem a palavra "saga" em suas descrições.
+DELETE FROM sakila.film_text
+WHERE description LIKE '%saga%';
+
+-- Apague da maneira mais performática possível todos os registros das tabelas film_actor e film_category .
+TRUNCATE sakila.film_actor;
+TRUNCATE sakila.film_category;
+
 
