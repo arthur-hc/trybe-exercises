@@ -29,7 +29,7 @@ SELECT SUBSTRING('Oi, eu sou uma string', 5);
 
 => NO SQL, INDEX COMEÇAM COM 1 <=
 
-fixação
+*** fixação ***
 Faça uma query que exiba a palavra 'trybe' em CAIXA ALTA.
 SELECT UCASE('trybe');
 
@@ -45,4 +45,94 @@ SELECT SUBSTRING('A linguagem JavaScript está entre as mais usadas', 13, 10);
 Por fim, padronize a string 'RUA NORTE 1500, SÃO PAULO, BRASIL' para que suas informações estejam todas em caixa baixa.
 SELECT LCASE ('RUA NORTE 1500, SÃO PAULO, BRASIL');
 
+*** CONDICIONAIS ***
 
+-- IF = SELECT IF (CONFICAO, VERDADEIRO, FALSO)
+SELECT IF(rental_rate > 0.99, 'CARO', 'BARATO') FROM sakila.film;
+SELECT title, IF(rental_rate > 0.99, 'CARO', 'BARATO') FROM sakila.film;
+
+-- CASE
+SELECT title, rental_rate,
+	CASE
+		WHEN rental_rate = 0.99 THEN 'BARATO'
+        WHEN rental_rate = 2.99 THEN 'MÉDIO'
+        WHEN rental_rate = 4.99 THEN 'CARO'
+	ELSE rental_rate = 'NÃO CLASSIFICADO'
+END AS valor
+FROM sakila.film
+LIMIT 10;
+
+*** fixação ***
+-- Usando o IF na tabela sakila.film , exiba o id do filme , o título e uma coluna extra chamada 'conheço o filme?' , em que deve-se avaliar se o nome do filme é ' ACE GOLDFINGER '. Caso seja, exiba "Já assisti a esse filme". Caso contrário, exiba "Não conheço o filme". Não esqueça de usar um alias para renomear a coluna da condicional.
+SELECT film_id, title, 
+IF(title = 'ACE GOLDFINGER', 'Já assisti esse filme', 'Não conheço o filme') 
+AS 'conheço o filme'  FROM sakila.film;
+
+-- Usando o CASE na tabela sakila.film , exiba o título , a classificação indicativa ( rating ) e uma coluna extra que vamos chamar de 'público-alvo' , em que classificaremos o filme de acordo com as seguintes siglas:
+-- G: "Livre para todos";
+-- PG: "Não recomendado para menores de 10 anos";
+-- PG-13: "Não recomendado para menores de 13 anos";
+-- R: "Não recomendado para menores de 17 anos";
+-- Se não cair em nenhuma das classificações anteriores: "Proibido para menores de idade".
+SELECT film_id, title, 
+IF(title = 'ACE GOLDFINGER', 'Já assisti esse filme', 'Não conheço o filme') 
+AS 'conheço o filme'  FROM sakila.film;
+
+SELECT title, rating,
+	CASE
+		WHEN rating = 'G' THEN 'Livre para todos'
+		WHEN rating = 'PG' THEN 'Não recomendado para menores de 10 anos'
+		WHEN rating = 'PG-13' THEN 'Não recomendado para menores de 13 anos'
+		WHEN rating = 'R' THEN 'Não recomendado para menores de 17 anos'
+		ELSE 'Proibido para menores de idade'
+	END AS 'Público Alvo'
+FROM sakila.film;
+
+*** FUNÇÕES MATEMÁTICAS DO MYSQL ***
+-- OPERAÇÕES NORMAIS
+SELECT 5 + 5;
+SELECT 5 - 5;
+SELECT 5 * 5;
+SELECT 5 / 5;
+
+-- OPERAÇÕES ENTRE COLUNAS
+SELECT rental_duration + rental_rate FROM sakila.film LIMIT 10;
+SELECT rental_duration - rental_rate FROM sakila.film LIMIT 10;
+SELECT rental_duration / rental_rate FROM sakila.film LIMIT 10;
+SELECT rental_duration * rental_rate FROM sakila.film LIMIT 10;
+
+-- DIVISÕES RETORNANDO APENAS INTEIROS
+SELECT 10 DIV 3; -- 3
+SELECT 10 DIV 2; -- 5
+SELECT 14 DIV 3; -- 4
+SELECT 13 DIV 2; -- 6
+
+-- RETORNANDO O RESTO
+SELECT 10 MOD 3; -- 1
+SELECT 10 MOD 2; -- 0
+SELECT 14 MOD 3; -- 2
+SELECT 13 MOD 2; -- 1
+SELECT 10.5 MOD 2; -- 0.5, ou seja, 2 + 2 + 2 + 2 + 2 = 10, restando 0.5
+
+*** Desafio ***
+-- Monte uma query usando o MOD juntamente com o IF para descobrir se o valor 15 é par ou ímpar. Chame essa coluna de 'Par ou Ímpar' , onde ela pode dizer 'Par' ou 'Ímpar'.
+SELECT IF(15 MOD 2 = 0, 'Par', 'Ímpar') AS 'Par ou Ímpar';
+
+-- Temos uma sala de cinema que comporta 220 pessoas. Quantos grupos completos de 12 pessoas podemos levar ao cinema sem que ninguém fique de fora?
+SELECT 220 DIV 12;
+
+-- Utilizando o resultado anterior, responda à seguinte pergunta: temos lugares sobrando? Se sim, quantos?
+SELECT (220 MOD 18);
+
+*** ARREDONDANDO VALORES ***
+-- Podemos omitir ou especificar quantas casas decimais queremos
+SELECT ROUND(10.4925); -- 10
+SELECT ROUND(10.5136); -- 11
+SELECT ROUND(-10.5136); -- -11
+SELECT ROUND(10.4925, 2); -- 10.49
+SELECT ROUND(10.4925, 3); -- 10.493
+
+-- SEMPRE PARA CIMA COM CEIL
+SELECT CEIL(10.51); -- 11
+SELECT CEIL(10.49); -- 11
+SELECT CEIL(10.2); -- 11
