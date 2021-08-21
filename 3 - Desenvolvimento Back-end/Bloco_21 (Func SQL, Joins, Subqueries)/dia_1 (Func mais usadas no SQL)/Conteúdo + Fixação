@@ -136,3 +136,76 @@ SELECT ROUND(10.4925, 3); -- 10.493
 SELECT CEIL(10.51); -- 11
 SELECT CEIL(10.49); -- 11
 SELECT CEIL(10.2); -- 11
+
+-- SEMPRE PARA BAIXO COM FLOOR
+SELECT FLOOR(10.51); -- 10
+SELECT FLOOR(10.49); -- 10
+SELECT FLOOR(10.2); -- 10
+
+*** EXPONENCIAL COM POW || RAIZ COM SQRT ***
+-- POW
+SELECT POW(2, 2); -- 4
+SELECT POW(2, 4); -- 16
+
+-- SQRT
+SELECT SQRT(9); -- 3
+SELECT SQRT(16); -- 4
+
+*** ALEATÓRIOS COM RAND() ***
+-- Para gerar um valor aleatório entre 0 e 1:
+SELECT RAND()*6;
+
+-- Para gerar um valor entre 7 e 13:
+--SELECT ROUND(PRIMEIRA FAIXA + (RAND() * FAIXA MÁXIMA))
+SELECT ROUND(7 + (RAND() * 6));
+
+-- O cálculo que é feito é o seguinte: (7 + (0.0 a 1.0 * 6))
+
+*** fixação ***
+-- Monte uma query que gere um valor entre 15 e 20 .
+SELECT ROUND(15 + (RAND() * 5));
+
+-- Monte uma query que exiba o valor arredondado de 15.7515971 com uma precisão de 5 casas decimais.
+SELECT ROUND(15.7515971, 5);
+
+-- Estamos com uma média de 39.494 de vendas de camisas por mês. Qual é o valor aproximado para baixo dessa média?
+SELECT FLOOR (39.494);
+
+-- Temos uma taxa de inscrição de 85.234% no curso de fotografia para iniciantes. Qual é o valor aproximado para cima dessa média?
+SELECT CEIL (85.234);
+
+*** DATAS E HORAS ***
+-- DATA/HORA
+SELECT CURRENT_DATE(); -- YYYY-MM-DD
+SELECT NOW(); -- YYYY-MM-DD HH:MM:SS
+
+-- 30, ou seja, a primeira data é 30 dias depois da segunda
+SELECT DATEDIFF('2020-01-31', '2020-01-01');
+
+-- -30, ou seja, a primeira data é 30 dias antes da segunda
+SELECT DATEDIFF('2020-01-01', '2020-01-31');
+
+-- -01:00:00, ou seja, há 1 hora de diferença entre os horários
+SELECT TIMEDIFF('08:30:10', '09:30:10');
+
+-- COMANDOS
+SELECT DATE(data_cadastro); -- YYYY-MM-DD
+SELECT YEAR(data_cadastro); -- Ano
+SELECT MONTH(data_cadastro); -- Mês
+SELECT DAY(data_cadastro); -- Dia
+SELECT HOUR(data_cadastro); -- Hora
+SELECT MINUTE(data_cadastro); -- Minuto
+SELECT SECOND(data_cadastro); -- Segundo
+
+-- COMBINANDO COMANDOS
+SELECT YEAR(CURRENT_DATE()); -- retorna o ano atual
+SELECT HOUR(NOW()); -- retorna a hora atual
+
+*** fixação ***
+-- Monte uma query que exiba a diferença de dias entre '2030-01-20' e hoje.
+SELECT DATEDIFF('2030-01-20', '2021-08-21');
+
+-- Monte uma query exiba a diferença de horas entre '10:25:45' e '11:00:00' .
+SELECT TIMEDIFF('10:25:45', '11:00:00');
+
+
