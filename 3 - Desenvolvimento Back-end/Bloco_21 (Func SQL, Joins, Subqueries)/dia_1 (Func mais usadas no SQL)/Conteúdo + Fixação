@@ -54,7 +54,7 @@ SELECT title, IF(rental_rate > 0.99, 'CARO', 'BARATO') FROM sakila.film;
 -- CASE
 SELECT title, rental_rate,
 	CASE
-		WHEN rental_rate = 0.99 THEN 'BARATO'
+	WHEN rental_rate = 0.99 THEN 'BARATO'
         WHEN rental_rate = 2.99 THEN 'MÉDIO'
         WHEN rental_rate = 4.99 THEN 'CARO'
 	ELSE rental_rate = 'NÃO CLASSIFICADO'
@@ -221,6 +221,8 @@ Monte um query que exiba:
 
 -- A média de duração dos filmes e dê o nome da coluna de 'Média de Duração';
 SELECT AVG(length) AS 'Média de Duração' FROM sakila.film;
+->>> caso queira contar valores nulos...(Os valores nulos serão substituidos por 0)
+SELECT AVG(coalesce(rental_duration, 0)) AS 'Média de Duração' FROM sakila.film;
 
 -- A duração mínima dos filmes como 'Duração Mínima';
 SELECT MIN(length) AS 'Duração Mínima' FROM sakila.film;
