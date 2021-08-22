@@ -200,3 +200,58 @@ SELECT
 FROM sakila.customer AS tabela_externa;
 
 -- NA TOMADA DE DECISÃO ENTRE SUBQUERY OU JOIN, ESCOLHER + PERFORMATICA
+
+*** EXISTS ***
+-- PARA SABER QUAIS CLIENTES FIZERAM RESERVAS
+SELECT * FROM hotel.Customers AS c
+WHERE EXISTS (
+SELECT * FROM hotel.Reservations
+WHERE c.CustomerId = Reservations.CustomerId
+);
+
+-- PARA SABER QUAIS CLIENTES Ñ FIZERAM RESERVAS
+SELECT * FROM hotel.Customers AS c
+WHERE NOT EXISTS (
+SELECT * FROM hotel.Reservations
+WHERE c.CustomerId = Reservations.CustomerId
+);
+
+-- PARA SABER QUAIS EMPRESAS Ñ POSSUEM PRODUTO UTILIZADO
+SELECT `Name` FROM praticando.manufacturers AS m
+WHERE NOT EXISTS (
+	SELECT * FROM praticando.products
+    WHERE Manufacturer = m.Code
+);
+
+*** fixação ***
+-- Usando o EXISTS na tabela books_lent e books , exiba o id e título dos livros que ainda não foram emprestados.
+SELECT Id, Title FROM hotel.Books AS a
+WHERE NOT EXISTS (
+	SELECT * FROM hotel.Books_Lent
+    WHERE a.Id = book_id
+);
+
+-- Usando o EXISTS na tabela books_lent e books , exiba o id e título dos livros estão atualmente emprestados e que contêm a palavra "lost" no título.
+SELECT Id, Title FROM hotel.Books AS a
+WHERE EXISTS (
+	SELECT * FROM hotel.Books_Lent
+    WHERE a.Id = book_id AND a.Title LIKE '%lost%'
+);
+
+-- Usando a tabela carsales e customers , exiba apenas o nome dos clientes que ainda não compraram um carro.
+SELECT `Name` FROM hotel.Customers AS c
+WHERE NOT EXISTS (
+	SELECT * FROM hotel.CarSales
+    WHERE c.CustomerID = CustomerID
+);
+
+-- Usando o comando EXISTS em conjunto com JOIN e as tabelas cars , customers e carsales , exiba o nome do cliente e o modelo do carro de todos os clientes que fizeram compras de carros.
+SELECT customer.name, cars.name 
+FROM hotel.Customers AS customer
+INNER JOIN hotel.Cars AS cars
+WHERE EXISTS (
+	SELECT * FROM hotel.CarSales
+    WHERE CustomerID = customer.CustomerId
+    AND carID = cars.ID
+)
+
