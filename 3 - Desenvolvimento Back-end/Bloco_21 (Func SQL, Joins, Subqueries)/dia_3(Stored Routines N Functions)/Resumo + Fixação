@@ -1,0 +1,279 @@
+*** PROCEDURE S/ PARÂMETROS ***
+-- CRIA A PROCEDURE
+USE sakila;
+DELIMITER $$
+
+CREATE PROCEDURE ShowAllActors()
+BEGIN
+    SELECT * FROM sakila.actor;
+END $$
+
+DELIMITER ;
+
+-- Como usar:
+CALL ShowAllActors();
+
+*** P/ CRIAR VARIÁVEIS ***
+SET @my_school = 'BeTrybe';
+SELECT @my_school;
+
+*** TIPOS DE DADOS ***
+-- STRING --
+- VARCHAR : Uma string não binária de comprimento variável;
+- CHAR : Uma string não binária (caractere) de comprimento fixo;
+- TEXT : Uma pequena string não binária
+
+-- NUMÉRICOS --
+- TYNINT : Um número inteiro muito pequeno;
+- INT : Um inteiro padrão;
+- BIGINT : Um grande número inteiro;
+- DECIMAL : Um número de ponto fixo.
+
+*** TIPOS DE PROCEDURE *** 
+- Procedure sem parâmetros;
+- Procedure com parâmetros de entrada (IN) ;
+- Procedure com parâmetros de saída (OUT) ;
+- Procedure com parâmetros de entrada e saída (IN-OUT) .
+
+*** COM PARAM DE ENTRADA (IN)
+USE sakila;
+DELIMITER $$
+
+CREATE PROCEDURE ShowActorsWithSyllable(IN syllable VARCHAR(100))
+BEGIN
+    SELECT *
+    FROM sakila.actor
+    WHERE first_name LIKE CONCAT('%', syllable, '%');
+END $$
+
+DELIMITER ;
+
+-- Como usar:
+
+CALL ShowActorsWithSyllable('lope');
+
+*** COM PARAM DE SAIDA (OUT)
+-- PRECISA DE ENTRADA TAMBÉM, MAS NÃO ESTÁ NA SAÍDA
+USE sakila;
+DELIMITER $$
+
+CREATE PROCEDURE ShowAverageRentalDurationOfMovie(
+    IN film_name VARCHAR(300),
+    OUT media_aluguel_em_dias DOUBLE
+)
+BEGIN
+    SELECT AVG(rental_duration) INTO media_aluguel_em_dias
+    FROM sakila.film
+    WHERE title = film_name;
+END $$
+
+DELIMITER ;
+
+-- Como usar:
+
+CALL ShowAverageRentalDurationOfMovie('ACADEMY DINOSAUR', @media_de_dias);
+SELECT @media_de_dias;
+
+*** COM PARAM DE ENTRADA E SAIDA (IN-OUT) =>>>>UTILIZAR VARIÁVEL<<<<<<=
+-- A ENTRADA TAMBÉM FARÁ PARTE DA SAÍDA
+USE sakila;
+DELIMITER $$
+
+CREATE PROCEDURE NameGenerator(INOUT film_name VARCHAR(300))
+BEGIN
+    SELECT CONCAT('ULTRA ', film_name, ' THE BEST MOVIE OF THE CENTURY')
+    INTO film_name;
+END $$
+
+DELIMITER ;
+
+-- Como usar:
+
+SELECT 'ACE GOLDFINGER' INTO @movie_title;
+CALL NameGenerator(@movie_title);
+SELECT @movie_title;
+
+*** fixação... ***
+-- Monte uma procedure que exiba os 10 atores mais populares, baseado em sua quantidade de filmes. Essa procedure não deve receber parâmetros de entrada ou saída e, quando chamada, deve exibir o id do ator ou atriz e a quantidade de filmes em que atuaram.
+USE sakila;
+DELIMITER $$
+
+CREATE PROCEDURE Show10MostPopularsActors()
+BEGIN
+	SELECT actor_id, COUNT(*) FROM sakila.film_actor
+    GROUP BY actor_id
+    ORDER BY COUNT(*) DESC
+    LIMIT 10;
+END $$
+
+DELIMITER ;
+
+CALL Show10MostPopularsActors();
+
+-- Monte uma procedure que receba como parâmetro de entrada o nome da categoria desejada em uma string e que exiba o id do filme , seu titulo , o id de sua categoria e o nome da categoria selecionada. Use as tabelas film , film_category e category para montar essa procedure.
+USE sakila;
+DELIMITER $$
+
+CREATE PROCEDURE ShowTitleInformations(IN category VARCHAR(100))
+BEGIN
+	SELECT f.film_id , f.title, fc.category_id, c.name
+	FROM film AS f
+	INNER JOIN film_category AS fc
+	ON f.film_id = fc.film_id
+	INNER JOIN category AS c
+	ON c.category_id = fc.category_id
+	AND c.name = category;
+END $$
+
+DELIMITER ;
+
+CALL ShowTitleInformations('Action')
+-- Monte uma procedure que receba o email de um cliente como parâmetro de entrada e diga se o cliente está ou não ativo, através de um parâmetro de saída.
+-- C/ INOUT
+USE sakila;
+DELIMITER $$
+
+CREATE PROCEDURE IsActiveClient(INOUT client_email VARCHAR(300))
+BEGIN
+	SELECT CONCAT('Client ', email, ' is', IF(active = 1, ' Active', ' Deactivate')) FROM customer
+	WHERE email = client_email
+	INTO client_email;
+END $$
+
+DELIMITER ;
+
+SET @client='SANDRA.MARTIN@sakilacustomer.org';
+CALL IsActiveClient(@client);
+SELECT @client;
+
+-- C/ OUT
+USE sakila;
+DELIMITER $$
+
+CREATE PROCEDURE CheckIfActiveClient(
+    IN client_email VARCHAR(200),
+    OUT isActive BOOL
+)
+BEGIN
+    SET isActive = (
+        SELECT active
+        FROM sakila.customer
+        WHERE email = client_email
+    );
+END $$
+
+DELIMITER ;
+
+-- Como usar:
+
+SELECT @ActiveStatus;
+CALL CheckIfActiveClient('MARY.SMITH@sakilacustomer.org', @ActiveStatus);
+SELECT @ActiveStatus;
+
+*** Stored Functions ***
+-Tipos de retorno comuns:
+-- DETERMINISTIC - Sempre retorna o mesmo valor ao receber os mesmos dados de entrada;
+-- READS SQL DATA - Indica para o MySQL que sua função somente lerá dados.
+
+-- Exemplo: Uma stored function que exibe a quantidade de filmes em que um determinado ator ou atriz atuou:
+USE sakila;
+DELIMITER $$
+
+CREATE FUNCTION MoviesWithActor(actor_id int)
+RETURNS INT READS SQL DATA
+BEGIN
+    DECLARE movie_total INT;
+    SELECT COUNT(*)
+    FROM sakila.film_actor
+    WHERE sakila.film_actor.actor_id = actor_id INTO movie_total;
+    RETURN movie_total;
+END $$
+
+DELIMITER ;
+
+-- Como usar:
+
+SELECT MoviesWithActor(1);
+
+-- Exemplo: Uma stored function que exibe o nome completo de um ator ou de uma atriz, dado seu id como parâmetro:
+USE sakila;
+DELIMITER $$
+
+CREATE FUNCTION GetFullName(id INT)
+RETURNS VARCHAR(200) READS SQL DATA
+BEGIN
+    DECLARE full_name VARCHAR(200);
+    SELECT concat(first_name, ' ', last_name)
+    FROM sakila.actor
+    WHERE actor_id = id
+    LIMIT 1
+    INTO full_name ;
+    RETURN full_name;
+END $$
+
+DELIMITER ;
+
+SELECT GetFullName(51);
+
+*** fixação ***
+-- Utilizando a tabela sakila.payment , monte uma function que retorna a quantidade total de pagamentos feitos até o momento por um determinado customer_id .
+USE sakila;
+DELIMITER $$
+
+CREATE FUNCTION showTotalPayment(id INT)
+RETURNS INT READS SQL DATA
+BEGIN
+	DECLARE total_payment INT;
+    SELECT SUM(amount)
+    FROM sakila.payment
+    WHERE customer_id = id
+    INTO total_payment;
+    RETURN total_payment;
+END $$
+
+DELIMITER ;
+
+SELECT showTotalPayment(1);
+
+-- Crie uma function que, dado o parâmetro de entrada inventory_id , retorna o nome do filme vinculado ao registro de inventário com esse id.
+USE sakila;
+DELIMITER $$
+
+CREATE FUNCTION showFilmTitle(id INT)
+RETURNS VARCHAR(500) READS SQL DATA
+BEGIN
+	DECLARE titleName VARCHAR(500);
+    SELECT f.title
+    FROM sakila.film AS f
+    INNER JOIN sakila.inventory AS i
+    ON f.film_id = i.film_id
+    AND inventory_id = id
+    INTO titleName;
+    RETURN titleName;
+END $$
+
+DELIMITER ;
+
+SELECT showFilmTitle(9);
+
+-- Crie uma function que receba uma determinada categoria de filme em formato de texto (ex: 'Action' , 'Horror' ) e retorna a quantidade total de filmes registrados nessa categoria.
+
+USE sakila;
+DELIMITER $$
+
+CREATE FUNCTION totalFilmsCategory(category VARCHAR(500))
+RETURNS VARCHAR(500) READS SQL DATA
+BEGIN
+	DECLARE total INT;
+    SELECT COUNT(*)
+    FROM sakila.film_category AS f
+    INNER JOIN sakila.category AS c
+    ON f.category_id = c.category_id
+    AND c.name = category
+    INTO total;
+    RETURN total;
+END $$
+
+DELIMITER ;
+
+SELECT totalFilmsCategory('Horror');
