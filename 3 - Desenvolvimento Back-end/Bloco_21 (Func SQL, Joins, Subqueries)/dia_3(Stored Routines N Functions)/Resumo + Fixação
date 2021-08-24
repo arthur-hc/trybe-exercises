@@ -277,3 +277,16 @@ END $$
 DELIMITER ;
 
 SELECT totalFilmsCategory('Horror');
+
+*** FUNCTION VS PROCEDURE ***
+-- Precisa retornar valor VS Pode ler e retornar opcionalmente
+-- Param apenas p/ entrada VS Param entrada e saída
+-- Pode dentro de select, having, where VS Não pode
+-- Não pode chamar procedure VS Pode chamar functions
+-- SELECT VS CALL
+
+-- EM SUMA, FUNCTION SÃO MENORES PARTES DE UM COD. PROCEDURE SÃO MAIORES E PODEM CONTER FUNCTIONS, MAS O CONTRÁRIO NÃO É VERDADEIRO
+
+*** TRINGERS ***
+
+
