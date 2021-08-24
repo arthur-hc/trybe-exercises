@@ -172,8 +172,8 @@ SELECT @ActiveStatus;
 
 *** Stored Functions ***
 -Tipos de retorno comuns:
--- DETERMINISTIC - Sempre retorna o mesmo valor ao receber os mesmos dados de entrada;
--- READS SQL DATA - Indica para o MySQL que sua função somente lerá dados.
+-- DETERMINISTIC - Sempre retorna o mesmo valor ao receber os mesmos dados de entrada; => SELECT(CASO QUEIRA) SERÁ FORA DA FUNC, NA SUA CHAMADA
+-- READS SQL DATA - Indica para o MySQL que sua função somente lerá dados. => SELECT ESTÁ DENTRO
 
 -- Exemplo: Uma stored function que exibe a quantidade de filmes em que um determinado ator ou atriz atuou:
 USE sakila;
@@ -291,6 +291,10 @@ SELECT totalFilmsCategory('Horror');
 -- SÃO COD QUE PODEM SER DISPARADOS AUTÓMATICAMENTE APÓS INSER, UPDATE OU DELETE
 -- BEFORE OU AFTER
 -- OLD(VALOR ANTES DO DISPARO) OLD.player_id | NEW(VALOR DEPOIS DO DISPARO) NEW.player_id
+
+-- INSERT (NEW)
+-- UPDATE (OLD E NEW)
+-- DELETE (OLD)
 
 -- EXEMPLOS
 
