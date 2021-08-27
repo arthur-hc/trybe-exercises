@@ -36,12 +36,15 @@ SELECT title, rating FROM Pixar.Movies AS m
 INNER JOIN Pixar.BoxOffice
 ON m.id = movie_id AND rating > 7.5;
 
-SELECT m.title, (
-	SELECT rating FROM Pixar.BoxOffice
-    WHERE movie_id = m.id
-) AS `rating`
-FROM Pixar.Movies AS m
-WHERE `rating` > 7.5;
+SELECT 
+(
+ SELECT title
+ FROM Movies AS Movies
+ WHERE Movies.id = BoxOffice.movie_id
+) AS Movies,
+rating AS Rating
+FROM BoxOffice
+WHERE rating > 7.5;
 
 -- Exercício 7: Faça duas buscas, uma utilizando SUBQUERY e outra utilizando INNER JOIN , que retornem as avaliações dos filmes lançados depois de 2009.
 SELECT title, rating, year FROM Pixar.Movies AS m

@@ -1,0 +1,122 @@
+*** ENTIDADES ***
+-- Representam um todo, é um conjunto que representa algo do mundo real, englobando toda uma ideia.
+
+*** ATRIBUTOS ***
+-- Tudo o que pode ser usado pra descrever algo, informações sobre uma entidade. (nome, altura, peso, idade...)
+
+*** RELACIONAMENTOS
+-- 1..1 => Uma linha corresponde na TabA a apenas uma linha na TabB e vice-versa. Normalmente serve para dividir tabelas maiores em menores
+
+-- 1..N => Uma linha pode ter várias correspondentes e outras. Um livro terá apenas uma categoria, mas uma categoria pode ter diversos livros
+
+-- N..N => Normalmente ligando como Tab intermediárias, isto é, uma tabela de junção. Pode ligar uma Tab de atores, que serão diversos, a uma Tab de filmes, que também serão diversos.
+
+*** CRIANDO UM BANCO DE DADOS ***
+
+-- Cria um banco de dados com o nome especificado.
+CREATE DATABASE nome_do_banco_de_dados;
+
+-- Sinônimo de CREATE DATABASE, também cria um banco de dados.
+CREATE SCHEMA nome_do_banco_de_dados;
+
+-- Verifica se o banco de dados ainda não existe.
+-- Essa verificação é comumente utilizada junto ao CREATE DATABASE para evitar
+-- a tentativa de criar um banco de dados duplicado, o que ocasionaria um erro.
+IF NOT EXISTS nome_do_banco_de_dados;
+
+CREATE SCHEMA IF NOT EXISTS nome_do_banco_de_dados;
+
+-- Lista todos os bancos de dados existentes.
+SHOW DATABASES;
+
+-- Define o banco de dados ativo para uso no momento.
+USE nome_do_banco_de_dados;
+
+*** TIPOS DE DADOS ***
+
+-- Bool (1 ou 0, nulo por padrão)
+
+-- CHAR(nChar) => Tamanho fixo limitado por n. Caso não complete o nChar, será preenchido mesmo assim e enviados para o banco
+
+-- VARCHAR(nChar) => Permite até n, porém só o ocupado o espaço preenchido.
+
+-- TINYINT => Valores exatos inteiros
+		UNSIGNED => PERMITE ARMAZENAR VALORES SOMENTE POSITIVOS (0 A 255)
+		SIGNED => PERMITE VALORES POSITIVOS E NEGATIVOS (-128 A 127)
+-- SMALLINT | MEDIUMINT | INT | BIGINT => Similares ao TINYINT, porém com faixas diferentes que vão aumentando conforme a escolha
+
+-- DECILMAL(PRECISÃO A DEFINIR EX: DECILMAL(5,2) = 199.99) | FLOAT/REAL (1 CASA DECIMAL) | DOUBLE (2 CASAS DECIMAIS)
+
+-- DATE (YYYYY-MM-DD)
+-- TIME (HH:MM:SS)
+-- YEAR (ENTRE 1901 A 2155)
+-- DATETIME (DATE+TIME DE 1001-01-01 00:00:00 A 9999-12-31 23:59:59)
+-- TIMESTAMP - IGUAL AO DATETIME MAS PODE UTILIZAR O FUSO COM BASE NO SERVIDOR
+
+*** PRIMARY KEY ***
+-- Chave primária, presente em uma ou em um grupo de colunas, p/ indentificar uma linha
+
+CREATE TABLE nome_tabela (
+	nome_coluna tipo_de_dados PRIMARY KEY
+	nome_coluna tipo_de_dados...
+)
+
+*** FOREIGN KEY ***
+-- Uma chave estrangeira em uma ou um grupo de colunas que permite identificar unicamente uma linha em uma outra tabela
+
+*** CRIANDO UMA TABELA COM PK ***
+     -- Apagar a versão antiga da tabela
+     DROP TABLE cidades; 
+     CREATE TABLE cidades(
+       id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+       cidade VARCHAR(100) NOT NULL,
+       estado VARCHAR(10) NOT NULL,
+       populacao INTEGER
+    );
+
+    INSERT INTO cidades(cidade, estado, populacao)
+    VALUES('Rio Claro','SP',185421),
+          ('Rio Claro','RJ',17216);
+          
+-- TAMBÉM É POSSÍVEL UTILIZAR UMA PK COMPOSTA. COSTUMAM SER UTILIZADAS EM TABELAS DE JUNÇÃO N:N
+	CREATE TABLE filme_ator(
+        AtorId INTEGER,
+        FilmeId INTEGER,
+        CONSTRAINT PRIMARY KEY(AtorId, FilmeId),
+        FOREIGN KEY (AtorId) REFERENCES Actor (Atorid),
+        FOREIGN KEY (FilmeId) REFERENCES Actor (Filmeid)
+    );
+    
+*** CRIANDO UM BANCO DE DADOS ***
+	CREATE DATABASE IF NOT EXISTS albuns;
+
+	USE albuns;
+
+	CREATE TABLE artista (
+		artista_id INT PRIMARY KEY AUTO_INCREMENT,
+	    nome VARCHAR(50)
+	) ENGINE=InnoDB;
+
+	CREATE TABLE estilomusical(
+		estilo_id INT PRIMARY KEY AUTO_INCREMENT,
+	    nome VARCHAR(50) NOT NULL
+	) ENGINE=InnoDB;
+
+	CREATE TABLE album(
+		album_id INT PRIMARY KEY AUTO_INCREMENT,
+		artist_id INT NOT NULL,
+		titulo VARCHAR(100) NOT NULL,
+		preco decimal(5,2) NOT NULL,
+		estilo_id INT NOT NULL,
+		FOREIGN KEY (artist_id) REFERENCES artista(artista_id),
+		FOREIGN KEY (estilo_id) REFERENCES estilomusical(estilo_id)
+	) ENGINE=InnoDB;
+	
+-- OBS: DEVE-SE CRIAR AS TABELAS REFERNCIAIS ANTES DE UTILIZÁ-LAS COMO FOREIGN KEYS
+
+*** PARA DESCOBRIR ESTRUTURA RELACIONAL VIA WORKBENCH ***
+-- => Database(no cabeçalho) => Reverse Engineer => Clicando em continuar...
+
+-- PARA CRIAR...
+-- => CLICAR NO ÍCONE EM QUE HÁ TABELAS LIGADAS (CANTO ESQUERDO, 2 ITEM)
+
