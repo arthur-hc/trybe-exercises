@@ -1,0 +1,55 @@
+*** FORMAS NORMAIS ***
+-- TEM O INTUITO DE DIMINUIR A CHANCE DE ERRO, OTIMIZAR O APROVEITAMENTO DO ARMAZENAMENTO, EVITANDO DUPLICIDADE DE DADOS, DIGITAÇÃO DESNECESSÁRIA ETC...
+
+
+*** 1 FORMA NORMAL ***
+-- AS TAB DEVEM SER ESCALÁVEIS
+
+-- DEVEM SER EXTENSIVEIS, ISTO É, MUDANÇAS NÃO DEVEM QUEBRAR.
+
+-- REGRAS:
+	- COLUNAS DEVEM POSSUIR APENAS UM VALOR
+	- COLUNAS DEVEM POSSUIR VALORES DO MESMO TIPO
+	- COLUNAS C/ NOME ÚNICO
+	- ORDEM DOS DADOS NÃO PODE AFETAR A INTEGRIDADE
+	
+*** 2 FORMA NORMAL ***
+-- RESPEITAR 1 FORMA NORMAL
+-- NÃO HAVER DEPENDÊNCIA PARCIAL, ISTO É, A TAB PODERIA EXISTIR INDEPENDEMENTE DA OUTRA. EX:
+
+id	nome	data_matricula	curso
+1	Samuel	2020-09-01	Física
+2	Joana	2020-08-15	Biologia
+3	Taís	2020-07-14	Contabilidade
+4	André	2020-06-12	Biologia
+
+-- A COLUNA CURSO PODERIA EXISTIR INDEPENDENTE DA TAB ALUNO
+
+*** 3 FORMA NORMAL ***
+-- REPEITAR A 1 E 2 FORMA NORMAL
+-- NÃO HAVER COLUNAS QUE NÃO SÃO TOTALMENTE DEPENDENTES DA PK:
+
+livro_id	categoria_id	categoria	valor
+1		1		Romance	29,90
+2		2		Policial	34,90
+3		3		Ficção		19,90
+4		4		Ficção		44,90
+
+-- PERCEBA QUE A TABELA PODERIA SER DIVIDIDA EM DUAS, VISTO QUE, A COLUNA CATAGORIA NÃO POSSUI DEPENDÊNCIA COM LIVRO_ID
+
+
+*** DUMP ***
+-- ARQUIVO DE TEXTO QUE PERMITE A CRIAÇÃO OU RE-CRIAÇÃO DO BANCO DE DADOS.
+
+
+-- ADMINISTRATION => DATA EXPORT...
+1- Escolha quais bancos de dados devem ser incluídos no backup;
+2- Escolha quais tabelas deve ser incluídas no backup;
+3- Escolha se Stored Procedures e Stored Functions devem ou não ser incluídas;
+4- Escolha se gostaria de exportar apenas estrutura ( Structure Only ), apenas os dados ( Data Only ) ou ambos ( Structure and Data );
+5- Escolha se gostaria de incluir os triggers no arquivo de backup;
+6- Escolha se gostaria de incluir o esquema (código para criar banco de dados. Ex.: CREATE DATABASE );
+7- Selecione o local para onde exportar o arquivo.
+8- Feito isso, basta clicar no botão Start Export .
+
+-- PARA RECRIAR BASTA ABRIR O ARQUIVO DUMP E RODAR O COMANDO SQL GERADO
