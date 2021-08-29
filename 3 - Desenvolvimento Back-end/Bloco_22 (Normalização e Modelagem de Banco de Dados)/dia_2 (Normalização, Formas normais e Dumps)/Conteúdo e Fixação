@@ -53,3 +53,32 @@ livro_id	categoria_id	categoria	valor
 8- Feito isso, basta clicar no botão Start Export .
 
 -- PARA RECRIAR BASTA ABRIR O ARQUIVO DUMP E RODAR O COMANDO SQL GERADO
+
+*** DUMP E RESTAURAÇÃO SEM UMA INTERFACE GRÁFICA ***
+-- VISUALIZANDO TABELAS E BANCO DE DADOS
+-- No terminal
+	- mysql -u arthur-hc -p (o '-p' indica que será inserido o password)
+	- inserir password
+	- show databases; (lista todos os bancos de dados)
+	- use sakila;
+	- show tables; (mostra as tabelas)
+	- select * from film (mostrará todas as informações da tabela film no banco sakila)
+
+-- CRIANDO BACKUP (ESTRUTURA E DADOS)
+-- No terminal
+	- mkdir backup (cria a pasta)
+	- cd backup
+	- mysqldump -u arthur-hc -p sakila > backupSakila.sql
+	
+-- CRIANDO BACKUP (ESTRUTURA)
+- Similar ao padrão, porém com --nodata (IRÁ FAZER UM BACKUP PARA RESTAURAR APENAS A ESTRUTURA, SEM OS DADOS.
+	- mysqldump -u arthur-hc -p --nodata sakila > backupSakila.sql
+	
+-- RESTAURANDO A PARTIR DOS DUMPS
+	- Caso exista, será necessário deletar com drop...	
+	- create database sakila;
+	- use sakila;
+	
+	...Na pasta com os arquivos dump
+	- mysqldump -u arthur-hc -p sakila < backupSakila.sql
+	
