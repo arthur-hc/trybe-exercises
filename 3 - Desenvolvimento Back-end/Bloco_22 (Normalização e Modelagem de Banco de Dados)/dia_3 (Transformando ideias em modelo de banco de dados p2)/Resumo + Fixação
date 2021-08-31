@@ -1,0 +1,146 @@
+*** CLONANDO TABELAS ***
+-- Sintaxe:
+	CREATE TABLE nome_para_nova_tabela LIKE tabela_a_ser_clonada;
+
+-- Exemplo:
+	CREATE TABLE actor_clone LIKE sakila.actor;
+--OBS: 
+- Apenas a estrutura será clonada
+- Se não especificada, a tabela a ser clonada será a última com USE. Assim sempre especifique
+	USE nome_do_banco_de_dados;
+	CREATE TABLE nome_para_nova_tabela LIKE tabela_a_ser_clonada;
+	
+-- TAMBÉM É POSSÍVEL ADICIONAR DEPOIS DE CLONAR COM SELECT
+	CREATE TABLE actor_clone LIKE sakila.actor;
+	INSERT INTO actor_clone(actor_id, first_name, last_name, last_update)
+	SELECT actor_id, first_name, last_name, last_update FROM sakila.actor;
+	
+	
+*** VIEW ***
+-- Tab temporária, criada a partir de uma query difinida
+-- Permite:
+	Ter uma tabela que pode ser usada em relatórios;
+	Ter uma tabela para usar como base para montar novas queries;
+	Reduzir a necessidade de recriar queries utilizadas com frequência.
+	
+-- Defina em qual banco a view será criada
+USE nome_do_banco_de_dados;
+-- Comando para criar a view
+CREATE VIEW nome_da_view AS query;
+
+-- UMA AGENCIA DESEJA SABER QUEM SÃO OS CLIENTES TOP 10
+	CREATE VIEW top_10_customers AS
+	    SELECT c.customer_id, c.first_name, SUM(p.amount) AS total_amount_spent
+	    FROM sakila.payment p
+	    INNER JOIN sakila.customer c ON p.customer_id = c.customer_id
+	    GROUP BY customer_id
+	    ORDER BY total_amount_spent DESC
+	    LIMIT 10;
+
+-- AGORA SEMPRE QUE FOR NECESSÁRIO ESSA CONSULTA
+	SELECT * FROM top_10_customers;
+	
+-- PARA EXCLUIR
+	DROP VIEW nome_da_view;
+	
+*** ALTER TABLE ***
+-- UTILIZADA QUANDO DESEJA-SE ALTERAR A TABELA
+
+-- Exemplo:
+	USE sakila;
+	CREATE TABLE noticia(
+	    noticia_id INT PRIMARY KEY,
+	    titulo VARCHAR(100),
+	    historia VARCHAR(300)
+	) engine = InnoDB;
+	
+-- Alterando...
+-- Adicionar uma nova coluna
+	ALTER TABLE noticia ADD COLUMN data_postagem date NOT NULL;
+
+-- Modificar o tipo e propriedades de uma coluna
+	ALTER TABLE noticia MODIFY noticia_id BIGINT;
+
+-- Adicionar incremento automático a uma coluna
+-- (especifique o tipo da coluna + auto_increment)
+	ALTER TABLE noticia MODIFY noticia_id BIGINT auto_increment;
+
+-- Alterar o tipo e nome de uma coluna
+	ALTER TABLE noticia CHANGE historia conteudo_postagem VARCHAR(1000) NOT NULL;
+
+-- Dropar/Excluir uma coluna
+	ALTER TABLE noticia DROP COLUMN data_postagem;
+
+-- Adicionar uma nova coluna após outra
+	ALTER TABLE noticia ADD COLUMN data_postagem DATETIME NOT NULL AFTER titulo;
+	
+-- Confirmando a alteração
+	SHOW COLUMNS FROM sakila.noticia;
+	
+*** DROP TABLE ***
+-- Deleta a tabela. OBS: Caso seja referência como chave estrangeira, será necessário excluir a outra tabela ou sua referência
+	DROP TABLE sakila.language;
+	
+*** INDEX ***
+-- P/ ESTRUTURAR OS DADOS DE FORMA EFICIENTE E SEJAM ENCONTRADOS MAIS RAPIDAMENTE
+
+-- Tipos:
+	- PRIMARY KEY (apenas 1 coluna)
+	- UNIQUE
+	- INDEX
+	- FULLTEXT INDEX
+
+-- FORMAS DE CRIAR INDEX:
+-- 1 - QUANDO A TAB JÁ ESTÁ CRIADA:
+	CREATE INDEX nome_index On tabela(coluna);
+	OU
+	CREATE FULLTEXT INDEX nome_index ON tabela(coluna);
+	
+-- 2 - AO CRIAR UMA TABELA
+	CREATE DATABASE IF NOT EXISTS pizzaria;
+	USE pizzaria;
+	
+	CREATE TABLE pizzas(
+		pizza_id INT PRIMARY KEY,
+		sabor VARCHAR(100),
+		preco DECIMAL(5,2),
+		INDEX sabor_index(sabor)
+	)ENGINE=InnoDB;
+	
+-- 3 - ALTERANDO UMA TABLEA
+	ALTER TABLE nome_tabela
+	ADD INDEX nome_index(nome_coluna);
+	
+-- MAIS EXEMPLOS
+-- Criando um índice em uma coluna
+CREATE [INDEX | FULLTEXT INDEX | UNIQUE INDEX] nome_indice
+ON tabela (coluna);
+
+-- Criando um índice composto, em duas ou mais colunas
+CREATE [INDEX | FULLTEXT INDEX | UNIQUE INDEX] nome_indice
+ON tabela (coluna1, coluna2);
+
+-- Excluindo índices
+DROP INDEX nome_do_indice ON tabela;
+
+-- No course, ao adicinar index ao first name, e fazer a busca por Rita, ganha-se 0,10 segundos. A verificação é feita no execution plan.
+
+-- VERIFICANDO A PERFORMANCE C/ MATCH e AGAINST
+	SELECT *
+	FROM sakila.address
+	WHERE MATCH(address) AGAINST('drive');
+OBSERVAR NO EXECUTION PLAN
+
+-- UNIQUE INDEX
+	CRIANDO:
+		CREATE UNIQUE INDEX nome_do_indice ON nome_tabela(nome_coluna);
+	EXCLUINDO:
+		DROP INDEX nome_do_indice ON nome_tabela;
+
+*** QUANDO NÃO UTILIZAR INDEX ***
+-Em tabelas pequenas, pois a diferença de performance será mínima, se houver;
+-Em colunas que retornarão uma grande quantidade dados quando filtradas. Por exemplo, você não adicionaria os artigos "o" e "a" ao índice de um livro;
+-Em tabelas que frequentemente têm atualizações em grande escala, uma vez que a performance dessas atualizações será afetada;
+-Em colunas que são frequentemente manipuladas, haja vista que a manutenção do índice dessa coluna pode demandar muito tempo quando feita em excesso;
+-Em colunas que possuem muitos valores nulos.
+
