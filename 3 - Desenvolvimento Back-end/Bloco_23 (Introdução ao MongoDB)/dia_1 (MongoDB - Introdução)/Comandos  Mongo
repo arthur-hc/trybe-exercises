@@ -1,0 +1,77 @@
+*** Comandos Iniciais Mongo ***
+
+	sudo service mongod start
+
+	sudo service mongod status
+
+	sudo service mongod stop
+
+	sudo service mongod restart
+
+-- P/ Ininicar junto ao sistema
+	sudo systemctl enable mongod.service
+
+-- P/ Não iniciar junto ao sistema
+	sudo systemctl disable mongod.service
+	
+*** Conectando-se ao Mongo ***
+
+-- Via terminal
+	mongo
+
+*** Outros comandos ***
+
+-- Mostra os bancos install no local
+	show dbs
+	
+-- Mostra as tabelas
+	show collections
+	
+-- sair do mongo
+	exit
+	
+-- Remove coleções
+	use banco
+	db.nomeDaColecao.drop();
+
+-- Remove o banco
+	use banco
+	db.dropDatabase();
+	
+*** Iniciando um banco de dados ***
+-- No mongo não há a formalidade de criar banco de dados. Na operação a seguir, caso não exista o banco para o insert, o próprio Mongo cria. Em seguida realiza o insert.
+	use nomeDoBanco
+	db.nomeDaColecao.insertOne( { x: 1 })
+
+*** Criando coleção ***
+-- Os documentos são armazenados em coleções (equivalentes à tabelas).
+
+-- Ambos comandos criam uma coleção caso não exista
+	db.nomeDaColecao1.insertOne({ x: 1 })
+	db.nomeDaColecao2.createIndex({ y: 1 })
+
+-- É possível criar de maneira explicita, sendo possível especificar parâmetros, mas não é obrigatório. O exemplo a seguir especifica a collation
+	db.createCollection( "nomeDaColecao", { collation: { locale: "pt" } } );
+	
+-- Documentos são equivalente a linhas de uma tabela relacional, porém, podem conter uma estrutura mais rica. Na tabela a baixo, o campo endereço provávelmente não existiria, apenas seus subdados.
+{
+    "_id": 1,
+    "nome": "Jose",
+    "endereco": {
+        "logradouro": "Rua 1",
+        "regiao": "Zona Norte",
+        "cidade": "São Paulo",
+        "uf": "SP"
+    }
+},
+{
+    "_id": 2,
+    "nome": "Maria",
+    "endereco": {
+        "logradouro": "Rua 2",
+        "cidade": "Belo Horizonte",
+        "uf": "MG"
+    }
+}
+
+

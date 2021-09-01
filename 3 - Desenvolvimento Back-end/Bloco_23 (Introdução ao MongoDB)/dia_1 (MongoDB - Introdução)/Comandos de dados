@@ -1,0 +1,172 @@
+*** Comandos para manipular dados ***
+
+-- Visto anteriormente
+	use nomeDoBanco
+	db.nomeDaColecao.insertOne( { x: 1 })
+
+	db.nomeDaColecao1.insertOne({ x: 1 })
+	db.nomeDaColecao2.createIndex({ y: 1 })
+
+*** insertOne() | insertMany()
+
+-- Um insere de um único doc, outro pode inserir milhares em uma única operação
+
+*** insertOne ***
+	show dbs
+	use veiculos
+	db => irá aparecer  veiculos
+	db.carros.insertOne({nome: 'Fusca', preco: 2000});
+-- Se não indicado um id, ele será gerado automáticamente. Caso queira gerar:
+	db.carros.insertOne({_id:1, nome: 'Camaro', preco: 250000});
+-- Para visualizar:
+	db.carros.find();
+
+*** fixação... ***
+-- Agora, crie um documento na coleção products , no banco de dados sample , com os seguintes atributos e valores:
+{
+ "productName": "Caixa",
+ "price": 20
+}
+
+	use sample
+	db.products.insertOne({productName: "Caixa", price: 20});
+-- Agora, assuma o controle do campo _id , passando um valor qualquer para ele e crie um novo documento com os mesmos atributos e valores do documento anterior.
+
+	db.products.insertOne({_id: 1, productName: "Tampa", price: 10});
+	db.products.find().
+	
+*** insertMany ***
+-- Utilizar array
+	
+	db.carros.insertMany([
+	{
+	obj1
+	},
+	{
+	obj2
+	},
+	...
+	]);
+	
+-- Caso possua id`s iguais, retornará um erro.
+-- Após o erro, o processo será parado. Então os dados após o erro, não serão salvos dessa maneira. Para evitar isso:
+	db.carros.insertMany([
+	{
+	obj1
+	},
+	...
+	], {ordered: false});
+
+*** fixação ***
+	db.products.insertMany([
+	{ "productName": "Lapis", "stock": 10, "price": 20,"status":"A"},
+    	{ "productName": "Tesoura", "price": 5, "status": "B" },
+    	{ "productName": "Borracha", "price": 15, "status": "A" }
+	], {ordered: false})
+	
+*** find() ***
+-- seleciona e retorna documentos de uma coleção, com um cursor. Esse método recebe dois parâmetros:
+	db.collection.find(query, projection)
+
+-- query (opcional):
+Tipo: documento;
+Descrição: especifica os filtros da seleção usando os query operators . Para retornar todos os documentos da coleção, é só omitir esse parâmetro ou passar um documento vazio ({})
+
+-- projection (opcional):
+Tipo: documento;
+Descrição: especifica quais atributos serão retornados nos documentos selecionados pelo parâmetro query . Para retornar todos os atributos desses documentos, é só omitir esse parâmetro.
+Esse método retorna um cursor para os documentos que correspondem aos critérios de consulta.
+
+*** Projeção (projection) ***
+-- Determinam quais atributos serão retornados. Para especifica, utiliza-se: 1|true OU 0|false
+
+-- EXEMPLO:
+	use movies
+	db.movies.insertOne(
+	    {
+		"title" : "Forrest Gump",
+		"category" : [ "drama", "romance" ],
+		"imdb_rating" : 8.8,
+		"filming_locations" : [
+		    { "city" : "Savannah", "state" : "GA", "country" : "USA" },
+		    { "city" : "Monument Valley", "state" : "UT", "country" : "USA" },
+		    { "city" : "Los Anegeles", "state" : "CA", "country" : "USA" }
+		],
+		"box_office" : {
+		    "gross" : 557, "opening_weekend" : 24, "budget" : 55
+		}
+	    }
+	)
+	
+	db.movies.findOne(
+	    { "title" : "Forrest Gump" },
+	    { "title" : 1, "imdb_rating" : 1 }
+	)
+	
+	RETORNARÁ:
+	
+	{
+	    "_id" : ObjectId("5515942d31117f52a5122353"),
+	    "title" : "Forrest Gump",
+	    "imdb_rating" : 8.8
+	}
+	
+-- PERCEBA QUE O id TAMBÉM RETORNOU. ESTE É O ÚNICO ATRIBUTO EM QUE NÃO É NECESSÁRIO ESPECIFICAR O RETORNO. CASO NÃO DESEJE:
+	
+	db.movies.findOne(
+	    { "title" : "Forrest Gump" },
+	    { "title" : 1, "imdb_rating" : 1, "_id": 0 }
+	)
+	
+	RETORNA:
+	
+	{
+	    "title" : "Forrest Gump",
+	    "imdb_rating" : 8.8
+	}
+	
+*** Gerenciamento de um cursos ***
+
+-- O Find() retorna 20 primeiros resultados. Para continuar, digite >>> it <<<, assim mais 20 serão exibidos.
+
+-- O método count() retorna o n de doc em uma coleção. Também pode receber um critério para definir quais docs retornam
+	db.movies.count()
+	
+*** Tipos e comparações ***
+	{ "_id": "apples", "qty": 5 }
+	{ "_id": "bananas", "qty": 7 }
+	{ "_id": "oranges", "qty": { "in stock": 8, "ordered": 12 } }
+	{ "_id": "avocados", "qty": "fourteen" }
+	
+	db.collection.find( { qty: { $gt: 4 } } )
+	
+	IRÁ RETORNAR:
+	
+	{ "_id": "apples", "qty": 5 }
+	{ "_id": "bananas", "qty": 7 }
+-- Oranges não retornou porque é do tipo object, enquanto avocados também não retornou pois é do tipo string. Ambos não conseguem se comparar com o param que é do tipo integer
+
+*** EXEMPLOS USANDO A COLEÇÃO BIOS ***
+-- RETORNARÁ TODOS OS DADOS
+	db.bios.find() => similar ao SELECT * FROM bios;
+	
+-- RETORNARÁ O DADO COM id 5
+ 	db.bios.find( { _id: 5 } ) => similar ao SELECT * FROM bios WHERE _id = 5;
+ 	
+-- RETORNARÁ DADO COM O ÚLTIMO NOME IGUAL A HOPPER. NOTE A UTILIZAÇÃO DO DOT NOTATION:
+	db.bios.find( { "name.last": "Hopper" } )
+	
+-- ESPECIFICANDO QUAIS DADOS SERÃO RETORNADOS
+	db.bios.find({}, { name: 1 }) => similar ao SELECT name FROM bios;
+	
+*** Limitando o número de dados retornados com limit() ***
+	db.bios.find().limit(5) => similar ao SELECT * FROM bios LIMIT 5;
+	
+*** Deixando os dados mais legíveis com pretty() ***
+	db.bios.find().limit(5).pretty()
+	
+*** Pulando documentos com skip ***
+	db.bios.find().skip(2)
+	
+	db.bios.find().limit(10).skip(5) => similar ao SELECT * FROM bios LIMIT 10 OFFSET 5;
+
