@@ -117,4 +117,12 @@
 	{ $or: [{ borough: 'Brooklyn' }, { cuisine: { $ne: 'Delicatessen' } }]}
 	] }).count();
 	
-
+*** $EXISTS ***
+-- $exists (verifica se o atributo existe). Pode ser complementado com uma condição.
+	db.inventory.find({ qty: { $exists: true } })
+	db.inventory.find({ qty: { $exists: true, $nin: [ 5, 15 ] } })
+	
+*** MÉTODO sort() ***
+-- Similar aos sorts, porém sua ordem é dada através de 1 (crescente ou alfabética) ou -1 (decrescente ou não alfabética)
+-- PS: SÓ PODE SER USADO APÓS UM RESULTADO DE BUSCA (find()), MESMO QUE SEM PARÂMETROS
+	db.example.find({}, { value, name }).sort({ value: -1 }, { name: 1 })
