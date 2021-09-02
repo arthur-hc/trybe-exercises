@@ -41,9 +41,80 @@
 	db.restaurants.find({ 'rating': { $gte: 8 } }).count();
 
 -4 Selecione e faça a contagem dos restaurantes que possuem avaliação menor que 4 .
-	db.restaurants.find({ 'rating': { $lt: 4 } }).count()
+	db.restaurants.find({ 'rating': { $lt: 4 } }).count();
 
 -5 Selecione e faça a contagem dos restaurantes que não possuem as avaliações 5 , 6 e 7 .
 	db.restaurants.find({ 'rating': { $nin: [5, 6, 7] } } ).count()
 
+
+*** LÓGICOS ***
+
+-- $not (NOT, negação)
+	db.inventory.find({ price: { $not: { $gt: 1.99 } } });
+
+-- $or (OR, ou) => O exemplo retorna os documentos que qty é menor que 20 ou price igual a 10
+	db.inventory.find({ $or: [{ qty: { $lt: 20 } }, { price: 10 }] });
+
+-- $nor (Not OR, não E não) => O exemplo retorna documentos que o price não é igual a 1.99 E sale não é true. AMBAS PRECISAM SER FALSE
+	 db.inventory.find({ $nor: [{ price: 1.99 }, { sale: true }] });
+	 
+-- $and (AND)
+	db.inventory.find({ $and: [{ price: 1.99 }, { sale: true }] });
+	
+-- Multiplas expressões: (OBS verifica que o atributo price existe)
+	db.inventory.find({
+		$and: [
+			{ price: { $ne: 1.99 } },
+			{ price: { $exists: true } }
+		    ]
+	});
+-- Multiplas expressões com o mesmo operador
+	db.inventory.find({
+		$and: [
+			{ price: { $gt: 0.99, $lt: 1.99 } },
+			{
+				$or: [
+				{ sale : true },
+				{ qty : { $lt : 20 } }
+			    	]
+			}
+		    ]
+	});
+	
+*** Fixação ***
+-1 Selecione e faça a contagem dos restaurantes que não possuem avaliação menor ou igual a 5 , essa consulta também deve retornar restaurantes que não possuem o campo avaliação.
+	db.restaurants.find({ $or: [{ rating: { $not: { $lte: 5 } } }, { rating: { $exists: false } }] }).count();
+	
+	GABARITO(MESMO RESULTADO)
+	
+	db.restaurants.find({ rating: { $not: { $lte: 5 } }}).count();
+
+-2 Selecione e faça a contagem dos restaurantes em que a avaliação seja maior ou igual a 6 , ou restaurantes localizados no bairro Brooklyn .
+	db.restaurants.find({ $or: [{ rating: { $gte: 6} }, { borough: 'Brooklyn' }] }).count();
+
+-3 Selecione e faça a contagem dos restaurantes localizados nos bairros Queens , Staten Island e Broklyn e possuem avaliação maior que 4 .
+	db.restaurants.find({ $and: [
+		{ borough: { $in: ['Queens' , 'Staten Island', 'Broklyn'] } }, 
+		{ rating: { $gt: 4 } }] 
+	}).count();
+	
+-4 Selecione e faça a contagem dos restaurantes onde nem o campo avaliação seja igual a 1 , nem o campo culinária seja do tipo American .
+	db.restaurants.find({ $and: [{ rating: { $ne: 1 }}, { cuisine: { $ne: 'American' } }] }).count();
+	
+	GABARITO(MESMO RESULTADO)
+	db.restaurants.find({ $nor: [{ rating: { $eq: 1 } }, { cuisine: "American" }] }).count();
+
+-5 Selecione e faça a contagem dos resturantes em que a avaliação seja maior que 6 ou menor que 10 , E esteja localizado no bairro Brooklyn , OU não possuem culinária do tipo Delicatessen .
+	
+	db.restaurants.find({ $and: [
+	{ $and: [{ rating: { $gt: 6 } }, { rating: { $lt: 10} }] }, 
+	{ $or: [{ borough: 'Brooklyn' }, { cuisine: { $ne: 'Delicatessen' } }]}
+	] }).count();
+	
+	SOLUÇÃO GABARITO(MESMO RESULTADO)
+	db.restaurants.find({ $and: [
+	{ $or: [{ rating: { $gt: 6, $lt: 10 } }] },
+	{ $or: [{ borough: 'Brooklyn' }, { cuisine: { $ne: 'Delicatessen' } }]}
+	] }).count();
+	
 
