@@ -81,6 +81,10 @@
 		    ]
 	});
 	
+	
+-- PS O AND PODE SER OCULTADO
+	db.inventory.find({ price: 1.99, sale: true });
+	
 *** Fixação ***
 -1 Selecione e faça a contagem dos restaurantes que não possuem avaliação menor ou igual a 5 , essa consulta também deve retornar restaurantes que não possuem o campo avaliação.
 	db.restaurants.find({ $or: [{ rating: { $not: { $lte: 5 } } }, { rating: { $exists: false } }] }).count();
@@ -126,3 +130,34 @@
 -- Similar aos sorts, porém sua ordem é dada através de 1 (crescente ou alfabética) ou -1 (decrescente ou não alfabética)
 -- PS: SÓ PODE SER USADO APÓS UM RESULTADO DE BUSCA (find()), MESMO QUE SEM PARÂMETROS
 	db.example.find({}, { value, name }).sort({ value: -1 }, { name: 1 })
+	
+*** Fixação ***
+-1 rdene alfabeticamente os restaurantes pelo nome (atributo name ).
+	db.restaurants.find().sort({ 'name': 1 });
+-2 Ordene os restaurantes de forma descrescente baseado nas avaliações.
+	db.restaurants.find().sort({ 'rating': -1 });
+	
+*** deleteOne() | deleteMany() ***
+
+-- deleteOne()
+- Remove apenas o primeiro documento que possua o atributo indicado. Caso não passe nenhum atributo, irá deletar o primeiro da coleção
+	db.inventory.deleteOne({ status: "D" })
+	
+-- deleteMany()
+-- Remove todos documentos que possuem o atributo
+	db.inventory.deleteMany({ status : "A" })
+-- Para deletar tudo basta não passar nenhum parâmetro
+	db.inventory.deleteMany({})
+	
+*** Fixação ***
+-1 Remova o primeiro restaurante que possua culinária do tipo Ice Cream, Gelato, Yogurt, Ices .
+	db.restaurants.deleteMany({ cuisine: 'Ice Cream', 'Gelato', 'Yogurt', 'Ices' });
+-2 Remova todos os restaurantes que possuem culinária do tipo American .
+	db.restaurants.deleteOne({ cuisine: 'American' });
+	
+*** OUTROS OPERADORES ***
+-- findOne() retorna o primeiro
+- db.filmes.count({ ano: { $lt: 1990 } })
+- db.dropDatabase(); irá apagar o atual banco utilizado
+- mongo banco Já inicia o mongo no banco de dados
+- para ordenar subdoc db.film.find().sort{ 'avaliacao.bom': -1 }
