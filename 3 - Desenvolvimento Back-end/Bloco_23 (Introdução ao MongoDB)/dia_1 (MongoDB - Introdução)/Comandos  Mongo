@@ -14,6 +14,9 @@
 -- P/ Não iniciar junto ao sistema
 	sudo systemctl disable mongod.service
 	
+-- P/ Importar coleção
+	mongoimport --db class --collection superheroes <caminho_do_arquivo>
+	
 *** Conectando-se ao Mongo ***
 
 -- Via terminal
