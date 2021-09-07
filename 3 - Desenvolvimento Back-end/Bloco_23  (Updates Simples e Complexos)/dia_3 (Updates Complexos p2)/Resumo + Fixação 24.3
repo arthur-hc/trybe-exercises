@@ -136,7 +136,7 @@
 	$ TERMINA COM
 
 *** $text ***
--- Busca textual baseado em um text index
+-- Busca textual baseado em um text index. Traz não só palavras que são buscadas como derivadas. EX: busca bake, traz também baking
 	{
 	text:
 	    {
@@ -148,6 +148,15 @@
 	}
 >	CRIANDO INDEX
 	db.articles.createIndex({ subject: "text" });
+	
+	db.articles.createIndex({ subject: "text" }, { default_language: "portuguese" });
+	
+>	CRIANDO INDEX COM MÚLTIPLOS ATRIBUTOS. (PS: SÓ PODE EXISTIR UM INDEX DE CADA TIPO. POR ISSO ESSA MANEIRA É NECESSÁRIA P/ MULT. TAMBÉM É POSSÍVEL ATRIBUIR PESOS.
+	db.articles.createInde(
+	{ subject: "text", author: "text" },
+	{ weights: { subject: 2, author: 1 }, name: "subject_and_author_index" }
+	);
+	
 
 >	DATA
 	{ _id: 1, subject: "coffee", author: "xyz", views: 50 },
@@ -167,6 +176,18 @@
 	
 >	QUERY P/ FRASE
 	db.articles.find({ $text: { $search: "\"coffee shop\"" } });
+	
+>	RETORNA OS INDEX
+	db.articles.getIndexes();
+	
+>	REMOVE O INDEX
+	db.articles.dropINdex("nome_do_index");
+	
+>	CASO SEJA UM INDEX COMPOSTO, GERA UM SCORE
+	db.articles.find(
+	{ $text: { $search: "coffee" } },
+	{ score: { $meta: "textScore" } }
+	);
 	
 *** $mod ***
 -- Retorna docs que a div específicada retorna o valor específicado
