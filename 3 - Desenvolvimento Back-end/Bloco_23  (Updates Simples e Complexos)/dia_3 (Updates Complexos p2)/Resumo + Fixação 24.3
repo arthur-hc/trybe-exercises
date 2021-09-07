@@ -1,0 +1,186 @@
+*** Updates Complexos parte 2 ***
+
+
+*** $all ***
+-- Similar ao and, contundo, independe da ordem. PODE CONTER OUTROS VALORES. A diferença desse para o $in é que, nesse, é necessário ter todos os valores, já no in, basta um, que satisfará a condição.
+
+-- Retorna apenas os que possuem esta ordem
+>	QUERY SEM $ALL
+	db.inventory.find({ tags: ["red", "blank"] });
+
+	OUTRO EXEMPLO EQUIVALENTE
+
+>	QUERY SEM $ALL	
+	db.inventory.find({ $and: [{ tags: "red" }, { tags: "blank" }]});	
+
+-- Retorna todos que contenham esses valores, independete da ordem
+>	QUERY COM $ALL
+	db.inventory.find({ tags: { $all: ["red", "blank"] } });
+
+*** $elemMatch ***
+-- Retorna documentos que contenham pelo menos UM que satisfaça TODAS as condições
+>	DATA
+	{ _id: 1, results: [82, 85, 88] },
+	{ _id: 2, results: [75, 88, 89] }
+
+>	QUERY COM $elemMatch
+	db.scores.find(
+	  { results: { $elemMatch: { $gte: 80, $lt: 85 } } }
+	);
+	
+	IRÁ RETORNAR APENAS O PRIMEIRO, POIS O 82 SATISFAZ AS DUAS CONDIÇÕES
+
+-- CONTUDO, PARA RETORNAR, DEVE CONTER AS CONDIÇÕES DENTRO DE UM MESMO OBJETO NO ARRAY.
+>	DATA
+	{
+	  _id: 1,
+	  results: [
+	    { product: "abc", score: 10 },
+	    { product: "xyz", score: 5 }
+	  ]
+	},
+	{
+	  _id: 2,
+	  results: [
+	    { product: "abc", score: 8 },
+	    { product: "xyz", score: 7 }
+	  ]
+	},
+	{
+	  _id: 3,
+	  results: [
+	    { product: "abc", score: 7 },
+	    { product: "xyz", score: 8 }
+	  ]
+	}
+	
+>	QUERY COM $elemMatch COM MAIS DE UMA CONDIÇÃO
+	db.survey.find(
+	  { results: { $elemMatch: { product: "xyz", score: { $gte: 8 } } } }
+	);
+
+>	SEM O $elemMatch
+	db.survey.find(
+	"results.product": "xyz",
+	"results.score": { $gte: 8 },
+	);
+
+>	RESULTADO
+	IRÁ RETORNAR APENAS O 3 DOC
+
+-- COM APENAS UMA CONDIÇÃO, O $elemMatch É DESNECESSÁRIO. EXEMPLO REMOVENDO $gte: 8
+	db.survey.find({ "results.product": "xyz" });
+
+*** $size ***
+-- Retorna docs que contenham um array com o n especificado
+
+>	DATA
+	{ _id: 1, tags: ["red", "green"] },
+	{ _id: 2, tags: ["apple", "lime"] },
+	{ _id: 3, tags: "fruit" },
+	{ _id: 4, tags: ["orange", "lemon", "grapefruit"] }
+	
+>	QUERY
+	db.products.find({ tags: { $size: 2 } });
+	
+>	REULTADO
+	RETORNA DOCS 1 E 2
+	
+*** $expr ***
+-- Compara valores dos campos de um mesmo doc
+
+>	DATA
+	{ _id: 1, category: "food", budget: 400, spent: 450 },
+	{ _id: 2, category: "drinks", budget: 100, spent: 150 },
+	{ _id: 3, category: "clothes", budget: 100, spent: 50 },
+	{ _id: 4, category: "misc", budget: 500, spent: 300 },
+	{ _id: 5, category: "travel", budget: 200, spent: 650 }
+
+>	QUERY COM $expr
+	db.monthlyBudget.find(
+	{ expr: { $gt: [ "$spent", "$budget" ] } }
+	);
+	
+>	RESULTADO
+-- Retorna docs em que spend É MAIOR QUE budget
+	{ "_id" : 1, "category" : "food", "budget" : 400, "spent" : 450 }
+	{ "_id" : 2, "category" : "drinks", "budget" : 100, "spent" : 150 }
+	{ "_id" : 5, "category" : "travel", "budget" : 200, "spent" : 650 }
+
+*** $regex ***
+-- Possibilita busca por expressões regulares
+
+>	DATA
+	{ _id: 100, sku: "abc123", description: "Single line description." },
+	{ _id: 101, sku: "abc789", description: "First line\nSecond line" },
+	{ _id: 102, sku: "xyz456", description: "Many spaces before     line" },
+	{ _id: 103, sku: "xyz789", description: "Multiple\nline description" }
+
+>	QUERY
+-- Retorna docs que TERMINEM com 789. REPARE NA POSIÇÃO DO $
+	db.products.find({ sku: { $regex: /789$/ } });
+	
+>	RESULTADO
+	Retorna docs 2 e 4
+	
+-- TAMBÉM É POSSÍVEL ESPECIFICAR OPÇÕES
+>	QUERY
+-- Retorna docs que contenham abc
+	db.products.find({ sku: { $regex: /ABC/i } });
+	
+>	QUERY
+-- Retorna docs que comecem com abc com case-insensitive. REPARE NA POSIÇÃO DO ^
+	db.products.find({ sku: { $regex: /^ABC/i } });
+	
+	^ COMEÇA COM
+	$ TERMINA COM
+
+*** $text ***
+-- Busca textual baseado em um text index
+	{
+	text:
+	    {
+	search: <string>, => busca com or
+	language: <string>, => opcional. verificar idiomas suportados
+	caseSensitive: <boolean>,=> false por default
+	diacriticSensitive: <boolean> => false por default
+	    }
+	}
+>	CRIANDO INDEX
+	db.articles.createIndex({ subject: "text" });
+
+>	DATA
+	{ _id: 1, subject: "coffee", author: "xyz", views: 50 },
+	{ _id: 2, subject: "Coffee Shopping", author: "efg", views: 5 },
+	{ _id: 3, subject: "Baking a cake", author: "abc", views: 90  },
+	{ _id: 4, subject: "baking", author: "xyz", views: 100 },
+	{ _id: 5, subject: "Café Com Leite", author: "abc", views: 200 },
+	{ _id: 6, subject: "Сырники", author: "jkl", views: 80 },
+	{ _id: 7, subject: "coffee and cream", author: "efg", views: 10 },
+	{ _id: 8, subject: "Cafe com Leite", author: "xyz", views: 10 }
+	
+>	QUERY P/ UM ÚNICO TERMO
+	db.articles.find({ $text: { $search: "coffee" } });
+	
+>	QUERY P/ QLQR DOS TERMOS
+	db.articles.find({ $text: { $search: "bake coffee cake" } });
+	
+>	QUERY P/ FRASE
+	db.articles.find({ $text: { $search: "\"coffee shop\"" } });
+	
+*** $mod ***
+-- Retorna docs que a div específicada retorna o valor específicado
+
+>	DATA
+	{ _id: 1, item: "abc123", qty: 0 },
+	{ _id: 2, item: "xyz123", qty: 5 },
+	{ _id: 3, item: "ijk123", qty: 12 }
+	
+>	QUERY
+	db.inventory.find({ qty: { $mod: [4, 0] } });
+	
+>	RESULTADO
+	{ "_id" : 1, "item" : "abc123", "qty" : 0 }
+	{ "_id" : 3, "item" : "ijk123", "qty" : 12 }
+	
+
