@@ -1,0 +1,286 @@
+*** Update Simples ***
+
+-- updateOne() => Irá alterar o primeiro que atenda ao filtro
+	db.inventory.updateOne(
+	  { item: "paper" },
+	  { $set: { "size.uom": "cm", status: "P" } }
+	);
+	
+Foi atualizado o primeiro item correspondente a paper, atualizando o size.uom para cm e status para p. Caso o primeiro parâmetro fosse {}, atualizaria o primeiro da lista.
+
+-- updateMany() => Altera todos que atendam ao filtro
+	db.inventory.updateMany(
+ 	 { "qty": { $lt: 50 } },
+	 { $set: { "size.uom": "in", status: "P" } }
+	);
+
+*** $set ***
+-- Altera os valores indicados. Caso os campos não existam, serão criados.
+
+-- Alterando em um top-level
+	db.products.update(
+	  { _id: 100 },
+	  { $set: {
+	      quantity: 500,
+	      details: { model: "14Q3", make: "xyz" },
+	      tags: [ "coats", "outerwear", "clothing" ]
+	    }
+	  }
+	);
+	
+-- Alterando o campo em documentos embedados com dot notation. Caso não use o dot notation, irá deixar apenas aquele doc e eliminar os outros.
+	db.products.update(
+	  { _id: 100 },
+	  { $set: { "details.make": "zzz" } }
+	);
+	
+-- Alterando arrays. A seguir, seleciona o _id = 1. Elemento com index 1 do array tag e o campo ratting com index 0 do array rattings
+-- CASO HAJA 3 ITENS NO ARRAY E SEJA ADICIONADO UM ITEM NO INDEX 5, SERÁ ADICIONADO DOIS NULL ATÉ O 6 ITEM ONDE ESTARÁ O NOVO ITEM.
+	db.products.update(
+	  { _id: 100 },
+	  { $set: {
+	      "tags.1": "rain gear",
+	      "ratings.0.rating": 2
+	    }
+	  }
+	);
+
+*** $mul ***
+-- Multiplica o valor de um número e salva, sem a necessidade de um set. ex:
+	
+	VALOR INICIAL
+	db.products.insertOne(
+	  { "_id": 1, "item": "ABC", "price": NumberDecimal("10.99"), "qty": 25 }
+	);
+	
+	COMANDO PARA MULTIPLICAR
+	db.products.update(
+	  { _id: 1 },
+	  { $mul: { price: NumberDecimal("1.25"), qty: 2 } }
+	);
+	
+	RESULTADO
+	{ "_id": 1, "item": "ABC", "price": NumberDecimal("13.7375"), "qty": 50 }
+	
+-- CASO SEJA UTILIZADO EM UM CAMPO QUE NÃO EXISTA NO DOC, CRIARÁ O CAMPO E ATRITUIRÁ O VALOR 0
+
+	INSERT INICIAL
+	db.products.insertOne(
+	  { _id: 2, item: "Unknown" }
+	);
+	
+	UPDATE
+	db.products.update(
+	  { _id: 2 },
+	  { $mul: { price: NumberLong("100") } }
+	);
+	
+	RESULTADO
+	{ "_id": 2, "item": "Unknown", "price": NumberLong(0) }
+	
+-- CONCLUSÃO: Perceba que o campo price foi criado.
+
+-- OUTRO EXEMPLO:
+	
+	INSERT INICIAL
+	db.products.insertOne(
+	  { _id: 3,  item: "XYZ", price: NumberLong("10") }
+	);
+	
+	UPDATE
+	db.products.update(
+	  { _id: 3 },
+	  { $mul: { price: NumberInt(5) } }
+	);
+	
+	RESULTADO
+	{ "_id": 3, "item": "XYZ", "price": NumberLong(50) }
+	
+*** $INC ***
+-- Incrementa ou decrementa valores
+	
+	INSERT INICIAL
+	db.increment.insertOne(
+	  {
+	    _id: 1,
+	    sku: "abc123",
+	    quantity: 10,
+	    metrics: {
+	      orders: 2,
+	      ratings: 3.5
+	    }
+	  }
+	)
+	
+	UPDATE
+	db.increment.update(
+	  { sku: "abc123" },
+	  { $inc: { quantity: -2, "metrics.orders": 1 } }
+	);
+	
+	RESULTADO
+	{
+	  "_id": 1,
+	  "sku": "abc123",
+	  "quantity": 8,
+	  "metrics": {
+	    "orders": 3,
+	    "ratings": 3.5
+	  }
+	}
+	
+*** $max || $min ***
+-- Alteram o campo que atendem esse requisito com o valor determinado
+	
+	INSERT
+	[
+	  { _id: 1, campo: 25 },
+	  { _id: 2, campo: 50 },
+	  { _id: 3, campo: 100 }
+	]
+	
+	UPDATE
+	db.collection.updateMany({}, { $max: { campo: 75 } });
+	
+	RESULTADO (ALTEROU PARA 75 OS CAMPOS QUE IAM ATÉ 75)
+	[
+	  { _id: 1, campo: 75 }, // valor anterior: 25
+	  { _id: 2, campo: 75 }, // valor anterior: 50
+	  { _id: 3, campo: 100 }, // não encontrou no escopo
+	]
+	
+	UPDATE
+	db.collection.updateMany({}, { $min: { campo: 42 } });
+	
+	RESULTADO (ALTEROU TODOS OS CAMPOS COM UM MÍNIMO DE 42(TODOS))
+	[
+	  { _id: 1, campo: 42 }, // valor anterior: 75
+	  { _id: 2, campo: 42 }, // valor anterior: 75
+	  { _id: 3, campo: 42 }, // valor anterior: 100
+	]
+	
+	COM DATAS
+	INSERT
+	use conteudo_trybe;
+	db.tags.insertOne(
+	  {
+	    _id: 1,
+	    desc: "crafts",
+	    dateEntered: ISODate("2019-10-01T05:00:00Z"),
+	    dateExpired: ISODate("2019-10-01T16:38:16Z")
+	  }
+	);
+	
+	UPDATE
+	db.tags.update(
+	  { _id: 1 },
+	  {
+	min: { dateEntered: new Date("2019-09-25") },
+	max: { dateExpired: new Date("2019-10-02") }
+	  }
+	);
+	
+*** $currentDate ***
+-- Adiciona ao campo a data corrente
+
+-- typeSpecification pode ser:
+	- um valor booleano true para atribuir o valor da data corrente ao campo utilizando o tipo Date ; ou
+	- um documento que especifica o tipo do campo. Esse documento pode ser { $type: "timestamp" } ou { $type: "date" } . Esse operador é case-sensitive e aceita somente letras minúsculas: timestamp ou date .
+
+	INSERT
+	use conteudo_trybe;
+	db.customers.insertOne(
+	  { _id: 1, status: "a", lastModified: ISODate("2013-10-02T01:11:18.965Z") }
+	);
+	
+	UPDATE (O lastModified torna-se a data atual por receber true e estar dentro do escopo do $currentDate . O cancelation.date recebe timestamp através de um $type: 'timestamp' dentro de um $currentDate. As outras atualização ou criações (cancellation.reson) ocorrem normalmente devido ao $set
+	db.customers.updateOne(
+	  { _id: 1 },
+	  { $currentDate: {
+	      lastModified: true,
+	      "cancellation.date": { $type: "timestamp" }
+	    }, $set: {
+	      "cancellation.reason": "user request",
+	      status: "D"
+	    }
+	  }
+	);
+	
+	RESULTADO
+	{
+	  "_id": 1,
+	  "status": "D",
+	  "lastModified": ISODate("2020-01-22T21:21:41.052Z"),
+	  "cancellation": {
+	    "date": Timestamp(1579728101, 1),
+	    "reason": "user request"
+	  }
+	}
+	
+*** $rename ***
+-- renomeia o campo
+	INSERT
+	{
+	  "_id": 1,
+	  "status": "D",
+	  "lastModified": ISODate("2020-01-22T21:21:41.052Z"),
+	  "cancellation": {
+	    "date": Timestamp(1579728101, 1),
+	    "reason": "user request"
+	  }
+	}
+	
+	UPDATE
+	db.fruits.updateOne(
+	  { name: "Banana" },
+	  { $rename: {
+	      "name": "productName"
+	    }
+	  }
+	);
+	
+	RESULTADO
+	{ _id: 100, quantity: 100, inStock: true, productName: 'Banana' }
+	
+-- CASO QUEIRA, PODERIA ATUALIZAR TODOS QUE POSSUEM O CAMPO(TALVEZ COM EXISTS), NÃO PASSANDO O PRIMEIRO PARÂM
+
+	db.fruits.updateMany(
+	  { name: { $exists: true } },
+	  { $rename: {
+	      "name": "productName"
+	    }
+	  }
+	);
+
+*** $unset ***
+-- remove campos
+	
+	INSERT
+	{
+	  _id: 100,
+	  productName: "Banana",
+	  quantity: 100,
+	  inStock: true
+	}
+	
+	UPDATE
+	db.fruits.updateMany(
+	  { productName: "Banana" },
+	  { $unset: { quantity: "" } }
+	);
+	
+	RESULTADO
+	{
+	  _id: 100,
+	  productName: "Banana",
+	  inStock: true
+	}
+	
+*** Upsert ***
+-- É o terceiro argumento do update => Caso não ache o filtro, quando true, insere na coleção.
+	db.fruits.updateMany(
+	  { productName: "Banana" },
+	  { $unset: { quantity: "" } },
+	  { upsert: true }
+	);
+	

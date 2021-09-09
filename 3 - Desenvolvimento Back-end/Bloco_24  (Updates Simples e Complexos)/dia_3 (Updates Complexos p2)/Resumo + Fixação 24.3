@@ -152,7 +152,7 @@
 	db.articles.createIndex({ subject: "text" }, { default_language: "portuguese" });
 	
 >	CRIANDO INDEX COM MÚLTIPLOS ATRIBUTOS. (PS: SÓ PODE EXISTIR UM INDEX DE CADA TIPO. POR ISSO ESSA MANEIRA É NECESSÁRIA P/ MULT. TAMBÉM É POSSÍVEL ATRIBUIR PESOS.
-	db.articles.createInde(
+	db.articles.createIndex(
 	{ subject: "text", author: "text" },
 	{ weights: { subject: 2, author: 1 }, name: "subject_and_author_index" }
 	);

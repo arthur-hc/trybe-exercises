@@ -1,0 +1,310 @@
+*** Aggragation Pipeline ***
+-- Similar ao group by do MySQL
+-- Conceito em que os documentos passam por um funil, sendo agrupados e se transformando
+
+*** $match ***
+- 1 Seleciona os docs que possuem Status: A
+- 2 Agrupa pelo cust_id, isto é, junta os similares, e gera um total que é gerado através da soma do amount.
+	db.orders.aggregate([
+	  { $match: { status: "A" } },
+	  { $group: { _id: "$cust_id", total: { $sum: "$amount" } } }
+	]);
+
+-- É INIDICADO USAR O $match O MAIS CEDO POSSÍVEL, POIS MELHORA A PERFORMANCE
+
+*** $limit ***
+- Limita o n docs que serão passados p/ próximo pipeline
+
+	db.articles.aggregate([{ $limit : 5 }]);
+	
+*** Fixação ***
+-1 Selecione todas as transações feitas pelo cliente chamado "Dave America".
+	db.transactions.aggregate([{ $match: { from: "Dave America" } }]).pretty();
+
+-2 Selecione todas as transações com o valor entre 700 e 6000, ou que sejam recebidas pela cliente "Lisa Simpson".
+	db.transactions.aggregate([{ $match: { $or: [{ value: { $gte: 700, $lte: 6000 } }, { to: "Lisa Simpson" }] } }]).pretty();
+
+-3 Selecione três transações com o valor acima de 1000.
+	db.transactions.aggregate([{ $match: { value: { $gt: 1000 } } }, { $limit : 3 }]);
+	
+*** $project ***
+-- Similar a especificação de campos no find({}, {CAMPOS QUE QUERO EXIBIR}). Aqui iremos escolher quais campos serão exibidos
+
+	db.books.aggregate([{ $project : { title : 1, author : 1, _id: 0 } }]);
+	
+- Removendo subdocs
+	db.books.aggregate([{ project : { "author.first": 0,  copies: 0 } }]);
+	
+
+- Incluindo campos ou gerando novos através de dados existentes
+>	DOC INICIAL
+	db.books.insertOne(
+	  {
+	    _id: 1,
+	    title: "A Fundação",
+	    isbn: "0001122223334",
+	    author: { last: "Asimov", first: "Isaac" },
+	    copies: 5
+	  }
+	)
+- Perceba que os novos campos (prefix, group, lastName etc) são geradas a partir do doc inicial
+- OS NOVOS SUBCAMPOS DENTRO DE isbn, FORAM GERADOS A PARTIR DOS NÚMERO DE ISBN INICIAL. $substr "corta" a informação e diz até onde deseja
+- OS VALORES DE lastName e copiesSold, são gerados a partir de author.last e copies, respectivamente
+	{
+	  "_id" : 1,
+	  "title" : "A Fundação",
+	  "isbn" : {
+	    "prefix" : "000",
+	    "group" : "11",
+	    "publisher" : "2222",
+	    "title" : "333",
+	    "checkDigit" : "4"
+	  },
+	  "lastName" : "Asimov",
+	  "copiesSold" : 5
+	}
+-- *** PS: ESSES DADOS SÃO APENAS PARA VISUALIZAÇÃO, NÃO SÃO ARMAZENADOS ***
+{ $match: { "$nCompras": { $gte: 5 } } }
+*** $group ***
+-- Operador de agregação
+	db.orders.aggregate([
+	  { $match: { status: "A" } },
+	  { $group: { _id: "$cust_id", total: { $sum: "$amount" } } }
+	]);
+	
+-- TAMBÉM É POSSÍVEL AGRUPAR POR MAIS DE UM ATRIBUTO, PASSANDO UM ARRAY OU UM OBJETO. O MAIS INDICADO SERIA UM OBJETO PARA CASO SEJA NECESSÁRIO ACESSAR DEPOIS ($project por exemplo) ATRAVÉS DO DOT NOTATION
+	db.orders.aggregate([
+	  { $match: { status: "A" } },
+	  { $group: { _id: ["$cust_id", "$outroCampo"], total: { $sum: "$amount" } } }
+	]);
+	
+	db.orders.aggregate([
+	  { $match: { status: "A" } },
+	  { $group: { _id: { custo: "$cust_id", outro: "$outroCampo" }, total: { $sum: "$amount" } } }
+	  { $project: { custo: "$_id.custo", outro: "$_id.outro", _id: 0 } }
+	]);
+	
+> OPERADORES SOBRE OS DOCS C/ AGRUPAMENTO
+ $addToSet : retorna um array com os valores únicos da expressão para cada grupo;
+ $avg : retorna a média de valores numéricos. Valores não numéricos são ignorados;
+ $first : retorna um valor do primeiro documento de cada grupo;
+ $last : retorna um valor do último documento de cada grupo;
+ $max : retorna o maior valor de cada grupo;
+ $sum : retorna a soma de valores numéricos. Valores não numéricos são ignorados.
+ 
+-- EXEMPLO P/ CONTAR O N DE DOCS
+	db.sales.aggregate([{ $group: { _id: null, count: { $sum: 1 } } }]);
+	EQUIVALENTE AO
+	db.sales.count();
+	
+-- Retornando valores distintos. A seguir, o _id recebe o item como valor, através de $item. Já o count, será o somado 1 a cada valor com $sum: 1
+>	QUERY
+	db.sales.aggregate([
+ 	{ $group : { _id : "$item", count: { $sum: 1} } }]);
+  
+>	RESULTADO
+	{ "_id" : "A Coragem de Ser Imperfeito", "count" : 2 }
+	{ "_id" : "O Homem e Seus Símbolos", "count" : 1 }
+	{ "_id" : "Código Limpo", "count" : 3 }
+	{ "_id" : "Comunicação Não-Violenta", "count" : 2 }
+
+-- Multi operações => A seguir, cada item será agrupado de acordo com o nome. Também será gerado um valor através de uma soma do p*qtd
+>	QUERY
+	db.sales.aggregate([
+	{ $group : { _id : "$item", totalSaleAmount: { $sum: { multiply: ["$price", "$quantity"] } } } }
+	]);
+
+>	RESULTADO
+	{ "_id" : "A Coragem de Ser Imperfeito", "totalSaleAmount" : NumberDecimal("112.5") }
+	{ "_id" : "O Homem e Seus Símbolos", "totalSaleAmount" : NumberDecimal("20") }
+	{ "_id" : "Código Limpo", "totalSaleAmount" : NumberDecimal("170") }
+	{ "_id" : "Comunicação Não-Violenta", "totalSaleAmount" : NumberDecimal("150") }
+	
+-- Combinandos estágios. (FAZ A CONTA ANTERIOR, CONTUDO, TRAZ APENAS OS COM RESULTADO >=100)
+
+>	QUERY
+	db.sales.aggregate([
+// Primeiro Estágio
+	{ $group: {
+	_id : "$item",
+	totalSaleAmount: {
+	$sum: {
+	$multiply: ["$price", "$quantity"] } } } },
+// Segundo Estágio
+	  {
+	$match: { "totalSaleAmount": { $gte: 100 } }
+	  }
+	]);
+
+>	RESULTADO
+	{ "_id" : "A Coragem de Ser Imperfeito", "totalSaleAmount" : NumberDecimal("112.5") }
+	{ "_id" : "Código Limpo", "totalSaleAmount" : NumberDecimal("170") }
+	{ "_id" : "Comunicação Não-Violenta", "totalSaleAmount" : NumberDecimal("150") }
+
+-- PARA FAZER OPERAÇÃO COM TODOS, UTILIZAR O ID COMO NULL
+>	QUERY
+	db.sales.aggregate([
+	{ $group : {
+	_id : null,
+	totalSaleAmount: { $sum: { $multiply: ["$price", "$quantity"] } },
+	averageQuantity: { $avg: "$quantity" },
+	count: { $sum: 1 } } }]);
+	
+>	RESULTADO
+	{
+	  "_id" : null,
+	  "totalSaleAmount" : NumberDecimal("452.5"),
+	  "averageQuantity" : 7.875,
+	  "count" : 8
+	}
+
+*** Fixação... ***
+-1 Selecione todos os bancos, ou seja, valores do campo bank ;
+	db.transactions.aggregate([{ $group: { _id: "$bank" } }]);
+	
+	GABARITO (GERA A QUANTIDADE DE BANCOS)
+	db.transactions.aggregate([{ $group: { _id: "$bank", bank: { $sum: 1 } } }]);
+
+-2 Selecione o valor total das transações em cada banco e quantas são;
+	db.transactions.aggregate([{ $group: { _id: "$bank", valor: { $sum: "$value" }, nTransacoes: { $sum: 1 } } }]);
+
+-3 Selecione o valor total de transações por banco;
+	db.transactions.aggregate([{ $group: { _id: "$bank", valor: { $sum: "$value" } } }]);
+
+-4 Selecione os bancos que têm o valor total de transações maior que 1000.
+	db.transactions.aggregate([{ $group: { _id: "$bank", valor: { $sum: "$value" } } }, { $match: { "valor": { $gt: 1000 } } }]);
+		
+*** $unwind ***
+-- Desconstrói e gera docs separados para cada item. FUNÇÃO P/ LIDAR COM ARRAY E PODE SER USADO JUNTO C/ GROUP
+
+>	DATA INICIAL
+	db.inventory.insertOne({ _id: 7, item: "ABC1", sizes: ["S", "M", "L"] });
+	
+>	QUERY
+	db.inventory.aggregate([{ $unwind : "$sizes" }]);
+	
+>	RESULTADO
+	{ "_id" : 7, "item" : "ABC1", "sizes" : "S" }
+	{ "_id" : 7, "item" : "ABC1", "sizes" : "M" }
+	{ "_id" : 7, "item" : "ABC1", "sizes" : "L" }
+	
+*** $lockup ***
+-- Junta docs de outra coleção. Similar ao INNER JOIN. Contudo, ele não é mesclado, e sim gerado um array contido em um campo.
+ from: coleção no mesmo database para join;
+ localField: campo da coleção que será comparado
+ foreingField: campo da outra coleção que será comparado com o localField
+ as: nome do novo array
+ 
+-- EXEMPLO
+>	DATA INICIAL Orders
+	db.orders.insertMany([
+	{ _id: 1, item: "almonds", price: 12, quantity: 2 },
+	{ _id: 2, item: "pecans", price: 20, quantity: 1 },
+	{ _id: 3 }
+	])
+	
+>	DATA INICIAL inventory
+	db.inventory.insertMany([
+	{ _id: 1, sku: "almonds", description: "product 1", instock: 120 },
+	{ _id: 2, sku: "bread", description: "product 2", instock: 80 },
+	{ _id: 3, sku: "cashews", description: "product 3", instock: 60 },
+	{ _id: 4, sku: "pecans", description: "product 4", instock: 70 },
+	{ _id: 5, sku: null, description: "Incomplete" },
+	{ _id: 6 }
+	])
+
+>	QUERY
+-- Irá (apenas visualização), criar um array com o match entre o campo "item" e "sku"
+	db.orders.aggregate([
+	{
+	$lookup: {
+	      from: "inventory",
+	      localField: "item",
+	      foreignField: "sku",
+	      as: "inventory_docs"
+	} }]);
+	
+>	RESULTADO
+	{
+	  "_id" : 1,
+	  "item" : "almonds",
+	  "price" : 12,
+	  "quantity" : 2,
+	  "inventory_docs" : [
+	    {
+	      "_id" : 1,
+	      "sku" : "almonds",
+	      "description" : "product 1",
+	      "instock" : 120
+	    }
+	  ]
+	}
+	{
+	  "_id" : 2,
+	  "item" : "pecans",
+	  "price" : 20,
+	  "quantity" : 1,
+	  "inventory_docs" : [
+	    {
+	      "_id" : 4,
+	      "sku" : "pecans",
+	      "description" : "product 4",
+	      "instock" : 70
+	    }
+	  ]
+	}
+	{
+	  "_id" : 3,
+	  "inventory_docs" : [
+	    {
+	      "_id" : 5,
+	      "sku" : null,
+	      "description" : "Incomplete"
+	    },
+	    {
+	      "_id" : 6
+	    }
+	  ]
+	}
+	
+*** Fixação ***
+-1 Selecione todos os clientes com as suas respectivas transações feitas;
+	db.clients.aggregate([
+	{ $lookup: {
+	from: "transactions",
+	localField: "name",
+	foreignField: "from",
+	as: "transactions"
+	} }
+	]).pretty();
+
+-2 Selecione quatro clientes com as suas respectivas transações recebidas;
+	db.clients.aggregate([
+	{ $lookup: {
+	from: "transactions",
+	localField: "name",
+	foreignField: "to",
+	as: "transactions"
+	} },
+	{ $limit: 4 }
+	]).pretty();
+
+-3 Selecione todos os cliente do estado da "Florida" e suas respectivas transações recebidas.
+	db.clients.aggregate([
+	{ $match: { State: "Florida" } },
+	{ $lookup: {
+	from: "transactions",
+	localField: "name",
+	foreignField: "to",
+	as: "transactions"
+	} }
+	]).pretty();
+	
+	
+*** RELEMBRANDO MONGOIMPOR ***
+- "--db" é a modalidade
+- "erp" é o nome do database 
+
+	mongoimport --db erp <caminho_do_arquivo_clientes.json>
+	mongoimport --db erp <caminho_do_arquivo_produtos.json>
+	mongoimport --db erp <caminho_do_arquivo_vendas.json>
