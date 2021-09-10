@@ -1,0 +1,299 @@
+*** Aggragation Pipeline 2 ***
+
+*** NOVAS CONDIÇÕES AO $lockup ***
+
+>	orders DATA
+	use example_db;
+	db.orders.insertMany([
+	  { _id: 1, item: "almonds", price: 12, ordered: 2 },
+	  { _id: 2, item: "pecans", price: 20, ordered: 1 },
+	  { _id: 3, item: "cookies", price: 10, ordered: 60 }
+	]);
+
+>	warehouse DATA
+	use example_db;
+	db.warehouses.insertMany([
+	  { _id: 1, stock_item: "almonds", warehouse: "A", instock: 120 },
+	  { _id: 2, stock_item: "pecans", warehouse: "A", instock: 80 },
+	  { _id: 3, stock_item: "almonds", warehouse: "B", instock: 60 },
+	  { _id: 4, stock_item: "cookies", warehouse: "B", instock: 40 },
+	  { _id: 5, stock_item: "cookies", warehouse: "A", instock: 80 }
+	]);
+	
+>	QUERY
+	db.orders.aggregate([
+	  {
+	    $lookup: {
+	      from: "warehouses",
+	      let: { order_item: "$item", order_qty: "$ordered" },
+	      pipeline: [
+		{
+		  $match: {
+		    $expr: {
+		      $and: [
+		        { $eq: [ "$stock_item",  "$$order_item" ] },
+		        { $gte: [ "$instock", "$$order_qty" ] }
+		      ]
+		    }
+		  }
+		},
+		{ $project: { stock_item: 0, _id: 0 } }
+	      ],
+	      as: "stockdata"
+	    }
+	  }
+	]);
+	
+-- NESTA QUERY, SERÁ RETORNARDO A JUNÇÃO DE orders, c/ A COMPLEMENTAÇÃO DE warehouses. P/ isso, dentro do lookup, são armazenados como let o item como order_item e ordered como order_qty. Com a abertura do pipeline, são definidas as condições para haver o retorno dos itens em warehouse. Através do $match, $expr (irá comparar o 1 com o 2 valor), $and, é condicionado que apenas os itens que possuem o stock_id igual ao order_item E instock é maior que order_qty, serão retornados.
+
+*** fixação ***
+- (utilizando db agg_example, collections clients e transactions).
+
+- Selecione todos os clientes com as suas respectivas transações feitas;
+	db.clients.aggregate([
+	{ $lookup: {
+	from: "transactions",
+	let: { client_name: "$name" },
+	pipeline: [
+	{ $match: { $expr: 
+	{ $eq: [ "$from",  "$$client_name" ] } } }],
+	as: "transactions"
+	} }]).pretty();
+
+>	COMO HÁ APENAS UMA CONDIÇÃO RELACIONAL, TAMBÉM É POSSÍVEL COM $lookup SIMPLES	
+	db.clients.aggregate([
+	{ $lookup: {
+	from: "transactions",
+	localField: "name",
+	foreignField: "from",
+	as: "transactions"
+	} },
+	]).pretty();
+
+- Selecione os quatro primeiros clientes com as suas respectivas transações recebidas ordenados pelo estado em ordem alfabética;
+	db.clients.aggregate([
+	{ $lookup: {
+	from: "transactions",
+	let: { client_name: "$name" },
+	pipeline: [
+	{ $match: { $expr: 
+	{ $eq: [ "$from",  "$$client_name" ] } } }],
+	as: "transactions"
+	} },
+	{ $sort: { State: 1 } },
+	{ $limit: 4 }]
+	).pretty();
+	
+>	COM $lookup SIMPLES
+	db.clients.aggregate([
+	{ $lookup: {
+	from: "transactions",
+	localField: "name",
+	foreignField: "from",
+	as: "transactions"
+	} },
+	{ $sort: { State: 1 } },
+	{ $limit: 4 }
+	]).pretty();
+
+- Selecione todos os cliente do estado da "Florida" e suas respectivas transações recebidas.
+	db.clients.aggregate([
+	{ $match: { State: "Florida" } },
+	{ $lookup: {
+	from: "transactions",
+	let: { client_name: "$name" },
+	pipeline: [
+	{ $match: { $expr: 
+	{ $eq: [ "$from",  "$$client_name" ] } } }],
+	as: "transactions"
+	} }]).pretty();
+	
+>	COM $lookup SIMPLES	
+	db.clients.aggregate([
+	{ $match: { State: "Florida" } },
+	{ $lookup: {
+	from: "transactions",
+	localField: "name",
+	foreignField: "from",
+	as: "transactions"
+	} },
+	]).pretty();
+	
+*** $add ***
+-- Soma valores numéricos ou data. !!!caso seja date, será tratado como milissegundos!!
+
+>	DATA
+	{ _id: 1, item: "abc", price: 10, fee: 2, date: ISODate("2014-03-01T08:00:00Z") },
+	{ _id: 2, item: "jkl", price: 20, fee: 1, date: ISODate("2014-03-01T09:00:00Z") },
+	{ _id: 3, item: "xyz", price: 5,  fee: 0, date: ISODate("2014-03-15T09:00:00Z") }
+	
+>	QUERY
+-- Irá somar o price e fee de cada doc
+	db.sales.aggregate([
+	{ $project: { item: 1, total: { $add: ["$price", "$fee"] } } }
+	]);
+	
+>	RESULTADO
+	{ "_id" : 1, "item" : "abc", "total" : 12 }
+	{ "_id" : 2, "item" : "jkl", "total" : 21 }
+	{ "_id" : 3, "item" : "xyz", "total" : 5 }
+	
+-- *** P/ DATAS ***
+- AQUI DESEJA-SE ADICIONAR 3 DIAS AO date. 3 dias * 24h * 60s * 60000ms
+	db.sales.aggregate([
+	  { $project: { item: 1, billing_date: { $add: ["$date", 3 * 24 * 60 * 60000] } } }
+	]);
+	
+*** Fixação ***
+-Calcule qual o custo total de cada produto, considerando o preço de compra e os impostos.
+-- (total_cost = purchase_price + taxes)
+	db.products.aggregate([
+	{ $project: { name: 1, _id: 0, total_cost: { $add: ["$purchase_price", "$taxes"] } } }
+	]);
+	
+*** $subtract ***
+-- Similar ao $add porém com subtração.
+-- É possível juntar operações
+-- (total_cost = (purchase_price + taxes) - discount)
+	db.products.aggregate([
+	{ $project: { name: 1, _id: 0, total_cost: { $subtract: [{ $add: ["$purchase_price", "$taxes"] }, $discount] } } }
+	]);
+
+-- Subtraindo datas (TAMBÉM PODE SUBSTITUIR O NOW POR new Date(), Ou subtrair por tempo neste caso, 5 minutos, 5*60*1000)
+	db.sales.aggregate([
+	{ $project: { item: 1, dateDifference: { $subtract: ["$$NOW", "$date"] } } }
+	]);
+
+*** Fixação ***
+- Calcule qual o lucro total de cada produto, considerando o preço de compra, os impostos e seu valor de venda.
+	db.products.aggregate([
+	{ $project: { name: 1, _id: 0, profit: { $subtract: ["$sale_price", { $add: ["$purchase_price", "$taxes"] }] } } }
+	]);
+	
+*** $ceil | $floor | $round ***
+-- $ceil => Arredonda valores decimais, para o número inteiro decimal de cima
+	db.products.aggregate([
+	{ $project: { name: 1, _id: 0, profit: { $ceil: { $subtract: ["$sale_price", { $add: ["$purchase_price", "$taxes"] }] } } } }
+	]);
+-- $floor => Arredonda valores decimais, para o número inteiro decimal de baixo
+	db.products.aggregate([
+	{ $project: { name: 1, _id: 0, profit: { $floor: { $subtract: ["$sale_price", { $add: ["$purchase_price", "$taxes"] }] } } } }
+	]);
+	
+-- $round => Arredonda para o número inteiro mais próximo. Também é possível escolher o n de casas decimais através do segundo param do array
+	db.products.aggregate([
+	{ $project: { name: 1, _id: 0, profit: { $round: [{ $subtract: ["$sale_price", { $add: ["$purchase_price", "$taxes"] }] }, 2]  } } }]);
+
+*** Fixação ***
+- Retorne o menor número inteiro relativo ao preço de venda de cada produto;
+	db.products.aggregate([
+	{ $project: { name: 1, _id: 0, minInt_sale_price: { $floor: "$sale_price"  } } }
+	]);
+
+- Retorne o maior número inteiro relativo ao lucro total sobre cada produto. Nota: Desconsiderar taxas (taxes)
+	db.products.aggregate([
+	{ $project: { name: 1, _id: 0, profit: { $ceil: { $subtract: ["$sale_price", "$purchase_price"] } } } }
+	]);
+	
+*** $abs ***
+- Retorna a diferença entre 2 valores. Muito útil com valores negativos.
+	db.ratings.aggregate([
+	{ $project: { delta: {	$abs: { $subtract: ["$start", "$end"] } } } }]);
+	
+*** Fixação ***
+- Calcule o valor absoluto do lucro total de cada produto.
+	db.products.aggregate([
+	{ $project: { absProfit: { $abs: { $subtract: ["$sale_price", { $add: ["$purchase_price", "$taxes"] }] } } } }
+	]);
+	
+*** $multiply ***
+-- Multiplica dois valores passados no array
+	db.sales.aggregate([
+	{ $project: { date: 1, item: 1, total: { $multiply: ["$price", "$quantity"] } } }
+	]);
+*** Fixação ***
+- Calcule qual o valor total em estoque de cada produto, considerando o preço de venda e a quantidade;
+	db.products.aggregate([
+	{ $project: { stockValue: { $multiply: ["$sale_price","$quantity"] } } }
+	]);
+- Calcule qual será o lucro total de cada produto caso todo o estoque seja vendido.
+	db.products.aggregate([
+	{ $project: { profitProjection: { $multiply: [{ $subtract: ["$sale_price", { $add: ["$purchase_price", "$taxes"] }] },"$quantity"] } } }
+	]);
+	
+*** $divide ***
+-- Divide dois valores. O primeiro é o dividendo, o segundo, o divisor.
+	db.planning.aggregate([
+	{ $project: { name: 1, workdays: { $divide: ["$hours", 8] } } }
+	]);
+*** Fixação ***
+- Calcule qual será o preço de venda de cada produto caso haja uma promoção de 50% de desconto.
+	db.products.aggregate([
+	{ $project: { discounted_sale_price: { $divide: ["$sale_price", 2] } } }
+	]);
+	
+*** $addFields ***
+- Adiciona novos campos aos documentos. A saída irá conter os campos existentes, mais, esses novos. Esses novos campos, podem ser criados de um já existente(ex: somando 1000 ao value, dando origem ao campo newValue)
+
+>	DATA
+	{
+	  _id: 1,
+	  student: "Maya",
+	  homework: [10, 5, 10],
+	  quiz: [10, 8],
+	  extraCredit: 0
+	},
+	{
+	  _id: 2,
+	  student: "Ryan",
+	  homework: [5, 6, 5],
+	  quiz: [8, 8],
+	  extraCredit: 8
+	}
+
+>	QUERY
+	db.scores.aggregate([
+	  {
+	addFields: {
+	      totalHomework: { $sum: "$homework" } ,
+	      totalQuiz: { $sum: "$quiz" }
+	    }
+	  },
+	  {
+	addFields: {
+	      totalScore: {
+	add: [ "$totalHomework", "$totalQuiz", "$extraCredit" ]
+	      }
+	    }
+	  }
+	]);
+
+>	RESULTADO
+	{
+	  "_id" : 1,
+	  "student" : "Maya",
+	  "homework" : [ 10, 5, 10 ],
+	  "quiz" : [ 10, 8 ],
+	  "extraCredit" : 0,
+	  "totalHomework" : 25,
+	  "totalQuiz" : 18,
+	  "totalScore" : 43
+	}
+	{
+	  "_id" : 2,
+	  "student" : "Ryan",
+	  "homework" : [ 5, 6, 5 ],
+	  "quiz" : [ 8, 8 ],
+	  "extraCredit" : 8,
+	  "totalHomework" : 16,
+	  "totalQuiz" : 16,
+	  "totalScore" : 40
+	}
+
+*** Fixação ***
+- Calcule o valor total do estoque, considerando que cada produto valha o mesmo que seu preço de venda. Lembre-se da quantidade.
+	db.products.aggregate([
+	{ $addFields: { stockValue: { $multiply: ["$sale_price","$quantity"] } } }
+	]).pretty();
+	
+
