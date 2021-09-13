@@ -1,6 +1,6 @@
 *** Aggragation Pipeline 2 ***
 
-*** NOVAS CONDIÇÕES AO $lockup ***
+*** NOVAS CONDIÇÕES AO $lookup ***
 
 >	orders DATA
 	use example_db;
@@ -254,7 +254,7 @@
 >	QUERY
 	db.scores.aggregate([
 	  {
-	addFields: {
+	$addFields: {
 	      totalHomework: { $sum: "$homework" } ,
 	      totalQuiz: { $sum: "$quiz" }
 	    }
