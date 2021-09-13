@@ -1,0 +1,155 @@
+*** Resumo + Fixação 26.1 ***
+
+*** EXPORTANDO MÓDULOS ***
+-- EXPORT
+// brlValue.js
+	const brl = 5.37;
+
+	const usdToBrl = (valueInUsd) => valueInUsd * brl;
+
+	module.exports = usdToBrl;
+
+-- IMPORT
+-- Repare que o nome fica à escolha	
+// index.js
+	const convert = require('./brlValue');
+
+	const usd = 10;
+	const brl = convert(usd);
+
+	console.log(brl) // 53.7
+	
+-- EXPORT
+-- É possível passar como objeto para enviar mais informações
+// brlValue.js
+	const brl = 5.37;
+
+	const usdToBrl = (valueInUsd) => valueInUsd * brl;
+
+	module.exports = {
+	  brl,
+	  usdToBrl,
+	};
+
+-- IMPORT
+	const { brl, usdToBrl } = require('./brValue');
+
+	console.log(`Valor do dólar: ${brl}`); // Valor do dólar: 5.37
+	console.log(`10 dólares em reais: ${usdToBrl(10)}`); // 10 dólares em reais: 53.7
+	
+-- EXPORTANDO VÁRIAS FUNCIONALIDADES
+-- É NECESSÁRIO CRIAR UM index.js QUE IRÁ CONTER E EXPORTAR TODOS JUNTOS
+
+// meuModulo/funcionalidade-1.js
+
+	module.exports = function () {
+	  console.log('funcionalidade1');
+	}
+
+// meuModulo/funcionalidade-2.js
+
+	module.exports = function () {
+	  console.log('funcionalidade2');
+	}
+	
+// meuModulo/index.js
+	const funcionalidade1 = require('./funcionalidade-1');
+	const funcionalidade2 = require('./funcionalidade-2');
+
+	module.exports = { funcionalidade1, funcionalidade2 };
+	
+	
+*** Módulos internos ***
+-- Passar o nome do pct como param em require
+const fs = require('fs');
+
+	fs.readFileSync('./meuArquivo.txt');
+
+*** Módulos de terceiros ***
+-- Também são importados da mesma forma, porém não são nativos do Node.js, sendo necessário instalar na pasta do projeto utilizado.
+
+-- Ordem de procura
+
+> Pasta/arquivo local > node_modules > procura outra node_modules em pastas superiores > repete processo > Para caso seja encontrado ou não exista
+
+
+*** CRIANDO UM NPM ***
+
+> NA PASTA ONDE SERÁ ARMAZENADO
+- NPM INIT
+
+-- Primeiro será perguntado o nome do pacote que, por padrão, será o nome da pasta (enter irá manter)
+
+ {
+   version: versão
+   description: descrição
+   entry point: onde o arquivo/pacote começa
+   test comand: comando para utilização de teste (npm test por exemplo)
+   git repository: dominio git
+   keyword: relacionado ao site npm, como as pessoas irão encontrar o pacote
+   author: autor
+   license: tipo de licensa, ISC => livre
+ }
+
+- Por padrão será um package.json
+
+- OU rm package.json (somente para deletar o pacote)
+
+- npm init -y (cria com valor default)
+
+*** INFO DOS ARQUIVOS ***
+// package-lock.json
+- Irá conter os pacotes e informações externas para a composição do projeto 
+
+// package.json
+- Nosso arquivo que contém informações de gerenciamento de pacotes.
+{
+  main: "index.js"(pode ser outro arquivo também. neste caso, foi definido index.js pois compila as funções) irá conter as principais infomrações. Não necessáriamente será executado, pode somente disponibilizar funções, info, etc
+
+  scripits: {
+  (IRÁ CONTER OS COMANDOS DE EXEXUÇÃO)
+  npm test: qual teste será executado
+  npm start: atalho para o npm run start. executa a principal aplicação do pacote
+  }
+}
+
+
+*** npm run ***
+- executa um determinado scripit configurado no package.json. (ex: npm run lint).
+
+*** npm install ***
+ 
+> npm install <nome do pacote>
+ Baixa o pacote do registro do NPM e o adiciona ao objeto dependencies do package.json
+ 
+> npm install -D <nome do pacote
+ Semelhante ao anterior, porém instala como dependencia para desenvolvimento, não para executar a aplicação.
+ 
+> npm install
+ Baixa e instala todos os pacotes listados nos objetos de dependencies e devDependencies do package.json . Sempre deve ser executado ao clonar o repositório de um pacote para garantir que todas as dependências desse pacote estão instaladas.
+ 
+*** Fixação / Criando hello word no node ***
+> CRIANDO UM HELLO WORD
+- 1 - Cria uma pasta chamada hello-word
+- 2 - npm init
+- 3 - utiliza as config default, alterando apenas o nome
+- 4 - Cria uma arquivo index.js e adiciona o console.log("Hello, world!");
+- 5 - No package.json, em scripit, adiciona "start": "node index.js"
+- 6 - na pasta hello-word, executa, npm start
+
+> UTILIZANDO PACOTES EXTERNOS
+- 1 - npm i readline-sync (pacote que irá ler nome e idade da pessoa)
+- 2 - importar no index com const readline = require('readline-sync');
+- 3 - insere questões que irão armazenar as info
+	const name = readline.question('Qual seu nome? ');
+	const age = readline.questionInt('Qual sua idade? ');
+- 4- cria a mensage
+	console.log(`Hello, ${name}! You are ${age} years old!`);
+- 5 - PRONTO! Basta dar npm start, será perguntado nome e idade e em seguida será retornado
+
+
+*** Desinstalando ***
+- Opção 1 => npm unistall nomeDoPacote
+- Opção 2
+	=> rm - rf node_modules
+	=> npm i
