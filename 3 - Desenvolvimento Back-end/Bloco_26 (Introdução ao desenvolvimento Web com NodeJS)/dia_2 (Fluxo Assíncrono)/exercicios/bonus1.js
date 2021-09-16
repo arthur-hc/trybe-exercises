@@ -26,4 +26,4 @@ const getFile = async () => {
   }
 }
 
-getFile()
+getFile();

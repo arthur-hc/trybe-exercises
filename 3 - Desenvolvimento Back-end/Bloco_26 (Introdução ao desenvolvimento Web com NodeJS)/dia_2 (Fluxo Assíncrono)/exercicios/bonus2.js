@@ -9,6 +9,8 @@
 // 2.7 - Salve o novo arquivo no caminho de destino.
 // Dica: Utilize a classe RegExp do JS para substituir todas as ocorrências da palavra com replace(new RegExp(palavra, 'g'), novaPalavra) .
 
+// SE TIVESSE SIDO UTILIZADO 'utf-8' COMO SEGUNDO PARAMETRO EM readFile, NÃO SERIA NECESSÁRIO O .toString();
+
 const { question } = require('readline-sync');
 const fs = require('fs').promises;
 
@@ -64,4 +66,4 @@ const getFile = async () => {
   }
 }
 
-getFile()
+getFile();
