@@ -169,6 +169,7 @@ app.post('/signup', (req, res) => {
 });
 
 //http POST :3001/signup email='arthurhermann@hotmail.com' password:=123 firstName='arthur' phone:=3344445555 
+//http POST :3001/signup email='arthurhermann@hotmail.com'
 
 app.listen(3001, ()=> {
   console.log('Aplicação ouvindo na porta 3001');
