@@ -172,5 +172,5 @@ app.post('/signup', (req, res) => {
 //http POST :3001/signup email='arthurhermann@hotmail.com'
 
 app.listen(3001, ()=> {
-  console.log('Aplicação ouvindo na porta 3001');
+  console.log('Aplicação ouvindo na porta 3001 dia 5 index');
 });
