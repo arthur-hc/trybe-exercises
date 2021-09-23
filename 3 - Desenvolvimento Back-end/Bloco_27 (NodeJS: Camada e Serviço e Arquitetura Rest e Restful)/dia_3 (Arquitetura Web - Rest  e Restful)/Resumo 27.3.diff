@@ -1,0 +1,56 @@
+*** ARQUITETURA WEB REST E RESTFULL
+REST => Conjunto de boas práticas
+RESTful => Web service que segue as normas do padrão REST
+
+*** RECURSO
+Na tranferência de informações durante o padrão REST, a abstração é o recurso. Ex: Usuário, Produtos, Compras etc
+
+*** 6 RESTRIÇÕES PARA SER RESTFUL:
+- 1- UNIFORM INTERFACE
+*A comunicação entre servidor/cliente deve possuir um padrão a ser seguido à risca. Endpoint, tipo de retorno, verbos de uso HTTP estão inclusos*
+
+> RECURSOS E COLEÇÕES:
+O acessado/alterado deve ser indicado pelo Endpoint da req
+(/books/:id)
+
+> TIPO DE RETORNO
+Manter os retornos consistentes. Se recebe JSON, deve retornar JSON. Se um endpoint retorna um erro com { code, error e message }, todos os outros erros devem retornar no mesmo formato
+
+> AÇÕES/VERBOS
+POST, GET, PUT E DELETE
+
+> RESPOSTAS
+SÃO OBRIGATÓRIAS, mesmo vázias.
+
+1xx: Informação;
+2xx: Sucesso;
+3xx: Redirecionamento;
+4xx: Erro do cliente;
+5xx: Erro no servidor.
+
+- 2 - ARQUITETURA CLIENTE servidor
+API e cliente desacoplados. Não importa quem é o cliente (app, web, tv...), devemos conseguir retornar dados para ele. O foco é a responsabilidade, enquanto o cliente se preocupa com exibição dos dados, experiência da pessoas usuária, etc, o servidor se preocupa em armazenar, acessar, cache, log, etc...
+
+- 3 - STATELESS
+Ser autossuficiente. Toda req deve conter todas info necessárias para realizar uma ação. EX:
+=> Ao logar e iniciar uma sessão, o servidor fornece um token. na próxima req, será necessário enviar este token, ele não se lembrará de você
+Isso permite:
+Transparência => facilidade para o servidor, as info estão na req
+Escalabilidade => despende menos recurso do serv
+
+- 4 - CACHEBLE
+Cache é um depósito de informações. Ex: navegador armazena img e arq para não ser necessário pedi-los novamente.
+
+AS RESPOSTAS DADAS PELA API DEVEM DIZER, EXPLICITAMENTE, SE PODEM OU NÃO SER CACHEADAS E POR QUANTO TEMPO.
+
+No Header do HTTP, Cache-Control: max-age=120, a resposta é cacheada por 120 segundos.
+
+
+- 5 - LAYERED SYSTEM (Sistema em camadas)
+Quem consome a API NÃO DEVE saber de onde as coisas estão vindo
+
+- 6 - CODE ON DEMAND (Opcional)
+Dar possibilidade do servidor enviar código (JS por exemplo), permitindo custmizar o comportamento o comportamento do cliente.
+
+*** REST NO EXPRESS
+Independete do uso do express ou qualquer outra tecnologia, os princípios devem ser seguidos
