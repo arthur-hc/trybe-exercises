@@ -1,4 +1,5 @@
 const connection = require('./connection');
+const axios = require('axios')
 
 const getAddressByCep = async (cep) => {
   const [result] = await connection.execute('SELECT * FROM ceps WHERE cep=?', [cep]);
@@ -18,7 +19,14 @@ const createAddress = async (logradouro, bairro, localidade, uf, cep) => {
   }
 };
 
+const cepExists = async (cep) => {
+  const cepExists = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+  if(cepExists.data.erro) return null
+  return true
+}
+
 module.exports = {
   getAddressByCep,
   createAddress,
+  cepExists,
 };

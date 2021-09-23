@@ -1,4 +1,5 @@
 const Joi = require('joi');
+
 const models = require('../models/cep-lookup');
 
 const withoutHyphen = (value) => value.replace('-', '');
@@ -53,8 +54,11 @@ const createAddress = async (logradouro, bairro, localidade, uf, cep) => {
   const addressValidationsResult = addressValidations(logradouro, bairro, localidade, uf);
   if(addressValidationsResult.error) return { error: { code: "invalidData", message: addressValidationsResult } };
 
-  const cepAlreadyExists = await models.getAddressByCep(withoutHyphen(cep));
-  if(cepAlreadyExists) return { error: { code: "alreadyExists", message: "CEP já existente" } };
+  const cepAlreadyRegistered = await models.getAddressByCep(withoutHyphen(cep));
+  if(cepAlreadyRegistered) return { error: { code: "alreadyExists", message: "CEP já cadastrado" } };
+
+  const cepExists = await models.cepExists(withoutHyphen(cep));
+  if(!cepExists) return { error: { code: "notFound", message: "CEP não encontrado" } };
 
   const newAddress = await models.createAddress(logradouro, bairro, localidade, uf, withoutHyphen(cep));
   if(!newAddress) return { error: { code: "InternalError", message: "Houve um problema interno" } }
