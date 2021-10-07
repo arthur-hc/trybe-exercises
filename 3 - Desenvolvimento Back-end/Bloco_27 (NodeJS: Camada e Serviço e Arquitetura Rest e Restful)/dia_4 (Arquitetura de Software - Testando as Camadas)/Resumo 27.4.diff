@@ -1,0 +1,114 @@
+*** TESTANDO AS CAMADAS
+1 - Escreve o teste, que irá falhar => 2 - Implementa a funcionalidade => 3 - Rafatora sem mudar comportamento => 1...
+
+*** TESTES UNITÁRIOS
+> Testam de forma isolada, baixo nível, pequenas partes, rápidos
+
+> Cada camada do MSC, em testes unit, são testados isoladamente:
+└── controllers
+│   └── movieController.js
+└── models
+│   └── connection.js
+│   └── movieModel.js
+└── services
+│   └── movieService.js
+└── tests
+│   ├── controllers
+│   │   └── movieController.test.js
+│   ├── services
+│   │   └── movieService.test.js
+│   └── models
+│       └── movieModel.test.js
+└── index.js
+
+> Pode-se quebrar em arquivos p/ cada func:
+└── controllers
+│   └── movieController.js
+└── models
+│   └── connection.js
+│   └── movieModel.js
+└── services
+│   └── movieService.js
+└── tests
+│   ├── controllers
+│   │   └── movieControllerCreate.test.js
+│   │   └── movieControllerGetAll.test.js
+│   │   └── movieControllerGetById.test.js
+│   └── models
+│   │   └── movieModelCreate.test.js
+│   │   └── movieModelGetAll.test.js
+│   │   └── movieModelGetById.test.js
+│   ├── services
+│   │   └── movieServiceCreate.test.js
+│   │   └── movieServiceGetAll.test.js
+│   │   └── movieServiceGetById.test.js
+└── index.js
+
+> Instalar mocha, chai e sinon
+npm install -D mocha chai sinon
+
+> Adicionar comando no package
+TODOS => mocha <suaPastaDeTestes> --recursive
+TODOS COM FINAL test.js => mocha .<suaPastaDeTestes>/**/*.test.js
+ÚNICO => mocha ./tests/**/*$NAME*.test.js 
+
+Em scripits:
+"test": mocha ./tests/**/*$NAME*.test.js 
+
+O --exit força o encerramento
+
+> Executando comandos
+TODOS => npm test
+ESPECÍFICO COM VAR DE AMBIENTE => NAME=nomeDoArquivo npm test
+
+*** TESTANDO CAMADA MODEL
+
+> tests/models/movieModelCreate.test.js
+const { expect } = require('chai');
+
+/*
+  Como ainda não temos a implementação, vamos fixar
+  um objeto simulando os métodos que iremos desenvolver,
+  porém, eles não terão nenhum comportamento
+*/
+const MoviesModel = {
+  create: () => {}
+};
+
+describe('Insere um novo filme no BD', () => {
+  const payloadMovie = {
+    title: 'Example Movie',
+    directedBy: 'Jane Dow',
+    releaseYear: 1999,
+  }
+
+  describe('quando é inserido com sucesso', () => {
+    it('retorna um objeto', async () => {
+      const response = await MoviesModel.create(payloadMovie);
+
+      expect(response).to.be.a('object')
+    });
+
+    it('tal objeto possui o "id" do novo filme inserido', async () => {
+      const response = await MoviesModel.create(payloadMovie);
+
+      expect(response).to.have.a.property('id')
+    });
+  });
+});
+
+> Rodando
+npm test ou NAME=movieModel npm test
+
+> Isolando o teste
+Tem a função de testar o comportamento, não de fato alterar o db.
+(exemplo em /tests/models/movieModelCreate.test.js)
+
+> Criando db em memória
+Stubs podem ser trabalhosos, e como no exemplo, não são tão assertivos e dependendo do retorno do cursor, possuindo métodos proprios (sort, limit, toArray), podem gerar complicações. P/ SOLUCIONAR, UTILIZA-SE DB EM MEMÓRIA
+
+npm install -D mongodb-memory-server@6
+
+> Stub para service
+Como service depende do retorno de model, é necessário utilizar o stub
+

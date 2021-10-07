@@ -37,29 +37,29 @@ app.get('/drinks/:id', (req, res) => {
 app.post('/drinks', (req, res) => {
   const { id, name, price } = req.body;
   drinks.push({id, name, price});
-  res.status(201).json({ message: `Drink created successfully!` })
+  return res.status(201).json({ message: `Drink created successfully!` })
 });
 
 app.put('/drinks/:id', (req, res) => {
   const { id } = req.params;
   const { name, price } = req.body;
-  const drinkIndex = drinks.findIndex((drink) => drink.id = Number(id));
+  const drinkIndex = drinks.findIndex((drink) => drink.id === Number(id));
   if(drinkIndex === -1) return res.status(404).json({ message: 'Drink not found!' });
 
   drinks[drinkIndex] = { ...drinks[drinkIndex], name, price };
 
   // res.status(204).end();
-  res.status(404).json({ message: `Drink id: ${id} edited successfully!` });
+  return res.status(200).json({ message: `Drink id: ${id} edited successfully!` });
 });
 
 app.delete('/drinks/:id', (req, res) => {
   const { id } = req.params;
-  const drinkIndex = drinks.findIndex((drink) => drink.id = Number(id));
+  const drinkIndex = drinks.findIndex((drink) => drink.id === Number(id));
   if(drinkIndex === -1) return res.status(404).json({ message: 'Drink not found!' });
 
   drinks.splice(drinkIndex, 1);
   // res.status(204).end();
-  res.status(404).json({ message: `Drink id: ${id} deleted successfully!` });
+  return res.status(200).json({ message: `Drink id: ${id} deleted successfully!` });
 });
 
 app.listen(3001, () => {

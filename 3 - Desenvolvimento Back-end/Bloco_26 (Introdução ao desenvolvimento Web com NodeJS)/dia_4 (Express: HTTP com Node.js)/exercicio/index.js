@@ -88,7 +88,7 @@ app.put('/users/:name/:age', (req, res) => {
 
 // 6- Crie um endpoint GET /simpsons
 // O endpoint deve retornar um array com todos os simpsons.
-app.get('/simpsons', (_req, res) => {
+app.get('/simpsons', (req, res) => {
   const token = req.headers.authorization;
   if (!token ||  token.length !== 16) return res.status(401).json({message: 'Invalid Token!'});
 
@@ -136,9 +136,9 @@ app.post('/simpsons', (req, res) => {
   if(!character) {
     const newArray = [...simpsons, { name, id }];
     fs.writeFileSync('./simpsons.json', JSON.stringify(newArray));
-    return res.status(204).end();
+    return res.status(201).json({ message: 'Character created' });
   }
-
+  
   res.status(409).json({ message: 'id already exists' });
 });
 
