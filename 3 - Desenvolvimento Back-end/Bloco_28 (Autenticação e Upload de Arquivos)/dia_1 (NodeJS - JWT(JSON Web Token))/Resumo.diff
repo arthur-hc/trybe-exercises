@@ -1,0 +1,91 @@
+*** JST (JSON Web Token)
+=> Forma de validação vantajosa, pois não utiliza o BD para ficar fazendo consultas, aumentando a performance.
+
+=> Mais simples em caso de uma arquitetura que não é boa para muitos usuários. Pode-se utilizar uma lib JWT
+
+=> É possível transitar o token entre aplições, depois de uma primeira autenticação (ex: drive, gmail, docs...)
+
+*** Características
+=> Leve
+=> Autocontido - Traz todas info p/ descriptar
+=> Seguro - Valida utilizando algoritmos de hashing
+
+*** Algoritmos de cript utilizados
+> HMAC - Chave secreta que cript e descript
+> RCA - Par de chaves pública/privada
+
+*** Compõe
+> Header
+> Payload
+> Signature = Header + Payload Criptografados
+
+>  Header + Payload + Signature = JWT
+
+
+*** Autenticação VS Autorização
+> Autenticação: quem é, comprova que aquele usuário é realmente ele (login no FB)
+> Autorização: o que pode fazer ou não (pode alterar as próprias fotos, não de outras pessoas)
+
+*** HMAC
+  - Algoritmo gerador de um MAC que criptografa através de hash (md5, sha1, sha256 etc...). Ao alterarmos qualuqer dado da informação, a assinatura se torna invalida. ex:
+  "Olá, tudo bem?" = b88651e71c7c757560722b52e5f1ead754a759d8
+  "olá, tudo bem?" = ac7016fd2014ca9a79ac2e3ef16b6bd857f91f7a
+
+*** Header
+> Composto por tipo de token (JWT) e tipo de algoritmo (HMAC, SHA256 ou RSA)
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+*** Payload
+> Contém os dados. Normalmente do usuário
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "admin": true
+}
+
+*** Signature
+> Junção das duas partes codificadas na base64
+import { hmac } from 'bibliotecaDeHmac';
+
+function base64 (string) {
+  return Buffer.from(string).toString('base64');
+}
+
+>>> NÃO É O MESMO DA HTTP<<<
+const header = JSON.stringify({
+  alg: 'HS256',
+  type: 'JWT'});
+
+const payload = JSON.stringify({
+  sub: '1234567890',
+  name: 'John Doe',
+  admin: true});
+
+const secret = 'MinhaSenhaMuitoComplexa123';
+
+const assinatura = hmac(`${base64(header)}.${base64(payload)}`, secret);
+
+const token = `${base64(header)}.${base64(payload)}.${base64(assinatura)}`;
+
+> Saida:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiZXhwIjoxNTQ3OTc0MDgyfQ.2Ye5_w1z3zpD4dSGdRp3s98ZipCNQqmsHRB9vioOx54
+
+Separando...
+
+> Header:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+> Payload:
+eyJ1c2VybmFtZSI6InVzZXIxIiwiZXhwIjoxNTQ3OTc0MDgyfQ
+
+> Signature:
+2Ye5_w1z3zpD4dSGdRp3s98ZipCNQqmsHRB9vioOx54
+
+*** Exemplo de Header com HTTP
+ GET /foo/bar HTTP/1.1
+ Host: www.exemplo.com
+ Authorization: Bearer (Header em base64).(Payload em base64).(Signature em base64)
+
