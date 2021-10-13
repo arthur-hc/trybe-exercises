@@ -1,0 +1,39 @@
+*** Multer
+ - Tem a função de interpretar dados no body da req, suportando arquivos no formato como Form Data (Content-Type: multipart/form-data);
+
+ - Capaz de suportar todas as operações do <form> HTML, na qual inclui a opção de arquivo.
+
+ - Além do req.body, permite req.file ou req.files
+
+*** Único VS Multiplos
+ No HTML
+ <form>
+  
+  <input type="file" name="arquivo"/>
+
+ </form>
+
+ ... como midleware
+ - upload.single('arquivo');
+> Irá colocar dentro da req um campo chamado file
+  
+ - upload.array()
+> Irá colocar dentro da req um campo chamado files
+
+
+*** Customizando o Multer
+
+const storage = multer.diskStorage({
+
+  destination: (req, file, callback) => {
+
+    callback(null, 'uploads/');
+  },
+
+  filename: (req, files, callback) => {
+    callback(null, Date.now()+'-'+filename.originalname)
+  },
+
+});
+
+const upload = multer({ storage });
