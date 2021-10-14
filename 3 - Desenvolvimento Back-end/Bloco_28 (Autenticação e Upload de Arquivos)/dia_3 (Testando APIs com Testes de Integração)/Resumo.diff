@@ -1,0 +1,67 @@
+*** TESTES DE INTEGRAÇÃO
+A cadeia toda estará conectada, mockando apenas o db
+
+*** CONTRATO
+É o comportamento esperado. Em uma requisição passando o id como param, quando a pessoa existe, espera-se um HTTP 200 e um body com as info do user
+
+*** PROJETO JWT
+O exemplo estará na pasta de forks
+O gabarito estará na branch block-28-3
+
+
+*** COBERTURA DE TESTES
+
+> Utiliza a ferramente nyc
+
+*** CRITÉRIOS
+
+> Cobertura de Funções / Function Coverage : Cada função/sub-rotina do script foi acionado/chamado?
+
+> Cobertura de Afirmações / Statement Coverage : Cada afirmação/definição/comando do script foi executado?
+
+> Cobertura de Ramificações / Branch Coverage : Cada situação de ramificação do código (aqui podemos assumir um script condicional, como um if { /*situação A*/ } else { /*situação B*/ } ) foi executada?
+
+*** OPÇÕES DE TESTAGEM
+Depois de instalar nyc
+
+> OPÇÃO PARA COBERTURA GERAL
+#package.json
+..."scripts": {
+    "dev": "nodemon .",
+    "test": "mocha ./tests/**/*$NAME*.test.js --exit",
+    "test:coverage": "nyc npm test"
+  },
+
+> PARA COBERTURA ESPECIFICA
+...
+"scripts": {
+    ...
+    "test": "mocha ./tests --recursive",
+    "test:coverage": "nyc --include='src/**/*.js' npm run test",
+    ...
+},
+...
+
+*** RELEMBRANDO INSERÇÃO DE ITENS NO MOCK db
+before(async () => {
+  const usersCollection = connectionMock.db('jwt_exercise').collection('users')
+})
+
+await usersCollection.insertOne({
+  username: 'user-ok',
+  password: 'senha-ok'
+})
+
+> CONTINUANDO EM CASOS EM QUE SERÁ NECESSÁRIO O TOKEN(ainda estaria dentro do before...)
+
+const token = await chai.request(server)
+.post('/api/login')
+.send({
+  username: 'user-ok',
+  password: 'senha-ok'
+})
+.then((res) => res.body.message);
+
+response = await chai.request(server)
+.get('/api/posts')
+.set('authorization', token);
