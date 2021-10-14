@@ -89,3 +89,4 @@ eyJ1c2VybmFtZSI6InVzZXIxIiwiZXhwIjoxNTQ3OTc0MDgyfQ
  Host: www.exemplo.com
  Authorization: Bearer (Header em base64).(Payload em base64).(Signature em base64)
 
+//
