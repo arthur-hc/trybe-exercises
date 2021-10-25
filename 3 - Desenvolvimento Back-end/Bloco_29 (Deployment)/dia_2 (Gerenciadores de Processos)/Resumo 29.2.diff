@@ -1,0 +1,251 @@
+*** GERENCIADORES DE PROCESSOS (PMs - Process Managers)
+Auxiliam o gerenciamento na rodagem, monitoramento e manutenção de uma aplicação, melhorando a perfomance
+
+*** PM2 
+Popular gerenciador p/ Node
+
+INSTALAÇÃO
+- \$ npm install pm2@latest -g
+
+VALIDAÇÃO DA INSTALAÇÃO (IRÁ MOSTRAR A VERSÃO INSTALADA)
+- \$ pm2 --version
+
+ATUALIZAÇÃO
+- \$ pm2 update
+
+*** COMANDOS
+
+INICIAR
+- \$ pm2 start index.js
+
+P/ DEFINIR O NOME DO PROC UTILIZA-SE A FLAG NAME. CASO NÃO ESPECIFIQUE, O NOME SERÁ O ARQ EXE (TAMBÉM HAVERÁ UM ID, QUE PODE SER UTILIZADO P/ REFERENCIAR TAMBÉM)
+- \$ pm2 start index.js --name <NOME_DO_PROCESSO>
+
+INTERROMPER (PERMITE INICIAR NOVAMENTE C/ START)
+- \$ pm2 stop <NOME_DO_PROCESSO>
+OU TODOS
+- \$ pm2 stop all
+
+EXCLUIR O APP
+- \$ pm2 delete <NOME_DO_PROCESSO>
+
+RESTART
+- \$ pm2 restart <NOME_DO_PROCESSO>
+
+OBS: C/ ALTERAÇÕES, O APP É RECARREGADO, MATANDO E REINICIANDO, DURANTE ESSE CURTO PROCESSO, O SERVIÇO NÃO RESPONDE
+
+RELOAD
+> NÃO CAUSA DOWNTIME (TEMPO FORA DO AR). PRIMEIRO SOBE UM NOVO PROCESSO PARA ENTÃO MATAR O ANTIGO
+- \$ pm2 reload <NOME_DO_PROCESSO>
+
+LISTANDO
+- \$ pm2 list
+- \$ pm2 ls
+
+LISTANDO ORDENADO
+- \$ pm2 list --sort name:desc
+
+DETALHES DE UM PROC ESPECÍFICO
+- \$ pm2 show <NOME_DO_PROCESSO>
+
+HISTÓRICO EM TEMPO REAL (SE UTILIZADO SEM UM PROCESSO, RETORNA TODOS)
+- \$ pm2 logs <NOME_DO_PROCESSO>
+
+DISPONIBILIZA UM DASHBOARD
+- \$ pm2 monit
+
+INTERFACE WEB (necessário criar conta)
+- \$ pm2 plus
+
+*** MODO CLUSTER
+Modo que permite a distribuição entre as CPUs dispníveis, aumentando a perfomance (Load Balancing)
+OBS: CADA PROCESSO RODA APENAS EM UMA CPU, E EXECUÇÃO DE MAIS DE UM PROCESSO EM UMA ÚNICA CPU QUE É EVITADO
+
+Caso uma API receba 4 chamadas, cada CPU processará 1 req
+
+UTILIZANDO O MODO
+- \$ pm2 start index.js --instances 2 --name <NOME_DO_PROCESSO>
+
+CRIA UMA INSTÂNCIA P/ CADA CPU DISPONÍVEL
+-\$ pm2 start index.js -i max --name <NOME_DO_PROCESSO>
+
+*** SCALING (EXTRA)
+Outro modo p/ aumentar o n processos
+
+INICIANDO
+- \$ pm2 scale <NOME_DO_PROCESSO> 3
+
+INDICANDO N PROCESSOS QUE DESEJA ADICIONAR
+- \$ pm2 scale <NOME_DO_PROCESSO> +3
+
+*** STATELESS (EXTRA)
+Nenhuma info do user é salva p/ utilizar em uma próxima sessão, apenas trabalhada durante o processo. Os que forem necessários, vão utilizar statefull, podendendo ser um db ou storage
+=> Escalar horizontalmente, em multi servs
+=> Cachear fácil e apps mais rápidas
+=> Menos complexidade de storages
+
+*** ECOSYSTEM FILE
+Define um arq de config p/ PM2 executar as app. Pode conter opções, comportamentos,var de ambiente, arquivos de log...
+- \$ pm2 [start|restart|stop|delete] ecosystem.config.js
+
+> Exemplo de um em js
+module.exports = {
+  apps: [
+    {
+      name: 'app',
+      script: './index.js'
+    },
+    //...
+  ]
+};
+
+> Exemplo em YAML
+apps:
+
+- name: app
+  script: ./index.js
+
+*** MULTIAPLICATIVOS
+> Exemplo
+apps:
+
+- name: app-1
+  script: .app-1/index.js
+- name: app-2
+  script: .app-2/index.js
+- name: app-3
+  script: .app-3/index.js
+
+CASO QUEIRA EXECUTAR APENAS UM OU ESPECÍFICOS, UTILIZAR ONLY
+- \$ pm2 start ecosystem.config.yml --only app-1
+OU
+- \$ pm2 start ecosystem.config.yml --only "app-1,app-2"
+
+
+*** INSTÂNCIAS
+> Exemplo
+apps:
+
+- name: app
+  script: ./index.js
+  exec_mode: cluster
+  instances: 4
+
+OBS: AO ALTERAR O ECOSYSTEM, É NECESSÁRIO DELETAR E INICIAR NOVAMENTE O PROJETO DO PM2
+
+*** VAR DE AMBIENTE (env_ + nome do ambiente)
+> Exemplo
+apps:
+
+- name: app
+  script: ./index.js
+  exec_mode: cluster
+  instances: 4
+  env_prod:
+    ENVIRONMENT: PRODUCTION
+  env_homolog:
+    ENVIRONMENT: HOMOLOG
+
+> EXECUTANDO PASSANDO AS VARIÁVEIS QUE SERÃO PASSADAS. PERCEBA QUE O AMBIENTE É PASSADO SEM O PREFIXO 'env_'
+- \$ pm2 start ecosystem.config.yml --env homolog
+
+
+*** AUTO RESTART
+P/ manter a resiliência, o PM2 reinicia automaticamente processos que tenham falhado. Há outras opções
+
+> Memória máxima
+Em caso de acumulo de uso de RAM ao decorrer do tempo. Exemplo com 20mb (Pode ser indicado tanto como propriedade do app quanto no ecosystem)
+Indicado por K M ou G
+- \$ pm2 start index.js --name <NOME_DO_PROCESSO> --max-memory-restart 20M
+
+OU 
+
+apps:
+
+- name: app
+  script: ./index.js
+  max_memory_restart: 20M
+
+*** ESTRATÉGIA DE BACKOFF (EXTRA)
+Irá reiniciar, aguardando antes 100ms. Durante esse período o app ficará como waiting restart
+
+apps:
+
+- name: app
+  script: ./index.js
+  exp_backoff_restart_delay: 100
+
+Se o erro se repetir:
+Vai reiniciar em 150ms;
+Vai reiniciar em 225ms.
+...
+Até chegar em 15000ms;
+
+*** ASSISTINDO ALTERAÇÕES
+Ficará observando um arquivo, caso, haja alterações, automaticamente reinicia os processos
+- \$ pm2 start index.js --name <NOME_DO_PROCESSO> --watch
+
+OU NO ECOSYSTEM
+
+apps:
+
+- name: app
+  script: ./index.js
+  watch: ./
+
+*** PM2 COM OUTRAS LINGUAGENS
+> LISTA DEFAULT:
+{
+".sh": "bash",
+".py": "python",
+".rb": "ruby",
+".coffee" : "coffee",
+".php": "php",
+".pl" : "perl",
+".js" : "node"
+}
+
+- \$ pm2 start hello-world.py --interpreter=python
+
+*** PM2 C/ HEROKU
+Pode ser utilizado como dep do projeto
+
+INSTALANDO
+- \$ npm install pm2
+
+NO HEROKU, DEFINE O SCRIPT NO PACKAGE.JSON
+// ...
+"scripts": {
+  "start": "pm2-runtime start ecosystem.config.yml"
+}
+// ...
+
+NECESSÁRIO CRIAR O ARQUIVO ECOSYSTEM REFERENCIADO NO PACKAGE.JSON
+> ecosystem.config.yml
+apps:
+
+- name: app
+  script: ./index.js
+
+FAZER DEPLOY NO HEROKU EM SEGUIDA...
+
+*** OTIMIZANDO OS CORES C/ CLUSTER MODE
+apps:
+
+- name: app
+  script: ./index.js
+  exec_mode: cluster
+  instances: max
+
+*** ALÉM DE OTIMZAR, MONITORAR
+DEPOIS DE IR NO SITE PM2 CRIAR UM BUCKET E OBTER AS VAR DE AMB, EM SEGUIDA, SETAR NO PROJETO VIA TERMINAL OU NO SITE DO HEROKU
+
+> EXEMPLO VIA LINHA DE COMANDO
+heroku config:set
+ PM2_PUBLIC_KEY=CHAVE_PUBLICA
+ PM2_SECRET_KEY=CHAVE_PRIVADA
+ PM2_MACHINE_NAME=NOME_DO_SERVER
+ --app NOME_DO_APP_NO_HEROKU
+
+ PS: ESSA KEYS SÃO SENSÍVEIS
+
