@@ -1,0 +1,127 @@
+*** HEROKU
+
+> Build => processo de preparação do cód p/ depois ser executado (ex: npm i).
+
+*** Procfile
+Em alguns casos, ou não é indicado explicitamente como executar a aplicação (ex: npm start) ou o Heroku não consegue inferir como executar, para isso, utiliza-se o Procfile.
+
+É um arquivo que especifica o comando para inicar o projeto e suas caracteristica e fica localizado na pasta raiz. Caso não exista, o Heroku irá tentar iniciar da maneira padrão da linguagem
+
+*** <process type>: <command>
+
+# <process type> Define o tipo daquele processo. Por exemplo, se é um servidor web ou um job .
+# <command> É o comando para iniciar o projeto.
+
+>>> O tipo web é especial, pois ele é o único tipo que pode receber tráfego HTTP externo pelas rotas do Heroku . A cada deploy , uma porta é gerada e fica disponível na variável de ambiente PORT . O Heroku fica responsável por redirecionar o tráfego HTTP que sua aplicação recebe para essa porta. Por isso, verifique se sua aplicação está parametrizada para definir qual porta utilizar a partir dessa variável de ambiente. <<<
+> web: node index.js
+
+*** DYNOS
+
+O Heroku utiliza o conceito de container(dynos), tomando a responsabilidade de gerenciar máq virtuais ou físicas. Ao fazer o deploy, ele colocará o app em um ambiente isolado e leve, provendo os recursos necessários.
+
+
+*** Scaling
+
+É possível escalar sua aplicação aumentando os dynos de forma vertical, "embutindo" 2 em 1, isto é, dobrando a capacidade, ou horizontalmente, dedicando mais dynamos de mesmo nível
+
+Esse Scaling pode ser feito via linha de comando ou dashboard do Heroku. Também é possível configurar o autoscaling, onde se ajusta automaticamente baseado em alguns parametros, como tempo de resposta da aplicação
+
+*** Acessando Heroku (no terminal)
+- heroku login
+
+*** Executando localmente (rodará na porta 5000)
+- npm install # Instalando as dependências em um exemplo NodeJs utilizando o npm.
+
+- heroku local web
+
+*** GIT
+Originalmente, no versionamento, os repositórios estão associados ao rep remoto origin. Para o deploy é necessário mais um remote, mas apontando para o servidor do Heroku
+
+*** COMANDOS DO PASSO A PASSO
+- npx create-react-app meu-primeiro-deploy-heroku
+- git init
+- git add .
+- git commit -m ‘Initialize project using Create React App’
+
+DEPOIS DE CRIAR O REPOSITÓRIO NO GITHUB...
+- git remote add origin git@github.com:arthur-hc/meu-primeiro-deploy-heroku.git
+- git remote -v (para visualizar os remotes)
+- heroku create
+
+PARA REMOVER...
+- git remote rm heroku
+- heroku create meu-primeiro-deploy-2930 (criando um app com nome específico)
+
+POR PADRÃO, O CLI NOMEIA O REMOTE COMO HEROKU, PARA ALTERAR...
+- heroku create meu-deploy-de-testes-29302 --remote heroku-homolog
+
+PARA RENOMEAR UM JÁ EXISTENTE
+- git remote rename heroku heroku-origin
+
+VINCULAR UM APP EXISTENTE
+- heroku git:remote -a meu-deploy-de-testes-29302 --remote heroku-test
+
+PARA FAZER DEPLOY DO APP
+- git push heroku-origin master
+
+PARA FAZER DEPLOY ESTANDO EM UM OUTRA BRANCH (FEATURE)
+- git checkout -b branch-teste
+- git add .
+- git push heroku branch-teste:master
+
+> SETAR AS VARÁVEIS DE AMBIENTE ANTES DO PUSH <
+
+> APERTAR CTRL+C NÃO CANCELA O DEPLOY <
+
+LISTANDO MEUS APPS
+- heroku apps
+
+DETALHES DE UM APP
+- heroku apps:info nome-do-seu-app-12345
+
+SETANDO VARIÁVEIS DE AMBIENTE
+- heroku config:set TESTE="texto qualquer" --app nome-do-seu-app-12345
+
+LISTANDO VARIÁVEIS DE AMBIENTE
+- heroku config --app nome-do-seu-app-12345
+
+VISUALIZANDO VARIÁVEl DE ESPECÍFICAf
+- heroku config:get VARIÁVEL --app nome-do-seu-app-12345
+
+REMOVENDO VARIÁVEl DE ESPECÍFICA
+- heroku config:unset VARIÁVEL --app nome-do-seu-app-12345
+
+LISTANDO LOGS (monitorando apps)
+- heroku logs --app nome-do-seu-app-12345
+POR PADRÃO RETORNA 100, CASO QUEIRA MAIS
+- heroku logs -n 200 --app nome-do-seu-app-12345
+
+MOSTRANDO OS LOGS EM TEMPO REAL
+- heroku logs --tail --app nome-do-seu-app-12345
+
+DETRUINDO UM APP
+- heroku destroy --app nome-do-app-12345 --confirm nome-do-app-12345
+
+*** UTILIZANDO UMA PORTA "MALEÁVEL"
+Na conexão...
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}!`);
+});
+
+*** UTILIZANDO BUILDPACK
+- npx create-react-app aplicação
+
+entrar na pasta e iniciar o git...
+- cd aplicação
+- git init
+
+INICIANDO O BUILDPACK (MARS) NA PASTA
+- heroku create -b mars/create-react-app
+
+DAR O PUSH PARA O HEROKU
+- git push heroku master
+
+
