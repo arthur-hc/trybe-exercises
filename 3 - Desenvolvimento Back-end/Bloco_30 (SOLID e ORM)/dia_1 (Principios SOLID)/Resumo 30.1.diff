@@ -1,0 +1,21 @@
+*** SOLID
+> Arquitetura que busca o desenvolvimento c/ qualidade
+- Facilita manutenção
+- Facilita escrita de testes
+- Melhor legibilidade e navegação
+- Evita duplicidade ou complexidade de código
+
+> S(ingle responsibility principle): classe c/ responsabilidade única
+> O(open/closed principle): abertas p/ extensão, mas fechadas p/ modificação
+> L(iskov): Obj devem ser susbstituíveis p/ instâncias, sem alterar a funcionalidade
+> I(nterface segregation principle): muitas interfaces de clientes específicas são melhores que uma p/ todos os propósitos
+> D(ependency inversion principle): deve-se depender de abstrações, não de objetos concretos
+
+*** Single Responsibility Principle
+OBSERVAR EXEMPLO CONTIDO NO ./fixacao/index S
+
+*** OPEN/CLOSED PRINCIPLE
+OBSERVAR EXEMPLO CONTIDO NO ./fixacao/index O
+
+*** Dependency Inversion Principle
+OBSERVAR EXEMPLO NO ./fixacao/dipExample.js

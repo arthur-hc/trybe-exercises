@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -6,7 +7,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 
 // IMPORTA O MÓDULO FS PARA VERIFICAR SE O ARQUIVO JÁ EXISTE
-const fs = require('fs')
+const fs = require('fs');
 
 const { PORT } = process.env;
 
@@ -36,42 +37,42 @@ const storage = multer.diskStorage({
 
   // SALVA O ARQUIVO COM DATA DE AGORA + NOME ORIGINAL
   filename: (req, file, callback) => {
-    
     // CRIA VERIFICAÇÃO DE TIPO DE ARQUIVO
-    if(file.mimetype !== 'image/jpeg') {
-      return callback(new Error('Extension must be `png`'), false)
+    if (file.mimetype !== 'image/jpeg') {
+      return callback(new Error('Extension must be `png`'), false);
     }
     
-    //CRIA VERIFICAÇÃO DE EXISTÊNCIA DE UM ARQUIVO COM AQUELE NOME SEM O TIMESTAMP
+    // CRIA VERIFICAÇÃO DE EXISTÊNCIA DE UM ARQUIVO COM AQUELE NOME SEM O TIMESTAMP
     const filesStored = fs.readdirSync(`${__dirname}/uploads`);
+    // eslint-disable-next-line no-shadow
     const filesStoredWithoutTimestamp = filesStored.map((file) => {
       const splitedName = file.split('-');
       const withotTimestamp = splitedName.slice(1, file.length);
       const newName = withotTimestamp.join('-');
-      return newName
-    })
+      return newName;
+    });
     
-    if(filesStoredWithoutTimestamp.some((fileName) => fileName === file.originalname)) {
-      return callback(new Error('File already exists'), false)
+    if (filesStoredWithoutTimestamp.some((fileName) => fileName === file.originalname)) {
+      return callback(new Error('File already exists'), false);
     }
 
     const date = Date.now();
 
-    const fileNameStored = `${date}-${file.originalname}`
+    const fileNameStored = `${date}-${file.originalname}`;
 
     const fileDataToReturn = {
       file: file.originalname,
       url: `http://localhost:3000/uploads/${fileNameStored}`,
-    }
-
-    if(req.filesPath) {
-      req.filesPath.push(fileDataToReturn)
-    } else {
-      req.filesPath = [fileDataToReturn];
     };
 
+    if (req.filesPath) {
+      req.filesPath.push(fileDataToReturn);
+    } else {
+      req.filesPath = [fileDataToReturn];
+    }
+
     callback(null, fileNameStored);
-  }
+  },
 });
 
 // MULTER UTILIZA O STORAGE PERSONALIZADO
@@ -79,13 +80,10 @@ const upload = multer({ storage });
 
 // CRIA ENDPOINT QUE RECEBE UM ÚNICO ARQUIVO E ADICIONA FUNÇÕES QUE LIDARÁ COM UPLOAD
 app.post('/upload', upload.single('file'), (_req, res) =>
-  res.status(200).json({ message: 'OK' })
-);
+  res.status(200).json({ message: 'OK' }));
 
 // CRIA ENDPOINT QUE RECEBE MULTIPLOS ARQUIVOS E ADICIONA FUNÇÕES QUE LIDARÁ COM UPLOAD
-app.post('/multiple', upload.array('file'), (req, res) => {
-  return res.status(200).json(req.filesPath)
-});
+app.post('/multiple', upload.array('file'), (req, res) => res.status(200).json(req.filesPath));
 
 // CRIA UM MULTER PADRÃO QUE IRÁ ENVIAR AS FOTOS PARA A PASTA profilePics
 const picUpload = multer({ dest: 'profilePics' });

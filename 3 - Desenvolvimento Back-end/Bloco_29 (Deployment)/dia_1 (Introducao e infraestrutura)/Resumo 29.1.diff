@@ -14,6 +14,7 @@ Em alguns casos, ou não é indicado explicitamente como executar a aplicação 
 
 >>> O tipo web é especial, pois ele é o único tipo que pode receber tráfego HTTP externo pelas rotas do Heroku . A cada deploy , uma porta é gerada e fica disponível na variável de ambiente PORT . O Heroku fica responsável por redirecionar o tráfego HTTP que sua aplicação recebe para essa porta. Por isso, verifique se sua aplicação está parametrizada para definir qual porta utilizar a partir dessa variável de ambiente. <<<
 > web: node index.js
+> web: pm2-runtime start ecosystem.config.yml
 
 *** DYNOS
 

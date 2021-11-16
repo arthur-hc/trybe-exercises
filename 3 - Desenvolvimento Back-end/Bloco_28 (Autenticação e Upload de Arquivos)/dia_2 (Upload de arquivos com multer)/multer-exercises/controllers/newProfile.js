@@ -9,13 +9,12 @@ module.exports = (req, res) => {
     name,
     email,
     password,
-    bio
+    bio,
   };
 
   const profilesData = JSON.parse(fs.readFileSync('./profiles.json', 'utf-8'));
   profilesData.push(newProfile);
   fs.writeFileSync('./profiles.json', JSON.stringify(profilesData));
-
 
   res.status(201).json({ message: 'Profile Created', newProfile });
 };
