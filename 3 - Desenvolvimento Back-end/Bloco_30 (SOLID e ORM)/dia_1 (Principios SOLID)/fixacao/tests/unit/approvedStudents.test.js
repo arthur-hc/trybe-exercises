@@ -55,7 +55,7 @@
 
 const { expect } = require('chai');
 
-const { approvedStudents } = require('../../index');
+const { approvedStudents } = require('../../index O');
 
 const disciplinesDict = {
   mathematics: 'matemática',
