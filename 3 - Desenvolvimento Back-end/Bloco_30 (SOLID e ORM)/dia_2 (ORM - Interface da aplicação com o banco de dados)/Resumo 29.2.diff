@@ -1,0 +1,198 @@
+*** ORM
+Libs que trabalham com ORM buscam simplificar e abstrair funções do banco de dados.
+
+*** Data Mapper
+Aqui as informações da entidade pessoa ficam desacopladas do banco de dados, sendo camadas distintas. Neste caso, o mapeador deverá ser refatorado ou refeito quando houver mudanças na estrutura do banco. Já a entidade pessoa não.
+
+*** Active Record
+Neste caso, o model está diretamente acoplado ao banco de dados. O model tem conhecimento de como fazer um CRUD por ex.
+
+O sequelize utiliza a linha Active Record
+
+O JS não possui suporte suficiente p/ o SQL, pois são diversas queries, banco data base, tabela... por isso a necessidade da lib.
+
+*** Passo a passo para implementação
+ mkdir app-with-sequelize && cd app-with-sequelize
+ npm init -y
+ npm install sequelize
+ npm install sequelize-cli
+ npm install mysql2
+ npx sequelize-cli init
+ renomear config.json (alterando database p/ orm_example)
+ npx sequelize db:create
+
+> PARA CONFIRMAR A CRIAÇÃO DO BANCO
+mysql -u arthur-hc -p
+show databases;
+
+> Pastas
+- config : contém um arquivo de configuração, que "fala" para o CLI como conectar-se com o nosso banco de dados;
+- models : contém todos os modelos da nossa aplicação;
+- migrations : contém todos os arquivos de migração da nossa aplicação;
+- seeders : contém todos os arquivos de "seeds".
+
+> Arquivo index.js no models
+Estabelece a intância de conexão entre os arquivos
+
+*** Definindo model através do sequelize
+- Chamando pela função sequelize.define(modelName, attributes, options)
+- Estendendo Model como uma classe e chamando init(attributes, options) => Forma mais padrão e específica p/ prog Orientada a Objetos
+
+> P/ criar o model:
+ >>> npx sequelize model:generate --name NomeDoModel --attributes nomeDoAtributo:string <<<
+- O parâmetro --name se refere ao nome da tabela,
+- O parâmetro --attributes se refere ao nome das colunas e os tipos de dados que ela contém. PS: É POSSÍVEL ADICIONAR COLUNAS DIRETO NO Model
+
+> COMANDO P/ CRIAR TABELA Users, contendo vários usuários. Primeiro, gerar uma model que irá representar uma Instância de usuário, ou uma linha na tabela Users no banco
+ >>> npx sequelize model:generate --name User --attributes fullName:string <<<
+
+> DEPOIS DE RODAR, O ARQUIVO user.js foi criado em model. Na pasta migrations foi criado uma arquivo no formato yyyy-MM-dd:mm:ss.js
+
+> COMO IREMOS TRABALHAR C/ FUNC, ALTERE O user.js (OBSERVAR MUDANÇA NO ARQUIVO)
+
+> AGORA A LÓGICA DE CRUD, FICARÁ NO CONTROLLERS OU SERVICES. O MODELO FICARÁ RESPONSÁVEL APENAS POR REPRESENTAR A ESTRUTURA DO DB.
+
+
+*** Migrations
+Forma de versionar o schema do bd. Cada uma conterá um pedaço de cód que, no cojunto, representa todas as alterações feitas no histórico do db.
+Assim, ao clonar, é possível rodar todas as migrations obtendo o formato mais recente do bd.
+Ela possui também Up (para executar mudanças) e Down (para reverter mudanças)
+
+No arquivo de migrations...
+
+> queryInterface
+  utilizado pelo sequelize p/ modificar o db.
+
+> sequelize
+  armazena os tipos de dados disponíveis (varchar, string, integer, date etc.)
+
+!!! MIGRATIONS C/ ERROS, PODEM NÃO EXECUTAR DIREITO  NOS PROCESSOS DE CRIAR OU DESFAZER A VERSÃO DO BANCO !!!
+
+> Adicionando a coluna de email na migration da tabela Users
+Estará indicado no arquivo
+
+> C/ a migration criada, executar pelo CLI
+ >>> npx sequelize db:migrate <<< 
+
+> Caso queira reverter...
+ >>> npx sequelize db:migrate:undo <<<
+
+*** Utilizando queryInterface
+Permite adicionar/remover/alterar colunas sem perder os dados, equivalente ao ALTER TABLE
+>>>  npx sequelize migration:generate --name add-column-phone-table-users <<<
+
+> Em seguida, configurar a migration para criar a coluna (Ver mudanças no arquivo)
+
+> Executar migration
+  >>>  npx sequelize db:migrate <<<
+
+Também é necessário alterar o model user.js p/ incluir a nova coluna
+
+*** Seeders
+Seeders tem o objetivo de preencher as tabelas
+
+> Criando um seed
+ >>> npx sequelize seed:generate --name users <<<
+
+> O seed será criado na pasta. Em seguida, modificamos para inserir os dados (Ver mudanças no arquivo)
+
+> Executando o seed:
+ >>>  npx sequelize db:seed:all <<<
+
+> Revertendo o seed:
+  >>>  npx sequelize db:seed:undo:all <<<
+
+
+*** Operações
+> Caso fosse preciso buscar todos os users, o sequelize diminui a complexidade
+
+// userController.js
+const express = require('express');
+const { User } = require('../models');
+const router = express.Router();
+
+// Este endpoint usa o método findAll do Sequelize para retorno todos os users.
+router.get('/', async (_req, res) => {
+  try {
+    const users = await User.findAll();
+
+    return res.status(200).json(users);
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).json({ message: 'Algo deu errado' });
+  };
+});
+
+// ...
+
+module.exports = router;
+
+> Outros exemplos de operações estarão no arquivo  controllers/userController.js
+
+*** Boas práticas
+Como evitar informações sensíveis no arquivo config.json > COM VAR DE AMB
+
+> Instalar doenv
+>>>  npm install dotenv <<<
+
+> Alterar config.json p/ js
+Agora, ao invés do json, será utilizado JS passando as variáveis de amb
+
+> Criar arquivo .env
+Irá conter informações como user, password...
+
+> Alterar models/index.js
+Irá receber configurações do config.js agora, não mais do config.json
+
+
+*** Alterando a estrutura p/ ficar dentro de outra pasta (src)
+
+> 1- Após mover as pastas p/ dentro de src, criar arquivo .sequelizerc 
+UTILIZANDO LIB path
+
+const path = require('path');
+
+module.exports= {
+  'config': path.resolve('src', 'config', 'config.js'),
+  'models-path': path.resolve('src', 'models'),
+  'seeders-path': path.resolve('src', 'seeders'),
+  'migrations-path': path.resolve('src', 'migrations'),
+};
+
+
+*** Definindo o nome da tabela
+Por padrão, o sequelize entende que o nome da tabela será o plural do banco de dados (banco user, será criada uma tabela users). Para definir o nome da tabela sendo o mesmo do bd: 
+
+> Alterar configuração do arquivo no model
+// users.js
+const User = (sequelize, DataTypes) => {
+  const User = sequelize.define("User", {
+    fullName: DataTypes.STRING,
+    email: DataTypes.STRING,
+    // aqui inserimos o datatype da coluna criada
+    phone_num: DataTypes.STRING,
+  }, {
+    // Inserir esse parâmetro //
+    freezeTableName: true
+
+    // TAMBÉM É POSSÍVEL DEFINIR O NOME AO INVÉS DE IGUALAR AO MODEL
+    tableName: "OutroNome"
+  });
+
+  return User;
+};
+
+module.exports = User;
+
+*** TESTES
+> Intalar chai sinon chai-http -D
+  >>> npm i mocha chai sinon chai-http -D <<<
+
+> Adicionar o comando ao package.json
+"scripts": {
+  ...
+  "test": "mocha ./tests/**/*$NAME*.test.js --exit"
+},
+
+> Exportar o index.js do app
+Observar no arquivo
