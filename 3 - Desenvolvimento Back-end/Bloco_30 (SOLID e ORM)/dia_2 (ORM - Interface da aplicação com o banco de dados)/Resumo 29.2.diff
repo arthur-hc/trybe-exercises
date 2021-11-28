@@ -196,3 +196,12 @@ module.exports = User;
 
 > Exportar o index.js do app
 Observar no arquivo
+
+*** Visualizando comandos
+>>> npx sequelize <<<
+
+*** QUANDO NÃO UTILIZAR TIMESTAMP
+utilizar timestamp como false no model
+
+*** QUANDO UTILIZAR CAMEL CASE
+utilizar underscore como true. TAMBÉM SERÁ NECESSÁRIO NO MIGRATIONS UTILIZAR A OPTION FIELD PARA INDICAR O NOME QUE SERÁ GRAVADO NO BANCO
