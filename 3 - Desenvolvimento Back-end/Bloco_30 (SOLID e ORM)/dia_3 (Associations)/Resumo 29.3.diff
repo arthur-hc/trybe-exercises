@@ -1,0 +1,191 @@
+*** Associations
+Faz relação entre as tabelas
+
+*** Referenciando uma outra tabela em uma migration
+> references.model : Indica qual tabela nossa FK está referenciando.
+> references.key : Indica qual coluna da tabela estrangeira deve ser utilizada para nossa foreign key .
+> onUpdate e onDelete : Configura o que deve acontecer ao atualizar ou excluir um usuário. Nesse caso, todos os produtos daquele usuário serão alterados ou excluídos.
+
+- Essa migration cria uma FK na tabela Addresses , que relaciona o campo employee_id dessa tabela ao campo id da tabela Employe
+
+*** Metodos de associação
+Os métodos de criação de associações que o sequelize disponibiliza são:
+> hasOne
+> belongsTo
+> hasMany
+> belongsToMany
+
+
+*** OBSERVAÇÕES
+O alias (as) dada no model, deve ser a mesma ao chamar no controller. ex: addresses no model Employees.js e no index.js
+
+*** Eager Loading
+Traz todas as informações na request. É possível remover alguma info caso desejado com:
+    const employee = await Employee.findOne({
+      where: { id },
+      include: [{ model: Address, as: 'addresses', attributes: { exclude: ['number'] } }] });
+
+*** Lazy Loading
+Traz as informações apenas se necessário. Utilizando o exemplo anterior, retornaria apenas se o campo address fosse true, por ex:
+ app.get('/employees/:id', async (req, res) => {
+   try {
+     const { id } = req.params;
+       const employee = await Employee.findOne({ where: { id } });
+
+     if (!employee)
+       return res.status(404).json({ message: 'Funcionário não encontrado' });
+
+       if (req.query.includeAddresses === 'true') {
+         const addresses = await Address.findAll({ where: { employeeId: id } });
+         return res.status(200).json({ employee, addresses });
+       }
+
+     return res.status(200).json(employee);
+   } catch (e) {
+     console.log(e.message);
+     res.status(500).json({ message: 'Algo deu errado' });
+   };
+ });
+
+*** Através do lazy, é possível fazer uma subquery
+const geyById = async (req, res) => {
+  const product = await Product.findPk(req.params.id)
+  const user = product.getUser();
+  // NA LINHA ANTERIOR o nome após get, deve ser o mesmo do alias no model (nesse caso User)
+  return res.status(200).json({ ...product.dataValues, user });
+}
+
+OUTRO EXEMPLO (CADASTRANDO VÁRIOS PRODUTOS A PROMOÇÃO)
+
+const addProductsInSelloff = async (req, res) => {
+  const { products } = req.body;
+
+  const selloff = await Selloff.findByPk(req.params.id);
+  if(!selloff) {
+    return res.status(404).send({ message: 'Liquidação não encontrada' });
+  }
+
+  const products = await Product.findAll([
+    where: { id: productsIds },
+  ]);
+
+  await selloff.addProducts(products);
+
+  return res.status(200).json({ message: 'Produtos adicionados com sucesso' });
+};
+
+*** Muitos para muitos e tabelas de junção
+Quando é utilizada tabela de junção, o seu model fica responsável por conter os relacionamentos. Os outros models ficam sem associação.
+
+> A ESSE MODEL LIGA DUAS TABELAS A DE JUNÇÃO
+// models/UserBook.js
+module.exports = (sequelize, _DataTypes) => {
+  const UserBook = sequelize.define('UserBook',
+    {},
+    { timestamps: false },
+  );
+
+  UserBook.associate = (models) => {
+    models.Book.belongsToMany(models.User, {
+      as: 'users',
+      through: UserBook,
+      foreignKey: 'book_id',
+      otherKey: 'user_id',
+    });
+    models.User.belongsToMany(models.Book, {
+      as: 'books',
+      through: UserBook,
+      foreignKey: 'user_id',
+      otherKey: 'book_id',
+    });
+  };
+
+  return UserBook;
+};
+
+!!! INDICANDO AMBOS COM belongsToMany e especificando through, o sequelize entende como uma tabela de associação. A foreignKey se refere-se ao model que chamamos belongsToMany, otherKey se refere ao model com o qual estamos criando associação !!!
+
+*** Transações
+Operações só devem ser realizadas por completo. Ex Transações monetárias, onde retira de um e acrescenta a outro. Utilizando exemplo dos funcionários e endereços, ao cadastrar um funcionário, devemos também cadastrar um endereço, mas caso uma delas tenha problemas, a outra não deve acontecer. Para isso, utiliza-se:
+> Unmanaged transactions
+> Managed transactions
+
+*** Unmanaged transactions
+> Indica-se manualmente quando uma transação deve ser finalizada ou revertida. A lógica será implementada no controller
+
+// const express = require('express');
+// const bodyParser = require('body-parser');
+const Sequelize = require('sequelize');
+
+// const { Addresses, Employees } = require('./models');
+const config = require('./config/config');
+
+// const app = express();
+// app.use(bodyParser.json());
+
+const sequelize = new Sequelize(config.development);
+
+// ...
+
+app.post('/employees', async (req, res) => {
+  // Primeiro iniciamos a transação
+  const t = await sequelize.transaction();
+
+  try {
+    const { firstName, lastName, age, city, street, number } = req.body;
+
+    // Depois executamos as operações
+    const employee = await Employee.create(
+      { firstName, lastName, age },
+      { transaction: t },
+    );
+
+    await Address.create(
+      { city, street, number, employeeId: employee.id },
+      { transaction: t },
+    );
+
+    // Se chegou até essa linha, quer dizer que nenhum erro ocorreu.
+    // Com isso, podemos finalizar a transação usando a função `commit`.
+    await t.commit();
+
+    return res.status(201).json({ message: 'Cadastrado com sucesso' });
+  } catch (e) {
+    // Se entrou nesse bloco é porque alguma operação falhou.
+    // Nesse caso, o sequelize irá reverter as operações anteriores com a função rollback, não sendo necessário fazer manualmente
+    await t.rollback();
+    console.log(e.message);
+    res.status(500).json({ message: 'Algo deu errado' });
+  }
+});
+// ...
+
+*** Managed transactions
+> Possui o mesmo objetivo, contudo, já gere o processod de forma automática
+// ...
+app.post('/employees', async (req, res) => {
+  try {
+    const { firstName, lastName, age, city, street, number } = req.body;
+
+    const result = await sequelize.transaction(async (t) => {
+      const employee = await Employee.create({
+        firstName, lastName, age
+      }, { transaction: t });
+
+      await Address.create({
+        city, street, number, employeeId: employee.id
+      }, { transaction: t });
+
+      return res.status(201).json({ message: 'Cadastrado com sucesso' });
+    });
+
+    // Se chegou até aqui é porque as operações foram concluídas com sucesso,
+    // não sendo necessário finalizar a transação manualmente.
+    // `result` terá o resultado da transação, no caso um empregado e o endereço cadastrado
+  } catch (e) {
+    // Se entrou nesse bloco é porque alguma operação falhou.
+    // Nesse caso, o sequelize irá reverter as operações anteriores com a função rollback, não sendo necessário fazer manualmente
+    console.log(e.message);
+    res.status(500).json({ message: 'Algo deu errado' });
+  }
+});

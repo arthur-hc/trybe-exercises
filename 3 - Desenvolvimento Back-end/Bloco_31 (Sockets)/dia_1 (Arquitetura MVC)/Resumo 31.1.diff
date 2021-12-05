@@ -1,0 +1,16 @@
+*** Arquitetura MVC(Model - View - Controller)
+As regras de negócio ficam mais longe da camada de apresentação, tornando possível a maior reutilização de código
+
+=> Controller passa a ser responsável por fazer a ponte entre view e Model
+=> A partir de agora, as regras de negócio, ficam no Model
+
+*** View
+Camada que tem contato com a pessoa que utiliza o sistema. Cria a visualização dos dados vindos do M e oferece meios p/ interagir c/ o sistema.
+
+*** Fluxo de Login
+
+1 - Disparada de uma ação c/ informações p/ login são enviadas (VIEW);
+2 - Informações no controller p/ decidir funções do Model a serem chamadas (CONTROLLER);
+3 - Validação dos dados e busca no banco, retornando p/ controller (MODEL);
+4 - Responde para view sitação da req (CONTROLLER);
+5 - Responde ao usuário como interagir c/ a resposta (VIEW);

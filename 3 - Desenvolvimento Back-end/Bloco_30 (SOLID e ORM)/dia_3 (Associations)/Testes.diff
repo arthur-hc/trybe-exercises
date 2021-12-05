@@ -1,0 +1,165 @@
+*** Script 
+//...
+"scripts": {
+  ...
+  "test": "NODE_ENV=test mocha ./tests/**/*$NAME*.test.js --exit"
+},
+//...
+
+*** Alterar o index ou controller
+/*
+  Essa linha será importante para que consigamos isolar nosso teste
+  utilizando a configuração `test` do seu `config.{js | json}`
+*/
+const sequelize = new Sequelize(
+  process.env.NODE_ENV === 'test' ? config.test : config.development
+);
+
+//     await t.commit();
+
+    return res.status(201).json({
+      id: employee.id, // esse dado será nossa referência para validar a transação
+      message: 'Cadastrado com sucesso'
+    });
+
+*** Configurando o amb p/ test
+// ./config/config.js
+
+module.exports = {
+// ...
+  "test": {
+    "username": "root",
+    "password": "", // preencha com a senha do seu banco de dados, caso tenha
+    "database": "orm_assoc_test_db",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    // adicione essa linha a sua configuração para omitir mensagens de log no orm
+    "logging": false
+  }
+// ...
+}
+
+*** Iniciar o banco de testes
+NODE_ENV=test npx sequelize-cli db:create
+NODE_ENV=test npx sequelize-cli db:migrate
+NODE_ENV=test npx sequelize-cli db:seed:all
+
+!!! OBS
+Caso queira remover o banco para começar novamente, utilize: NODE_ENV=test npx sequelize-cli db:drop .
+
+*** Criando testes
+Agora, crie uma pasta ./tests/integration onde testaremos a criação de Employees , por tanto crie um arquivo employeeCreation.test.js 
+
+
+// ./tests/integration/employeeCreation.test.js
+
+const chai = require('chai');
+const { stub } = require('sinon');
+const chaiHttp = require('chai-http');
+
+chai.use(chaiHttp);
+
+const { expect } = chai;
+
+const app = require('../../index');
+
+// omitir os `console.log`s dos testes gerando um `stub` pra função
+const consoleLogStub = stub(console, 'log');
+before(()=> consoleLogStub.returns(true));
+after(()=> consoleLogStub.restore());
+
+describe('Rota POST /employees', () => {
+  describe('quando os dados do `body` são válidos', () => {
+    let postEmployee;
+    let getEmployee;
+
+    before(async () => {
+      try {
+        postEmployee = await chai.request(app)
+          .post('/employees')
+          .send({
+            firstName: "Rodrigo",
+            lastName: "Oliveira",
+            age: 30,
+            city: "TrybeCity",
+            street: "Rua Teste",
+            number: 42
+          });
+
+        const { body : { id } } = postEmployee;
+
+        getEmployee = await chai.request(app)
+          .get(`/employees/${id}`);
+      } catch (error) {
+        console.error(error.message);
+      }
+    });
+
+    it('retorna 201 - Created', async () => {
+      const { status } = postEmployee;
+
+      expect(status).to.be.equals(201);
+    });
+
+    it('retorna um atributo `id`, que é um número', async () => {
+      const { body: { id } } = postEmployee;
+
+      expect(typeof id).to.be.equals("number");
+    });
+
+    it('retorna uma mensagem `Cadastrado com sucesso`', async () => {
+      const { body: { message } } = postEmployee;
+
+      expect(message).to.be.equals('Cadastrado com sucesso');
+    });
+
+    it('é possível consultar a pessoa criada através do `id` retornado', async () => {
+      const { body: { id: postId } } = postEmployee;
+      const { body: { id: getId } } = getEmployee;
+
+      expect(postId).to.be.equals(getId);
+    });
+
+    it('essa consulta também retornou um atributo `addresses`, com pelo menos um item', async () => {
+      const { body: { addresses } } = getEmployee;
+
+      expect(addresses.length).to.be.greaterThanOrEqual(1);
+    });
+  });
+
+  describe('quando os dados do `body` não são válidos', () => {
+    let postEmployee;
+
+    before(async () => {
+      try{
+        // removendo city
+        postEmployee = await chai.request(app)
+          .post('/employees')
+          .send({
+            firstName: "Rodrigo",
+            lastName: "Oliveira",
+            age: 30,
+            street: "Rua Teste",
+            number: 42
+          });
+      } catch (error) {
+        console.error(error.message);
+      }
+    });
+
+    it('retorna 500 - Internal Server Error', async () => {
+      const { status } = postEmployee;
+
+      expect(status).to.be.equals(500);
+    });
+
+    it('retorna uma mensagem `Algo deu errado`', async () => {
+      const { body: { message } } = postEmployee;
+
+      expect(message).to.be.equals('Algo deu errado');
+    });
+  });
+});
+
+
+!!! LEMBRANDO QUE A API NÃO DEVE ESTAR RODANDO, O PRÓPRIO chai-http FICARÁ ENCARREGADO DISSO
