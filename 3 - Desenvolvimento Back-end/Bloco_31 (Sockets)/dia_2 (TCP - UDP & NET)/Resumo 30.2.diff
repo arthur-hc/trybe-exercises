@@ -1,0 +1,61 @@
+*** Socket
+Tecnologia que permite a conexão entre dois dispositivos e troca de mensagens.
+
+*** Funcionamento
+Um exemplo é a sala de chat. Um cliente envia uma mensagem para o servidor, que em seguida já envia a mesma para os outros usuários. Neste caso, há uma conexão fixa.
+
+*** Modelo de camadas OSI (Open System Interconnection)
+Modelo referência ISO. Antes dessa refência, cada dispositivo poderia tinha sua forma de conectar e comunicar, assim, havia diversos problemas de integração.
+
+É um modelo de pilha onde cada camada (1 a 7) define uma parte da comunicação entre as máquinas.
+
+*** Camadas
+> 1 - Fisíca
+Estabelece conexão real entre dois dispositivos através de cabo ou radiofrequência(ex: wifi)
+
+> 2 - Enlace (ligação/link de dados)
+Controle de fluxo de tranmissão, detectando e corringindo erros do nível físicos como erros, interferências, e recebe/passa tudo p/ camada física
+
+> 3- Rede
+Faz endereço/mapeamento dos dispositivos até a rede e seu destino
+
+> 4 - Transporte
+Garante confiança na chegada de todos os dados, sem perdas ou duplicidade (protocolo TCP e UDP)
+
+> 5 - Sessão
+Gerencia a conexão entre os hosts, atuando na intermediação entre duas máquinas
+
+> 6 - Apresentação
+Faz a conversão dos formatos
+
+> 7 - Aplicação
+Camada em que atuamos, intereface. HTTP, SMTP, FTP etc..
+
+*** Funcionamento
+O dispositivo emissor faz o processo 7 (dados) até 1(bits).
+Ao chegar no receptor, ocorro o processo inverso até obter as informações
+
+*** TCP/IP
+Modelo amplamente difundido, que utiliza 4 camadas derivadas da OSI.
+> Aplicação + Apresentação + Sessão = Aplicação
+> Transporte = Transporte
+> Rede = Internet
+> Enlace + Física = Acesso a Rede
+
+*** Ligação entre server e o cliente (Three Way Handshake):
+Maquina requisitora manda um pedido (SYNchronize), receptora recebe (ACKnowledge) e responde (SYNchronize), a primeira maquina recebe a confirmação (ACKnowledge)
+- Cliente: SYN Quero me conectar!
+- Servidor: ACK Mensagem recebida!
+- Servidor: SYN Vamos nos conectar!
+- Cliente: ACK Mensagem recebida!
+
+*** Garantia de integridade dos dados
+Em um arquivo grande, há a divisão em menores. Através do protocolo, há a garantia de que todos serão entregues e juntados na mesma ordem. A cada pacote recebido, o destino confirma que recebeu ao emissor, caso haja falha, ocorre um pedido de retransmissão.
+
+*** UDP
+Protocolo mais simples, mas com menor garantia, que pode ser realizada pela aplicação. A transmissão ocorre, sem confirmação do recebimento. Se há perdas, não existe possibilidade de reenvio. (ex: Pendrive)
+
+*** Socket
+Endereços indentificam máquinas, portas, aplicações. Por isso, não é possível 2 APIs em uma mesma porta.
+
+O servidor aguarda conexões que o cliente realiza através do IP do servidor. Se não houver problemas, o servidor aceita a conexão e gera um socket em uma porta vaga no servidor, deixando a porta original livre p/ receber outros pedidos de conexão.
