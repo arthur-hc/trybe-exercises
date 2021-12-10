@@ -1,0 +1,13 @@
+*** Socket.io
+Lib que facilita a criação de Sockets p/ aplicações Real Time. Lib que facilita a criação de Sockets p/ aplicações Real Time.Lib que facilita a criação de Sockets p/ aplicações Real Time.Lib que facilita a criação de Sockets p/ aplicações Real Time.Lib que facilita a criação de Sockets p/ aplicações Real Time.
+
+=> Exemplo estará em ./fixacao
+
+*** Comandos
+-  npm install socket.io
+
+*** socket vs io
+Essa é a principal diferença do socket.emit para o io.emit ; O primeiro envia apenas para o cliente que disparou o evento e o segundo transmite algo para todos os clientes que estão conectados ao socket.
+
+*** socket.broadcast
+Envia p/ todos, menos para que disparou o evento
