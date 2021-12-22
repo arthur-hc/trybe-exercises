@@ -1,0 +1,97 @@
+*** Python (Introdução)
+Iniciar o terminal Python: python3
+
+*** OPERADORES BÁSICOS
++
+-
+*
+/
++=
+-+
+>
+<
+==
+!=
+10 < algumNumero < 25 => retorna true or false
+temperatura < 25 and temperatura > 18 (é possível também)
+idade <= 5 or idade >= 65
+True and False
+True or False
+// retorna a sobra
+^^ eleva
+xablau='fala do oliva'
+print('ola')
+type(a)
+
+
+*** Listas (arrays) - P/ um conjunto de entidades
+igual = ['mesmo', 'sistema', 'do', 'JS', 'viu']
+igual[4] => irá imprimiu 'viu'
+igual.index['viu'] => retorna o index
+igual.append('novo') => adiciona
+igual.remove('novo') => remove
+outraLista = ['outros', 'itens']
+igual.extend(outraLista) => adicionará todos os da outraLista (poderia ser passado um array direto)
+
+
+*** Tuplas P/ uma única enteidade
+Semelhantes a objetos(porém sem chaves), e não podem ser modificadas durante a execução do programa
+primeiro=("Ayrton Senna", 3)
+primeiro[0] => retorna "Ayrton Senna"
+
+*** Dicionário
+Quando deseja-se ter chaves
+jogador = { "nome": "Arthur", "cidade": "Peruibe" }
+jogador["nome"] => retorna "Arthur"
+del jogador["nome"] => deleta a chave "nome" junto de seu valor
+del jogador["novo"] = "item" => adiciona a chave "novo" junto do valor "item"
+jogador.items() => retorna os itens em forma de junto
+
+*** Conjuntos
+Elementos únicos e não ordenado
+permissions = {"member", "other"}
+permissions.add => adiciona
+permissions.union => retorna o resultado de uma união de conjuntos
+permissions.intersection => retorna o iguais entre 2 conjuntos
+permissions.difference => retorna os diferentes entre 2 conjuntos
+
+*** Range
+Sequencia numérica de um valor inicial até um valor final
+
+range( [start], stop[, step] ) 
+OBS: stop NÃO É INCLUÍDO NA SEQUÊNCIA. caso queira de 0 a 10 range(1, 11)
+
+# definimos somente o valor de parada
+list(range(5))  # saída: [0, 1, 2, 3, 4]
+
+# definimos o valor inicial e o de parada
+list(range(1, 6))  # saída: [1, 2, 3, 4, 5]
+
+# definimos valor inicial, de parada e modificamos o passo para 2
+list(range(1, 11, 2))  # saída: [1, 3, ,5 ,7 , 9]
+
+# podemos utilizar valores negativos para as entradas também
+list(range(10, 0, -1))  # saída: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+
+*** Condicionais
+No exemplo, um print será exibido de acordo com o resultado do dado
+from random import radint
+
+dice_roll = radint(1, 20)
+
+if dice_roll == 1:
+  print("Deu ruim")
+elif 2 <= dice_roll <= 15:
+  print("Ahadarak, porque me atormentas!")
+elif 16 <= dice_roll <= 19:
+  print("Obrigado pela sorte!")
+else:
+  print("Agora ninguém me segura!")
+
+*** Retições:
+pilotos = [{"nome": "Senna", "titulos": 3}, {"nome": "Hammilton", "titulos": 7}, {"nome": "Massa", "titulos": 0}]
+
+nomes = []
+
+for sobrenomes in pilotos:
+  nomes.append(sobrenomes["nomes"]);
