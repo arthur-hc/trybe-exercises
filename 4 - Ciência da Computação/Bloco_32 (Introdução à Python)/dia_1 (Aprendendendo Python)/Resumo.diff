@@ -91,7 +91,14 @@ else:
 *** Retições:
 pilotos = [{"nome": "Senna", "titulos": 3}, {"nome": "Hammilton", "titulos": 7}, {"nome": "Massa", "titulos": 0}]
 
+// ADICIONA TODOS OS NOMES DOS PILOTOS
 nomes = []
 
-for sobrenomes in pilotos:
-  nomes.append(sobrenomes["nomes"]);
+ for piloto in pilotos:
+...     nomes.append(piloto["nome"])
+
+// ADICIONA TODOS OS PILOTOS EXCETO MASSA
+nomes = [piloto for piloto in pilotos if piloto["nome"] != "Massa"]
+
+// ADICIONA APENAS OS NOMES DOS PILOTOS EXCETO MASSA
+nomes = [piloto["nome"] for piloto in pilotos if piloto["nome"] != "Massa"]
