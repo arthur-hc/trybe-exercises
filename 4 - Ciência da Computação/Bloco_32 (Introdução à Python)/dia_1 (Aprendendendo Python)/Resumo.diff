@@ -7,6 +7,7 @@ Iniciar o terminal Python: python3
 *
 /
 +=
+*=
 -+
 >
 <
@@ -23,6 +24,31 @@ xablau='fala do oliva'
 print('ola')
 type(a)
 
+// FIXAÇÃO
+- Exercício 1: No terminal, inicialize duas variáveis a e b, sendo a = 10 e b = 5. Mostre o resultado das 7 operações básicas (soma, subtração, multiplicação, divisão, divisão inteira, potenciação e módulo) envolvendo essas variáveis.
+a = 10
+b = 5
+a+b // r: 15
+a-b // r: 5
+a*b // r: 50
+a/b // r: 2.0
+a//b // r: 2
+a**b // r: 100000
+a%b // r: 0
+
+- Exercício 2: Declare e inicialize uma variável: hours = 6 . Quantos minutos têm em 6 horas? E quantos segundos? Declare e inicialize variáveis minutes e seconds que recebem os respectivos resultados das contas. Depois, imprima cada uma delas.
+hours = 6
+minutes = 6*60 // r: 360
+seconds = 360*60 // r: 21600
+print(minutes)
+print(seconds)
+
+- Exercício 3: Teste e verifique o que acontece se você colocar um ponto e vírgula no final de uma instrução em Python.
+Nada
+
+- Exercício 4: Suponha que o preço de capa de um livro seja 24,20, mas as livrarias recebem um desconto de 40%. O transporte custa 3,00 para o primeiro exemplar e 75 centavos para cada exemplar adicional. Qual é o custo total de atacado para 60 cópias? Escreva uma expressão que receba o custo total e a imprima.
+CT = (60*(24.20*0.60)) + 3 + 59*0.75
+
 
 *** Listas (arrays) - P/ um conjunto de entidades
 igual = ['mesmo', 'sistema', 'do', 'JS', 'viu']
@@ -33,11 +59,24 @@ igual.remove('novo') => remove
 outraLista = ['outros', 'itens']
 igual.extend(outraLista) => adicionará todos os da outraLista (poderia ser passado um array direto)
 
+//FIXAÇÃO
+trybe_course = ["Introdução", "Front-end", "Back-end"]
 
-*** Tuplas P/ uma única enteidade
+- Exercício 5: Adicione o elemento "Ciência da Computação" à lista.
+trybe_course.append('Ciência da Computação')
+
+- Exercício 6: Acesse e altere o primeiro elemento da lista para "Fundamentos".
+trybe_course[0] = 'Fundamentos'
+
+*** Tuplas P/ uma única entidade
 Semelhantes a objetos(porém sem chaves), e não podem ser modificadas durante a execução do programa
 primeiro=("Ayrton Senna", 3)
 primeiro[0] => retorna "Ayrton Senna"
+
+// FIXAÇÃO
+- Exercício 7: Um conjunto ou set pode ser inicializado utilizando-se também o método set() . Inicialize uma variável com essa função var = set() e adicione seu nome ao conjunto utilizando um dos métodos vistos acima. Depois, imprima a variável e confira se o retorno é: {'seu_nome'}.
+var = set({})
+var.add('Arthur');
 
 *** Dicionário
 Quando deseja-se ter chaves
@@ -47,6 +86,17 @@ del jogador["nome"] => deleta a chave "nome" junto de seu valor
 del jogador["novo"] = "item" => adiciona a chave "novo" junto do valor "item"
 jogador.items() => retorna os itens em forma de junto
 
+// FIXAÇÃO
+- Exercício 8: O que acontecerá se você tentar acessar o valor da chave "personagem" como fazíamos em JavaScript, utilizando object.key ?
+Erro
+
+- Exercício 9: Insira no objeto uma nova propriedade com o nome de chave "recorrente" e o valor "Sim". Em seguida, imprima o objeto no console.
+info['recorrente']='sim'
+
+- Exercício 10: Remova a propriedade cuja chave é "origem" e imprima o objeto no console.
+del info['origem']
+info
+
 *** Conjuntos
 Elementos únicos e não ordenado
 permissions = {"member", "other"}
@@ -54,6 +104,9 @@ permissions.add => adiciona
 permissions.union => retorna o resultado de uma união de conjuntos
 permissions.intersection => retorna o iguais entre 2 conjuntos
 permissions.difference => retorna os diferentes entre 2 conjuntos
+COM FROZEN SET, SÃO IMUTÁVEIS
+permissions = frozenset(["member", "group"]) 
+
 
 *** Range
 Sequencia numérica de um valor inicial até um valor final
@@ -73,6 +126,13 @@ list(range(1, 11, 2))  # saída: [1, 3, ,5 ,7 , 9]
 # podemos utilizar valores negativos para as entradas também
 list(range(10, 0, -1))  # saída: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
 
+// FIXAÇÃO
+- Exercício 11: Após uma consulta do banco de dados, temos linhas que contém nome, sobrenome e idade como: "Thiago", "Nobre", 29 . Que estrutura vista anteriormente seria recomendada dado que após esta consulta somente exibimos estes valores?
+Tuplas
+
+- Exercício 12: Realizar a contagem de quantas vezes cada elemento aparece em uma sequência é uma técnica muito útil na solução de alguns problemas. Qual é a estrutura mais recomendada para o armazenamento desta contagem?
+Conjuntos
+
 *** Condicionais
 No exemplo, um print será exibido de acordo com o resultado do dado
 from random import radint
@@ -88,7 +148,7 @@ elif 16 <= dice_roll <= 19:
 else:
   print("Agora ninguém me segura!")
 
-*** Retições:
+*** Repetições:
 pilotos = [{"nome": "Senna", "titulos": 3}, {"nome": "Hammilton", "titulos": 7}, {"nome": "Massa", "titulos": 0}]
 
 // ADICIONA TODOS OS NOMES DOS PILOTOS
@@ -102,3 +162,93 @@ nomes = [piloto for piloto in pilotos if piloto["nome"] != "Massa"]
 
 // ADICIONA APENAS OS NOMES DOS PILOTOS EXCETO MASSA
 nomes = [piloto["nome"] for piloto in pilotos if piloto["nome"] != "Massa"]
+
+
+// FILTRANDO RESTAURANTES COM NOTA MÍNIMA
+restaurants = [
+    {"name": "Restaurante A", "nota": 4.5},
+    {"name": "Restaurante B", "nota": 3.0},
+    {"name": "Restaurante C", "nota": 4.2},
+    {"name": "Restaurante D", "nota": 2.3},
+]
+
+filtered_restaurants = []
+min_rating = 3.0
+for restaurant in restaurants:
+    if restaurant["nota"] > min_rating:
+        filtered_restaurants.append(restaurant)
+print(filtered_restaurants)  # imprime a lista de restaurantes, sem o B e D
+
+// MANEIRA MAIS "PYTHONICA"
+min_rating = 3.0
+filtered_restaurants = [restaurant
+                         for restaurant in restaurants
+                         if restaurant["nota"] > min_rating]
+print(filtered_restaurants)  # imprime a lista de restaurantes, sem o B e D
+
+// SEQUENCIA DE FIB.
+// OBS O NEXT CONSIDERA O VALOR ANTES DA ADIÇÃO (ANTIGO LAST, ANTES DE TORNAR-SE O ATUAL NEXT)
+n = 10
+last, next = 0, 1
+while last < n:
+    print(last)
+    last, next = next, last + next
+
+// FIXAÇÃO
+- Exercício 13: O Fatorial de um número inteiro é representado pela multiplicação de todos os números predecessores maiores que 0. Por exemplo o fatorial de 5 é 120 pois 5! = 1 * 2 * 3 * 4 * 5 . Escreva um código que calcule o fatorial de um número inteiro.
+i, n, t  = 1, 5, 1
+while i <= n:
+    i, t = i + 1, t * i
+
+
+- Exercício 14: Um sistema de avaliações registra valores de 0 a 10 para cada avaliação. Após algumas mudanças estes valores precisam ser ajustados para avaliações de 0 a 100. Dado uma sequência de avaliações ratings = [6, 8, 5, 9, 10] . Escreva um código capaz de gerar as avaliações após a mudança. Neste caso o resultado deveria ser [60, 80, 50, 90, 100] .
+new_ratings = []
+for rating in ratings:
+...     new_ratings.append(rating*10)
+
+Experimente utilizar a sintaxe de compreensão de listas.
+- Exercício 15: Percorra a lista do exercício 14 e imprima "Múltiplo de 3" se o elemento for divisível por 3.
+for rating in new_ratings:
+    if rating % 3 == 0:
+        print(rating)
+ 
+*** Criando Funções
+def soma(x, y):
+    return x + y
+
+soma(2, 2)  # os parâmetros aqui são posicionais
+soma(x=2, y=2)  # aqui estamos nomeando os parâmetros
+
+def concat(*strings):
+    # Equivalente a um ", ".join(strings), que concatena os elementos de um iterável em uma string utilizando um separador
+    # Nesse caso a string resultante estaria separada por vírgula
+    final_string = ""
+    for string in strings:
+        final_string += string
+        if not string == strings[-1]:
+            final_string += ', '
+    return final_string
+
+# pode ser chamado com 2 parâmetros
+concat("Carlos", "João")  # saída: "Carlos, João"
+
+# pode ser chamado com um número n de parâmetros
+concat("Carlos", "João", "Maria")  # saída: "Carlos, João, Maria"
+
+# dict é uma função que já vem embutida no python
+dict(nome="Felipe", sobrenome="Silva", idade=25)  # cria um dicionário utilizando as chaves passadas
+dict(nome="Ana", sobrenome="Souza", idade=21, turma=1)  # o número de parâmetros passados para a função pode variar
+
+! Escopos
+Variáveis definidas dentro das funções tem escopo local, porém uma função quando não encontra um nome no escopo local irá procurar no espaço de nomes global.
+
+*** Convenções
+  Utilização de snake_case
+  Constantes são escritas com todas as letras maiúsculas
+
+*** Executando
+python3 area.py
+
+*** Utlizando formatador
+Ctrl + Shift + i (Corrige o problema de formatação)\
+Após salvar, os erros deverão sumir
