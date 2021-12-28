@@ -252,3 +252,7 @@ python3 area.py
 *** Utlizando formatador
 Ctrl + Shift + i (Corrige o problema de formatação)\
 Após salvar, os erros deverão sumir
+
+*** Contador de palavras
+text = "My phrase here"
+print(len(text.split(" ")))
