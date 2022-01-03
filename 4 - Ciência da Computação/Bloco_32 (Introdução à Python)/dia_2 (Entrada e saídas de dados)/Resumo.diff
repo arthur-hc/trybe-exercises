@@ -1,0 +1,18 @@
+*** Ambiente Virtual
+
+*** Venv
+  Permite isolar ambientes, permitindo cada projeto utilizar suas bibliotecas na versão desejada
+
+*** P/ criar amb isolado
+python3 -m venv .venv
+(.venv é o nome do amb isolado)
+
+- Caso não esteja instalado sudo apt install python3-venv
+
+*** Ativando amb isolado
+source .venv/bin/activate
+
+*** Verificando se funcionou
+which python3 => retorna o caminho + .venv/bin/python3
+(.venv) no começo da linha no terminal, indica que está rodando
+
