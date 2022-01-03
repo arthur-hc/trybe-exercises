@@ -16,3 +16,93 @@ source .venv/bin/activate
 which python3 => retorna o caminho + .venv/bin/python3
 (.venv) no começo da linha no terminal, indica que está rodando
 
+*** Exemplos e exercicios de input em:
+arquivo.py
+erros.py
+exemplo_input.py
+interpolacao.py
+saidas.py
+somador_de_numeros.py
+fixacao1.py
+fixacao2.py
+
+*** Manipulação de arquivos
+personagens_legais.py
+
+*** Erros de sintaxe VS Exceções
+Sintaxe:
+  print{"Olá, mundo!"}
+
+Exceção:
+  print(10 * (1 / 0))
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+  ZeroDivisionError: division by zero
+  print(4 + spam * 3)
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+  NameError: name 'spam' is not defined
+  print('2' + 2)
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+  TypeError: can only concatenate str (not "int") to str
+
+
+*** Tratamento de Exceções
+Utiliza-se try e except
+
+=> Se nenhuma Exceção ocorrer, except é ignorado e try finalizada
+=> Se ocorrer durante a cláusula try, as instruções remanescentes são ignoradas. Se a exceção for prevista, essa cláusula é executada
+=> Se não existir nenhum tratador previsto para tal exceção, trata-se de uma exceção não tratada e a execução do programa termina com uma mensagem de erro.
+
+Exemplo em:
+erros_execoes.py
+fixacao3
+
+*** with
+> Limita o escopo do open, retirando a necessidade do close
+with open('arquivo.txt') as superheroes_file:
+  for hero in superheroes_file.read():
+    print(hero)
+
+*** Lendo JSON
+import json
+
+# É necessário converter em json para acessar através de [0]["superhero"]
+with open("superheroes.json") as superheroes_file:
+    print(json.load(superheroes_file))
+
+# Imprimindo nome de cada herói
+with open("superheroes.json") as superheroes_file:
+    superheroes_list = json.load(superheroes_file)
+    for superhero in superheroes_list:
+        print(superhero["superhero"])
+
+
+*** Lendo CSV
+# NÃO PODE SER IMPRESSO DIRETAMENTE, DEVE SER ITERADO SOBRE CADA ITEM
+import csv
+
+with open("dc-wikia-data.csv") as superheroes_file:
+    superheroes_list = csv.DictReader(superheroes_file)
+    for superhero in superheroes_list:
+        print(superhero["name"])
+
+# "DECOMPONDO" O ARQUIVO
+import csv
+
+with open("dc-wikia-data.csv") as superheroes_file:
+    superheroes_list = csv.DictReader(superheroes_file)
+    header, *superheroes_list = csv.reader(superheroes_file)
+# IMPRIMIRÁ APENAS O CABEÇALHO
+    print(header)
+# IMPRIME OS VALORES
+    print(superheroes_list)
+# IMPRIME OS VALORES SEM SER UM DICIONÁRIO
+    for superhero in superheroes_list:
+        print(superhero)
+
+
+EXEMPLOS DE MANIPULAÇÃO JSON E CSV
+fixacao4
+fixacao5
