@@ -106,3 +106,46 @@ with open("dc-wikia-data.csv") as superheroes_file:
 EXEMPLOS DE MANIPULAÇÃO JSON E CSV
 fixacao4
 fixacao5
+
+
+*** Uso do set
+Evita a repetição dos dados durante a leitura de um arquivo. Ex: caso esteja lendo um arquivo de info de games, o genero ação é registrado apenas uma vez, mesmo que vários games sejam do gênero
+
+import json
+
+with open("video_games.json, mode="r") as file:
+  video_games = json.load(file)
+game_generes = set()
+for game in video_games:
+    for genre in game['Metadata']['Genre'].split(','):
+        game_genres.add(genre)
+
+# Irá mostrar a quantidade de jogos
+len(video_games)
+#Irá mostrar a quantidade de generos
+len(game_generes)
+
+
+*** Vendas por console
+consoles = set()
+for game in video_games
+    console.add(game["Release"]["Console"])
+
+sales_by_console = {console: 0.0 for console in consoles}
+
+for game in video_games:
+    console = game["Release"]["Console"]
+    sales = game["Metrics"]["Sales"]
+    sales_by_console[console] += sales
+
+*** Criando um arquivo CSV
+
+import csv
+
+with open("reviews_by_genre", "w") as file:
+# Na linha seguinte ocorre a "autorização" p/ escrever
+    writer = csv.writer(file)
+# Na linha seguinte, ocorre a escrita do cabeçalho
+    writer.writerow(["genre", "mean"])
+    for genre, mean in mean_review_score_by_genre.items()
+        writer.writerow([genre, mean])
