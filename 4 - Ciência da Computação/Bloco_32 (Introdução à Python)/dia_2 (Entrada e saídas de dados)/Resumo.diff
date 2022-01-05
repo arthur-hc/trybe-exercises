@@ -129,7 +129,7 @@ len(game_generes)
 *** Vendas por console
 consoles = set()
 for game in video_games
-    console.add(game["Release"]["Console"])
+    consoles.add(game["Release"]["Console"])
 
 sales_by_console = {console: 0.0 for console in consoles}
 
