@@ -23,10 +23,6 @@ for book in books["books"]:
     for category in book["categories"]:
         average_by_category[category] += 1 / len(books["books"])
 
-# print(average_by_category["java"])
-for category in average_by_category:
-    print({category: str(round(average_by_category[category] * 100, 2)) + "%"})
-
 with open("average_by_category", "w") as file:
     writer = csv.writer(file)
     writer.writerow(["category", "percentage"])
