@@ -1,0 +1,32 @@
+*** TESTES EM PYTHON
+
+
+*** Instalação
+python3 -m pip install pytest
+
+python3 -m pytest --version (verifica se foi instalado)
+# SAÍDA: This is pytest version 5.3.0, imported from /home/cassiobotaro/projects/gerenciador-tarefas/.venv/lib/python3.8/site-packages/pytest.py
+
+*** Formato e execução
+> Nomenclatura
+  O nome do teste, deve iniciar com test_NOMEDOARQUIVO.py
+
+> Para executar o teste
+  python3 -m pytest
+
+*** test fixture ou fixture
+São precondições ou estados necesários p/ execução de um teste
+
+*** Dublês
+> fakes:
+  objetos que possuem implementações funcionais, porém normalmente simplificadas;
+
+> mocks: 
+  são pré programados para verificarem as chamadas das funções que receberem;
+
+> stubs:
+  proveem respostas predefinidas;
+
+> spies:
+  são como stubs, mas também armazenam informações de como foram chamados.
+
