@@ -30,3 +30,8 @@ São precondições ou estados necesários p/ execução de um teste
 > spies:
   são como stubs, mas também armazenam informações de como foram chamados.
 
+*** Anotações aula ao vivo
+Caso o retorno de uma função seja armazenada dentro de uma variável, para verificar seu interior, utiliza-se:
+
+report = generate_simple_report(data)
+assert "Data de fabricação mais antiga: 2019-09-13" in report
