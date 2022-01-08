@@ -1,0 +1,162 @@
+*** DOCKER
+Busca solucionar o problema de incompatilbilidade entre sistemas, funcionando como "empacotador".
+
+*** Funcionamento
+1 - Após sua instalação seus comando de ativação, parada e status são os mesmos de outros serviços
+=> sudo service docker start/stop/status
+ou
+=> sudo systemctl start/stop/status docker
+
+*** Habilitando o daemon do Docker p/ iniciar durante o boot
+=> sudo systemctl enable docker
+
+*** Hello world Docker
+=> docker run hello-world
+
+*** P/ Desinstalar o Docker
+=> sudo apt-get purge docker-ce docker-ce-cli containerd.io
+
+*** Remover Containers
+=> sudo rm -rf /var/lib/docker
+=> sudo rm -rf /var/lib/containerd
+
+*** Containers
+Processo do Docker que possui todo o necessário p/ o funcionamento da aplicação (Sistema Operacional, Libs etc)
+
+Lembram VM, MAS NÃO SÃO. Container simula apenas o SO enquanto VM hardware e software
+
+Não deve ser utilização p/ várias aplicações. Por isso ocupa menos espaço que uma VM
+
+*** Imagem
+É a fotografia de um container. Assim, quando for necessário inicar um novo a partir de uma estrutura já conhecida, só precisamos regastar uma imagem
+
+Docker Hub é o um repositório de imagens Docker. Nele existe o Registry que um sistema de armazenamento e entrega. Lembra o Github pela possibilidade de dar pull nas imagens para uso posterior
+
+*** Fluxo:
+1 - DOCKERFILE => arquivo que possui instruções necesárias p/ gerar uma img (SO, comandos etc)
+2 - PUSH || PULL => Em uma imagem no Registry. Pode ser na sua propria caso já tenha criado ou em uma de sua escolha, como no hello world
+3- RUN IMAGE => em um container
+
+*** Rodando OS em um container
+docker <comando> <sub-comando> <parâmetros>
+docker container run hello-world 
+
+P/ RODAR UM CONTAINER:
+docker container run <nome-da-imagem>:<tag>
+<tag> é a versão daquela imagem. Se não passsada, assumirá a última disponível
+
+=> docker container run ubuntu
+Com esse comando, a imagem será baixada, o container será rodado, mas nada irá acontecer pois não houveram instruções, fazendo com que ele fosse encerrado.
+
+
+*** Listando Containers
+Quais estão ativos
+=> docker container ls
+
+Quais estão ativos e inativos
+=> docker container ls -a
+
+Último container
+=> docker container ls -l
+
+*** Cabeçalhos da saida
+CONTAINER ID: Identificador único*;
+IMAGE: O nome da imagem utilizada para a criação do container ;
+COMMAND: O comando executado/ em execução dentro do container ;
+CREATED: Quando foi criado o container ;
+STATUS: O status atual do mesmo, no nosso caso, encerrado;
+PORT: A porta que estamos utilizando para nos comunicar com o container**;
+NAMES: O apelido do container , como não definimos nenhum, foi criado um aleatório.
+
+*** Rodando um comando adicional antes de terminar o container
+É possível executar comandos de terminal antes que o container seja encerrado. Para isso, basta adicional os comando no final da execução do run
+=> docker container run <nome-da-imagem>:<tag> <comando> <argumentos-do-comando>
+=> docker container run ubuntu echo 'Hello Tryber!'
+
+*** Rodando o container de forma interativa
+P/, por exemplo, utilizar um terminal dentro do container, passamos o param -ti* ao comando run que dá acesso ao terminal. Trata-se de dois comandos juntos
+  -t indica que estamos requisitando um terminal no container que consiga imprimir o retorno dos nossos comandos
+  -i estabele uma interface de comunicação física com esse terminal
+
+=> docker container run -ti ubuntu
+
+NOTA-SE
+> O domínio do usuário root no terminal do container é o CONTAINER ID do mesmo, nesse caso 65897a6b07fb ( root@65897a6b07fb ) ;
+> O comando cat /etc/lsb-release retorna os dados da distribuição, no caso, o Ubuntu 20.04 que é a imagem utilizada;
+> Para sair desse terminal interno do container e retornar ao seu terminal, é só utilizar o comando exit .
+
+==>>> PRINCIPAIS COMANDOS DO CLI <<<==
+
+***  Criar e rodar um container
+=> docker container run <parâmetros> <imagem>:<tag>
+
+> O parâmetro --name define um <nome-da-sua-escolha> para aquele container (ao invés de um nome aleatório)
+=> docker container run --name <nome-da-sua-escolha> <imagem>:<tag>
+
+> Modo 'Cleanup': O parâmetro --rm deve garantir que o container seja removido ao final da execução (útil para testar imagens sem ficar acumulando containers novos) :
+=> docker container run --rm <imagem>:<tag>
+
+> O parâmetro -d (de --detach , desacoplado em português) rodará esse container em segundo plano*:
+-   abalhar em segundo plano significa que a aplicação está rodando, porém de forma assíncrona ao   comando, ou seja, embora não esteja visível, o processo está lá, funcionando por de trás dos panos. É possível validar isso com o comando docker ps -a .
+-   O comando -d em outros aplicativos e serviços também pode estar associado ao conceito de daemon , que também é uma forma de se referenciar aplicativos que estão funcionando em segundo plano.
+-   No exemplo da imagem ubuntu, faz sentido passar o parâmetro -d associado ao -it como em: docker container run -dit ubuntu , o que manterá o container ativo em segundo plano, já com um terminal disponível para acesso;
+=> docker container run -d <imagem>:<tag>
+
+*** Criar um container sem executá-lo
+> Cria um container com a imagem de referência, mas não o executa imediatamente:
+=> docker container create <parâmetros> <imagem>:<tag>
+
+> O parâmetro -it nesse contexto, deve garantir que ao iniciar o container , ele se mantenha ativo e disponha de um terminal de acesso:
+=> docker container create -it <imagem>:<tag>
+
+
+*** Listar containers
+> Lista ( ls , list em inglês) todos os containers ativos :
+=> docker container ls
+
+> Lista todos os containers ativos e inativos :
+=> docker container ls -a
+
+> Lista o último container criado (independente do seu estado) :
+docker container ls -l
+
+*** Iniciar, reiniciar, pausar, resumir e parar um container
+> Inicia* um container usando referências de sua identificação única (campo CONTAINER ID , parcialmente ou inteiro) , ou pelo nome (campo NAMES ) que foi definido:
+=> docker container start <CONTAINER ID || NAMES>
+OBS: O start apenas inicia o container já criado. Run cria um e executa
+
+> Reinicia um container usando as referências citadas anteriormente:
+=> docker container restart <CONTAINER ID || NAMES>
+
+> Pausa um container usando as referências citadas anteriormente:
+=> docker container pause <CONTAINER ID || NAMES>
+
+> Tira um container do modo de pausa usando as referências citadas anteriormente:
+=> docker container unpause <CONTAINER ID || NAMES>
+
+> Encerra um container usando as referências citadas anteriormente:
+=> docker container stop <CONTAINER ID || NAMES>
+
+
+*** Retomando o acesso a um container interativo rorando em segundo plano
+> Caso você tenha iniciado um container em segundo plano utilizando -dit , você pode acessar esse container rodando o comando attach :
+=> docker container attach <CONTAINER ID || NAMES>
+
+*** Excluindo containers específicos
+> Se o container não estiver ativo, esse comando deve remover o mesmo:
+=> docker container rm <CONTAINER ID || NAMES>
+
+> Se o container estiver ativo, você deve passar o parâmetro -f (forçar) para parar sua execução e depois efetuar a remoção:
+=> docker container rm -f <CONTAINER ID || NAMES>
+
+
+*** Limpando containers que não estão sendo utilizados
+> !!! Use com moderação !!!: Esse comando deve remover todos os containers inativos do seu computador. O comando pede confirmação e o resultado é conforme a imagem a seguir:
+=> docker container prune
+
+*** Monitorando os processos dentro de um container
+> O comando top , assim como nos terminais linux, traz as informações sobre os processos que estão sendo rodados, mas dentro daquele container , o que não inclui, por exemplo, serviços que são compartilhados com o sistema hospedeiro. Ele é útil para quando estamos os rodando em segundo plano:
+=> docker container top <CONTAINER ID || NAMES>
+- Aqui o container é rodado com um comando dd if=/dev/zero of=/dev/null (que no nosso caso, serve para estressar o container ) que gerou um processo, esse que é mostrado na lista de processos.
+
+

@@ -1,0 +1,6 @@
+Ao ininiar um novo projeto
+
+1 - python3 -m venv .venv
+2 - source .venv/bin/activate
+3 - Instala as dependencias que irá utilzar no projeto
+4 - pip freeze > requirements.txt
