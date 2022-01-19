@@ -1,0 +1,180 @@
+*** IMAGENS VS CONTAINERS
+> Imagem >>> Arquivo imutável capaz de gerar um ou mais containers. Criado através do processo de build de um arquivo chamado Dockerfile. Esse docker file contém as intstruçòes p/ roda a aplicação e libs a serem instaladas, arquivos inciados etc...
+
+> Container >>> Contexto (ativo ou não) de uma aplicação, baseado em uma imagem. Ex: container baseado em linux, contendo NodeJS instalado e configurado, para rodar uma aplicação React
+
+*** Lista as imagens
+=> docker images
+
+*** Retorna containers ativos e inativos
+=> docker ps -a
+
+*** Remove a imagem
+=> docker rmi -f bc11b176a293
+
+- É importante ressaltar que ao excluir uma imagem, os containers gerados a partir dela não serão excluídos, apenas ficaram órfãos das camadas da imagem que a utilizavam para executar suas funções.Portanto, para gerar novos containers precisaremos de uma nova imagem.
+
+*** CAMADAS DE UMA IMAGEM
+Cada parte que aparece ao fazer o download de uma imagem, é uma camada. Como estão divididas, poderão ser reaproveitadas por outras imagens, evitando a duplicidade no sistem e o download de um arquivo já existente. Esse sistema é o Layered File System
+
+=> Elas são apenas para leitura, porém, se ao acessar de modo interativo (docker run -it ubuntu), e realizar atualizações (apt-get) ou criar novos arquivos, estes persistirão mesmo se o container for reiniciado
+
+=> Isso acontece pois, ao criar um container, uma camada extra (container layer) é adicionada, tornando possível ler e escrever nela, SOMENTE NELA!!!
+
+*** COMANDOS
+exit
+=> comando que inativa o container
+
+docker start -ai meu_container
+=> retoma o container, sendo a de attach, retomando o container, e i de interativo
+
+*** Mapeamento de Portas
+> A seguir, um exemplo de um Servidor HTTP Apache
+
+Baixa a imagem:
+=> docker container run -d -P httpd:2.4
+
+Mostra o servidor com a porta utilizada
+=> docker ps
+
+Pode ser acesado através de:
+=> http://localhost:49153/
+
+A porta 80 é interna, enxergada apenas dentro do container. A 49153 é a externa (acessada em nossa máquina)
+
+Renomeando o container:
+=> docker container run -d -P --name site-trybe httpd:2.4
+
+Para interromper ou ativar o funcionamento:
+=> docker stop site-trybe
+=> docker start site-trybe
+
+Linkado a porta do container(80) com a interna do computador utilizando(que será definido) -p ao invés de -P (aleatório):
+=> docker run -d -p 54321:80 httpd:2.4
+
+- Um detalhe importante é que a porta do container vai variar dependendo da aplicação que você está rodando . No caso do servidor http , a porta padrão de acesso para páginas web é a 80 . Em uma aplicação de React por outro lado, a imagem deveria expor a porta 3000 como padrão, então é importante saber qual porta sua aplicação vai usar antes de rodar o parâmetro -p .
+
+*** Dockerfile - Comandos básicos
+- PS: É possível fazer commit nas alterações do docker com docker commit, que serve literalmente para pegarmos as alterações (que são etapas adicionais) que fizemos no nosso container e salvar elas em uma imagem (nova ou já existente).
+
+O Dockerfile é o arquivo de config p/ definir o passo a passo a ser executado
+
+*** Criando e rodando React com Dockerfile
+
+Cria o react App e entra na pasta:
+=> npx create-react-app react-dockerized
+=> cd react-dockerized
+
+Cria o arquivo Dockerfile:
+=> touch Dockerfile
+
+Editando o Dockerfile:
+FROM
+# Indica a imagem que a nossa será baseada.
+# É possível utilizar qualquer orem, no entanto, se bem posicionado, melhora o processo de build, rebuild ou até na distribuição, pois menos etapas, serão menos camada e consequentemente menos peso.
+FROM ubuntu:latest
+
+# É recomedado especificar a versão (ubuntu:8) para evitar quebras
+
+# Outra recomendação, é utilizar as versões mínimas de imagem, através das tags slim ou alpine, que utilizam a versão mínima do SO, possuindo menos dependências e ferramentas instaladas
+
+WORKDIR
+# Indica o diretório que será utilizado como base
+WORKDIR /diretorio/que/sera/utilizado
+ex: WORKDIR /app
+
+COPY
+# Responsável por copiar os diretórios e arquivos p/ dentro da imagem
+COPY ["<ARQUIVO_1>","<ARQUIVO_2>",...,"<ARQUIVO_X>", "<PASTA-DESTINO>"]
+- Vale ressaltar que no COPY tanto a sintaxe na forma exec ( COPY ["arquivo1", "arquivo2", "./destino"] ) como na shell ( COPY arquivo1 arquivo2 ./destino ) são aceitas*.
+- * O modo shell é como se você rodasse o comando em um terminal.
+
+RUN
+# Executa comandos durante a criação da imagem
+RUN npm install
+- !!!Aqui é importante frisar, que só é possível fazer esse comando de instalação pois a imagem Node , já possui esses aplicativos internamente.
+
+*** Passos intermediários
+dockerignore
+# o que não deseja ser copiado
+touch .dockerignore
+node_modules
+
+COPY . .
+Copia de todos arquivos (pois ignorará o node_modules)
+
+RUN npm run build
+# Como o React possui o script p/ gerar versão otmizada, é possível. Caso outras aplicações tenham, também será possível. Ela normalmente é utilizada em deploy.
+
+NGINX
+# No exemplo, este foi o servidor HTTP utilizado, assim como o Apache inicialmente. O dockerfile foi dividido em mais de uma parte (multi-stage build). Será criado uma imagem a partir do Nginx com o alias de "prod". Em seguida, será copiado as informações do build para o diretório do servidor
+
+EXPOSE
+# Especifica a porta utilizada pela aplicação para o container "saber" onde buscar. O exemplo da Nginx utiliza a porta 80
+EXPOSE <PORTA-DO-APP-NO-CONTAINER>
+
+LEMBRETE
+# Para esse passo, lembre-se ao rodar um container que expõe uma porta, é necessário atribuir uma porta do hospedeiro(host) que direcionará p/ o sistema do convidado(guest). P/ isso, utiliza-se -p
+# docker container run \
+#    -p <PORTA-HOST>:<PORTA-GUEST> \
+#    <IMAGEM>:<TAG>
+
+# Por exemplo, se temos uma aplicação que serve na porta 80 que está exposta no Dockerfile e queremos acessá-la a partir da porta 3000 do host , basta executarmos:
+# docker container run \
+#    -p 3000:80 \
+#    --rm \
+#    -dit \
+#    yeasy/simple-web:latest
+
+CMD
+# "Command Prompt" sempre é executado quando o container é inciado.
+# CMD ["/bin/echo", "Hello World"] <<< Forma com parâmetros
+# CMD npm start
+# Caso o container seja executado passando run, o comando passado sobrescreverá o do CMD
+
+ENTRYPOINT
+# Diferente do CMD, não é sobrescrito pelo passado no run, por isso, é mais indicado para inciar aplicações
+
+# Se utilizado, os comandos CMD se tornam parâmetros adicionais.
+# ENTRYPOINT ["/bin/echo", "Hello"]
+# CMD ["World"]
+# Imprime "Hello World".
+# Caso utilize run, ele ainda substituirá o CMD
+
+CONSOLIDAR INSTRUÇÕES
+# Passo necessário p/ consolidar em uma imagem
+docker image build -t <name:tag> <origem_docker_file>
+docker image build -t react-dockerized:v1 .
+
+VERIFIQUE E RODE
+docker images
+docker run -dit -p 8000:80 --name reactdockerized react-dockerized:v1
+Abra http://localhost:8000/
+
+*** Comandos Adicionais
+LABEL
+# Comando p/ atribuir metadatas (dados auxiliares). É recomendados p/ organizar as imagens, registrar licenças, relacionamentos entre containers etc.
+LABEL <KEY>=<VALUE>
+LABEL maintener="John Doe <john.doe@trybe.com.br>"
+# Podendo ser resgatado posteriormente com
+# "Labels": {
+#    "maintener": "John Doe <john.doe@trybe.com.br>"
+# }
+
+ENV
+Variaveis de ambiente
+ENV NODE_ENV production
+# Também é possível passá-las ao rodar os containers
+# docker container run \
+#    --env myCat=fluffy \
+#    --env myName=johnDoe \
+#    <IMAGE NAME>
+
+USER
+# Define o usuário a inciar o app. Caso não seja definido, será o root como padrão (NÃO RECOMENDADO POR SEGURANÇA)
+USER node-user
+# Normalmente as imagens já possuem um genérico. Ex: node já possui um chamado node
+USER node
+
+Layers e Cache
+# Ao criar imagens, cada comando é uma camada(layer). Cache remete ao uso de "memória cache", de aramazenamento rápido e temporário p/ utilização de um recurso. Caso não haja mudança naquele step, utilizará o cache do último build. Caso haja alteração, será repetido a partir do step modificado.
