@@ -114,7 +114,7 @@ EXPOSE
 EXPOSE <PORTA-DO-APP-NO-CONTAINER>
 
 LEMBRETE
-# Para esse passo, lembre-se ao rodar um container que expõe uma porta, é necessário atribuir uma porta do hospedeiro(host) que direcionará p/ o sistema do convidado(guest). P/ isso, utiliza-se -p
+# Para esse passo, lembre-se ao rodar um container que expõe uma porta, é necessário atribuir uma porta do hospedeiro(host || nosso computador) que direcionará p/ o sistema do convidado(guest). P/ isso, utiliza-se -p
 # docker container run \
 #    -p <PORTA-HOST>:<PORTA-GUEST> \
 #    <IMAGEM>:<TAG>
@@ -178,3 +178,9 @@ USER node
 
 Layers e Cache
 # Ao criar imagens, cada comando é uma camada(layer). Cache remete ao uso de "memória cache", de aramazenamento rápido e temporário p/ utilização de um recurso. Caso não haja mudança naquele step, utilizará o cache do último build. Caso haja alteração, será repetido a partir do step modificado.
+
+*** Anotações aula
+
+INSPECIONAR IMAGENS
+docker image inspect nginx -f '{{.RootFS.layers}}'
+docker image inspect <PASTA DESEJADA>/hello-nginx -f '{{.RootFS.layers}}'
