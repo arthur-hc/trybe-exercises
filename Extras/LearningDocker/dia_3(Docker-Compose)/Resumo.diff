@@ -1,0 +1,223 @@
+*** Docker Compose
+Arquivo p/ configurar todos um ambiente de containers através de um arquivo YAML, sabendo o que e em qual ordem executar.
+
+*** Volumes
+Componentes do Docker responsáveis por prover a preservação de info.
+
+*** Networks - Redes no Docker
+Rede virtualizada, que permite contectar containers a uma ou mais redes, podendo compartilhar informações.
+
+Há 3 redes(consultadas através de: docker network ls), que são criadas em conjunto:
+
+docker network ls
+
+> Bridge
+Ao iniciar um container, se a rede não seja especificada explicitamente, será associada a Bridge
+=> Podem se conectar via protcolo TCP/IP. Sabendo o IP, é possível enviar tráfego ao container, não sendo tão eficiente, pois ao reiniciar, o IP poderá mudar
+
+# As estapas a seguir, permitem visualizar a interação entre container, com o 2 encontrando o ping de 1. O link não é obrigatório, apenas permitem apelidos, evitando a necessidade de encontrar o IP a todo momento em que a máquina for reiniciada.
+# docker container run -ti --name container1 busybox
+# docker container run -ti --link container1 --name container2 busybox
+# ping container1
+
+> Host
+O container associado passa a compartilhar toda stack de rede do host. Recomendado apenas serviços específicos, como infra.
+
+> None
+Rede que não possui nenhum driver associado, deixando o continer isolado. Útil p/ containers que utilizar arquivos p/ execução ou backup que rode script localmente
+
+*** Criando e adicionando o container a rede
+=> docker network create --driver bridge rede-local (Cria rede)
+=> docker container run -itd --name novo_container mjgargani/ubuntu-ping (Cria container)
+=> docker network connect rede-local novo_container (Conecta o container a rede)
+
+!!! Também é possível criar o container já conectado
+=> docker container run -it --name outro_container --network rede-local mjgargani/ubuntu-ping
+
+*** Desconectando o container da rede
+=> docker network disconnect minha-rede meu-container
+
+*** Mapeando portas p/ utilização em containers
+Para persistir os dados, utiliza-se volumes. Isso ocorre mapeando uma pasta do Sistema Hospedeiro (Docker Host) p/ o Sistema Convidado (Container). Assim, mesmo c/ a remoção, os dados serão mantidos.
+
+*** Trabalhando com volumes
+
+# Após criar o arquivo HTML, crie um container vinculado a pasta local. Assim, qualquer alteração HTML, será refletida no serv http do container. Para isso, vamos usar no comando run , o parâmetro -v (de 'volume') da forma -v <PASTA-LOCAL>:<PASTA-CONTAINER> :
+=> docker run -d --name site-trybe2 -p 8881:80 -v "/home/arthur/Documentos/Trybe/trybe-exercises/Extras/LearningDocker/dia_3(Docker-Compose)/fixacao/:/usr/local/apache2/htdocs/" httpd:2.4
+
+# Para acessar: http://localhost:8881/primeiro-teste.html
+
+# Qualquer alteração, será mostrada após salvar e recarregar a página
+
+# Tudo o que for colocado na pasta /usr/local/apache2/htdocs/ do container, ficará preservado na pasta local
+
+# Para verificar, utilize este comando e procure por mounts:
+=> docker inspect site-trybe2 #que é o nome que demos ao nosso container
+
+# Para especificar volumes no Dockerfile, utiliza-se VOLUME.
+VOLUME ["/data"]
+
+# !!! Volumes ocupam espaço. Caso não seja utilizado, é importante remove-los c/:
+=> docker volume rm <VOLUME NAME>
+=> docker volume prune (remove os que não estão sendo utilziados)
+=> docker container rm -v <CONTAINER ID || NAMES> (-v garante que o volume será removido junto)
+
+*** Compose File - Parte I
+Torna possível criar e especificar todo o ambiente. Quais containers e imagens irão rodar, sem a necessidade de rodar um a um. Caso seja imagem local, é possível especificar p/ que crie a partir do Dockerfile.
+
+O exemplo de um Docker Compose estará em:
+docker-compose.yaml
+
+# BASE
+version: "<VERSÃO-DO-COMPOSE>"
+services: # Definição dos containers
+  <MEU-CONTAINER-1>:
+    image: <MINHA-IMAGEM:VERSÃO> # Exemplo carregando uma imagem já _buildada_
+    # ... outras configurações
+  <MEU-CONTAINER-2>:
+    build: <CAMINHO-DO-DOCKERFILE> # Exemplo gerando uma build a partir de um `Dockerfile`
+    # ... outras configurações
+  <MEU-CONTAINER-N>:
+    image: <MINHA-IMAGEM:VERSÃO>
+    # ... outras configurações
+
+# VERSION
+Versão que será utilizada p/ interpretar, evitando conflites com versões recentes
+
+# SERVICES
+Tipos dos containers que irão rodar. Uma API, é um service, por exemplo. Se utilizarmos uma aplicação Full Stack (front, back e db) teremos 3 serviços.
+
+# RESTART
+Define se haverá reinicio quando o docker for reiniciado ou ocorrer algum erro
+- no - Este é o valor padrão assumido pelo Docker e define que o container não irá restartar automaticamente;
+
+- on-failure - Define que o container será reiniciado caso ocorra alguma falha, apontado pelo exit code diferente de zero;
+
+- aways - Especifica que sempre que o serviço parar, seja por um falha ou porque ele finalizou sua execução, ele irá ser reiniciado; *
+
+- unless-stopped - Define que o container sempre seja reiniciado, a menos que a menos que o Docker em si seja parado (manualmente ou não). No caso de ser interrompido, ele não reinicia nem depois que o daemon do Docker * seja reiniciado.
+
+# PORTS (host:container)
+Define as portas que serão Com Docker Compose isso já é realizado de forma padrão.
+
+ATENÇÃO!!! 
+
+
+# ENVIRONMENT
+Config var de ambiente
+
+# DEPENDS ON
+Garante a ordem de iniciar e finalizar.
+
+*** Gerenciando Services
+Comandos de execução do docker-compose
+
+# UP
+Executa os containers, criando objetos especificados, como redes e volumes
+
+É possível rodá-los no modo daemon com -d
+
+=> docker-compose up
+
+=> docker-compose up <SERVICE NAME> == docker-compose backend
+
+# FLAG -f
+A flag -f é utilizado quando é dado um nome diferente do padrão. É necessário estar na pasta:
+docker-compose -f meu-arquivo-compose.yaml up
+ou 
+docker-compose -f meu-arquivo-compose.yml stop
+
+# FLAG --build
+Se utilizado o back-end por ex, devido a dependência c/ depends_on, o database será criado e startado. Caso já tenha acontecido um build anterior, será utilizado o antigo. Para forçar um novo build, utiliza-se o --build:
+=> docker-compose up --build <SERVICE NAME>
+
+- Muito utilizada em desenvolvimento, pois com alterações, deseja-se que reflita no ambiente compose, sendo necessário um rebuild.
+
+
+# DOWN
+Para os services e objetos criados pelo up
+=> docker-compose down
+
+# PS
+Lista os containers pertecentes ao Compose referenciado (utilizar -f c/ nomes personalizados)
+=> docker-compose ps
+
+# STOP
+Para services e containers relacionados, porém, diferente do downm, não remove redes e objetos
+=> docker-compose stop
+
+Também é possível especificar um
+=> docker-compose stop <SERVICE NAME>
+
+# START
+Starta services parados anteriormente do compose
+=> docker-compose start
+
+# LOGS
+Permite visualizar os logs dos services. Com -f ou follow, é possívels ver em tempo real. Com --tail, define-se o n linhas
+=> docker-compose logs -f --tail=100 <SERVICE NAME>
+
+*** Compose File - Parte II
+#VOLUMES
+Define o volume. É possível de forma simplificada como no comando docker container run quanto como bind na forma nomeada. Exemplo de forma mais extensa
+
+version: "3.8"
+services:
+  web:
+    image: nginx:alpine
+    volumes:
+      - type: volume
+        source: mydata
+        target: /data
+        volume:
+          nocopy: true
+      - type: bind
+        source: ./static
+        target: /opt/app/static
+
+  db:
+    image: postgres:latest
+    volumes:
+      - "/var/run/postgres/postgres.sock:/var/run/postgres/postgres.sock"
+      - "dbdata:/var/lib/postgresql/data"
+
+volumes:
+  mydata:
+  dbdata:
+
+# NETWORKS
+Containers precisar estar na mesma rede p/ se comunicar utilizando o name. Com Docker Compose isso já é realizado de forma padrão.
+
+[!!!ATENÇÃO!!!]: Lembre-se que se apontarmos para o localhost:3000 simplesmente, nosso container irá acessar a sua própria porta 3000 e não irá encontrar nada, pois o banco está em outro serviço. Por isso, devemos sempre utilizar, caso o serviço esteja em outro container , o nome dele.
+O networks possibilita a utilização de redes personalizadas.
+
+- Agora, vamos a um exemplo! Imagine que temos um ambiente com 3 services , sendo um front-end e dois back-ends, mais um banco de dados. Nessa arquitetura, apenas os back-ends acessam o banco de dados e o front-end acessa os back-ends. Para criarmos esses isolamentos, nosso YAML ficaria semelhante ao exemplo abaixo:
+
+version: '3'
+
+services:
+  frontend-a:
+    build: ./frontend_a
+    networks:
+      - frontend
+
+  backend-a:
+    build: ./backend_a
+    networks:
+      - backend
+      - frontend
+
+  backend-b:
+    build: ./backend_b
+    networks:
+      - backend
+      - frontend
+
+  db:
+    image: mysql
+    networks:
+      - backend
+
+networks:
+  frontend:
+  backend:
