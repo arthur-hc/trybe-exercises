@@ -1,0 +1,187 @@
+*** POO Introdução
+Em back, cada camada do MSC, seria uma entidade com sua responsabilidade. Em front, Pages, componentes, Redux, store... Cada uma é uma entidade, com sua responsabilidade. A ideia é a separação com entidades bem descritas e com responsabilidade definidas. ESSA 
+E A BASE DE POO, seria o PARADIGMA DE PROGRAMAÇÃO.
+
+Divisão de um programa em caixinhas, que para utilizar, deve-mos saber como chama-la e o que ela pode fazer, não sendo necessário saber como ela funciona.
+
+*** Paradigma de programação
+Forma de pensar, organizar e escrever um projeto. Uma ou mais estrutura que a linguagem deve seguir.
+
+*** Objeto em POO?
+Estrutura que pode ter informações e comportamentos.
+
+*** Exemplo fixação
+Para pensar de forma Orientada a Objetos , faça a seguinte pergunta:
+- Quem quer fazer o que e com o que ?
+
+Um User quer recuperar sua senha com seu email:
+> Uma entidade User
+> Uma ação ou entidade de enviar emails
+> Uma ação ou entidade de recuperar senhas
+
+*** User, primeira entidade
+Quem é? Alguém que deseja recuperar uma senha por email.
+
+class User:
+    def __init__(self, name, email, password):
+        """Método construtor da classe User. Note que
+        o primeiro parâmetro deve ser o `self`. Isso é
+        uma particularidade de Python, vamos falar mais
+        disso adiante!"""
+        self.name = name
+        self.email = email
+        self.password = password
+
+
+# Para invocar o método construtor, a sintaxe é NomeDaClasse(parametro 1,
+# parametro 2)
+# Repare que o parâmetro self foi pulado -- um detalhe do Python.
+meu_user = User("Valentino Trocatapa", "valentino@tinytoons.com", "Grana")
+
+# A variável `meu_user` contém o objeto criado pelo construtor da classe User!
+
+print(meu_user)
+print(meu_user.name)
+print(meu_user.email)
+print(meu_user.password)
+
+*** Objetos
+Foi definido uma CLASSE e, a partir dela, um Objeto. Para que isso ocorra, é necessário um método CONTRUTOR (__init__)
+
+*** Enviar emails
+P/ recuperar senha, é necessário a entidade evniar email.
+class User:
+    def __init__(self, name, email, password):
+        """ Método construtor da classe User. Note que
+        o primeiro parâmetro deve ser o `self`. Isso é
+        uma particularidade de Python, vamos falar mais
+        disso adiante!"""
+        self.name = name
+        self.email = email
+        self.password = password
+
+    def reset_password(self):
+        print("Envia email de reset de senha")
+
+
+meu_user = User("Valentino Trocatapa", "valentino@tinytoons.com", "Grana")
+meu_user.reset_password()
+
+> Em POO interessa apenas que a ação é feita, não como.
+
+> ABSTRAÇÃO => Pilar de definir entidades (1 pilar)
+> ENCAPSULAMENTO => Pilar de usar entidades, sem a a necessidade de enenteder o funcionamento (2 pilar)
+
+- Em uma classe (entidade), métodos são as coisas que ela faz. Atributos são as coisas que ela sabe.
+
+*** Dicionario
+> CLASSE
+  Entidade geral definida e baseada no problema que será resolvido
+
+> OBJETO
+  Entidade específica, criada a partir das regras da GERAL. "Classe é o molde e o objeto é a escultura que o molde faz"
+
+> INSTÂNCIA
+  Um objeto que é criado a partir de uma classe
+
+> ATRIBUTO
+  Informação de uma instância criada, User por ex.
+
+> MENSAGEM
+  Forma que objetos interagem, sendo chamados entre si. "User, resete sua senha!"
+
+> ABSTRAÇÃO
+  Pilar da POO. Criar entidade que farão ações que resolverão o problema
+
+> ENCAPSULAMENTO
+  Pilar da POO. Instanciar uma entidade e enviar mensagens a ela, sem saber seu funcionamento por dentro
+
+*** Mailer
+> OBS:
+Note no exemplo a separação de classes por responsabilidade, evitando repetição e permitindo a reutilização em outros trechos de acordo com a necessidade.
+
+import smtplib
+import ssl
+
+
+class User:
+    def __init__(self, name, email, password):
+        self.name = name
+        self.email = email
+        self.password = password
+
+    def reset_password(self):
+        meu_mailer = Mailer("password_reset@teste.com", "myverysafepassword", self.email)
+        meu_mailer.send_email("Reset your password", "Instruções para resetar a senha, com o link de resetar")
+
+
+class Mailer:
+    def __init__(self, from_email, from_password, to_email):
+        self.from_email = from_email
+        self.from_password = from_password
+        self.to_email = to_email
+
+    def send_email(self, subject, message):
+        body = f"Subject:{subject}\n\n{message}".encode('utf-8')
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL(
+            "smtp.gmail.com", 465, context=context
+        ) as server:
+            server.login(self.from_email, self.from_password)
+            try:
+                server.sendmail(self.from_email, self.to_email, body)
+            except (smtplib.SMTPRecipientsRefused, smtplib.SMTPSenderRefused):
+                raise ValueError
+
+
+meu_user = User("Valentino Trocatapa", "valentino@tinytoons.com", "Grana")
+meu_user.reset_password()
+
+*** Mensagens e Métodos
+Cada objeto pode receber mensagens. Funções que respondem mensagens, são chamadas de Métodos.
+- "O bom Encapsulamento faz com que nós só precisemos saber do nome de uma classe e seus métodos para interagir com ela."
+
+*** Dicionario 2
+
+> CLASSE
+- Uma classe consiste numa espécie de molde para criação de novos objetos, definindo seus atributos e métodos comuns que serão utilizados por ele.
+  - USER: Representa a entidade que armazenará as informações de uma pessoa usuária;
+  
+  - MAILER: Representa um gerenciador de envio de emails, que pode ser utilizado em qualquer parte do sistema;
+
+  - EMAILNOTFOUNDERROR: Representa uma exceção customizada, que é lançada pelo gerenciador de envio de emails, caso não seja possível fazer este envio devido a algum dos emails não existir;
+  
+  - USERSERVICE: Representa um serviço que implementa as regras de negócio associadas a uma pessoa usuária, como por exemplo, o envio de um email de redefinição de senha para o caso da pessoa ter esquecido sua senha.
+
+> OBJETO/INSTÂNCIA
+- Com a classe criada, podemos instanciar um objeto. Instanciar é o ato de criar um novo objeto/instância a partir da classe definida.
+
+  - EX:
+  mailer = Mailer(
+  "app-dev@email.com",
+  "123456",
+  "user@email.com"
+  )
+
+> ATRIBUTO
+  - USER: Uma instância de User armazena informações de nome, email e senha de cada pessoa usuária da nossa aplicação;
+  
+  - MAILER: Uma instância de Mailer armazena as informações de quem envia e quem recebe o email, seu assunto e seu conteúdo;
+  
+  - EMAILNOTFOUNDERROR:  Classes não precisam necessariamente ter atributos. Essa classe por exemplo, apenas representa um tipo de exceção, não definindo nenhum atributo;
+
+  - USERSERVICE: Atributos não precisam armazenar apenas informações de tipos de dados primitivos, podendo armazenar também instâncias de outras classes, ou até mesmo uma classe em si. Nesse caso, uma instância da classe UserService armazena uma instância de uma pessoa usuária e uma classe de gerenciamento de emails.
+
+> MÉTODO
+- Métodos são funções que possuem acesso aos dados armazenados em atributos, podendo implementar comportamentos e alterar seus estados.
+
+  ex: Como um método realiza uma ação, a utilização de verbos é uma boa prática para nomeá-los. Nomes como redefinir_senha ou reset_password poderiam ser utilizados para um método que implementa o comportamento de redefinição de senha.
+
+> CONTRUTOR
+- É um método especial utilizado para inicializar instâncias de uma classe e que pode receber parâmetros usados para definir as informações armazenadas em seus atributos. O nome e a implementação desse método especial varia de linguagem para linguagem, bem como a forma de invocá-lo.
+
+> ABSTRAÇÃO
+- No contexto de orientação a objeto, este conceito está ligado à definição de características de uma classe de forma abstrata, que aqui significa definir uma classe focando nas mensagens que ela responde e nos atributos de que precisa.
+
+> ENCAPSULAMENTO
+- Encapsulamento se trata de esconder parte da implementação de uma classe, exibindo de forma pública somente aquilo que é necessário.
