@@ -1,0 +1,76 @@
+*** Tema
+O tema do dia, visa permitir e tornar o código aberto e fácil a incrementações.
+
+*** HERANÇA
+Herança nada mais é do que especializar o comportamento de uma classe. A classe herdeira é tudo que a classe ascendente é e um pouco mais!
+- "Se DatabaseConnector é a classe ascendente, MySQLConnector e MongoConnector são as classes herdeiras! Ambas são um tipo específico de conector de banco de dados."
+
+ClasseAscendente(param1, param2):
+    def __init__(self, param1, param2):
+            self.soma = param1 + param2
+
+ClasseHerdeira(ClasseAscendente):
+    print(self.soma)
+
+*** CLASSES ABSTRATAS
+No exemplo, os relatórios sempre irão precisar de um formato, assim, a classe ascendente não será diretamente utilizada. Esse é um exemplo de Classe Abstrata. O METÓDO ABSTRATO, segue o mesmo pensamento.
+- "No contexto de Programação Orientada a Objetos, pense que coisas abstratas são coisas criadas para serem especializadas por classes herdeiras!"
+
+*** INTERFACES
+Um objeto deve ser capaz de receber mensagens. As funções que você chama são as mensagens enviadas a ele. Quando você dá a um objeto uma função você define uma mensagem que ele será capaz de receber e interpretar. Ao conjunto de mensagens que um objeto pode interpretar é dado o nome de Interface!
+- "Para a classe SalesReport , sua interface é composta pelas funções build e serialize."
+
+*** Criando comportamento "global"
+Se necessário que todos os relatórios fossem compactados, adicionamos um método a classe ascendente, assim, todas as herdeiras teriam acesso, sem a necessidade de adicionar um método a cada uma.
+
+Na ascendente...
+def compress(self):
+        binary_content = json.dumps(self.build()).encode('utf-8')
+
+        with gzip.open(self.export_file + '.gz', 'wb') as compressed_file:
+            compressed_file.write(binary_content)
+
+*** COMPOSIÇÃO
+Quando um comportamento começa a aparecer somente em algumas das herdeiras, é melhor utilizar a COMPOSIÇÃO. Assim, a escolha fica a quem esta instanciando. Isso se chama INVERSÃO DE DEPENDÊNCIA.
+Não será o autor da SalesreportJSON que define o compressor, é quem cria a instância
+
+# O compressor padrão, é o gz, que será utilizado caso não seja específicado.
+relatorio_de_compras = SalesReportJSON("meu_relatorio_1")
+
+# Para os novos que desejam utilizar zip, utiliza-se o parametro utilizando o novo método de Zip criado em classes que antecedem a classe ascendente.
+relatorio_de_vendas = SalesReportJSON("meu_relatorio_2", ZipCompressor())
+
+# Assim, o relatório terá o compressor que o "instanciador" deseja
+relatorio_de_compras.compress()
+relatorio_de_vendas.compress()
+
+*** Composição e Interfaces
+Um problema surge, se ao criar um novo compressor, não tiver uma função chamada compress que receba o mesmo parâmetro, ocorrerá um erro. A solução p/ isso é através de uma INTERFACE
+
+"Cria-se uma regra: Todo compressor deve ter uma função chamada compress que recebe esse param"
+
+Na solução em composition_example2.py, todo compressor que for criado precisa ter uma função compress que receberá esse parâmetro específico para funcionar!
+
+*** Métodos de Classe, Métodos Estáticos, Métodos de Instância
+No exemplo, caso ocorra várias instâncias, nada mudará de uma p/ outra, tornando desnecessário instanciar um objeto dessa classe. minha_instancia_de_zip_compressor.compress() ou ZipCompressor.compress() teriam o mesmo resultado. P/ que a segunda fosse possível, seria necessária uma refatoração que estará em composition_example_refactor.py
+- "métodos de classe são chamados diretamente da classe, sem instâncias, e utilizam algum atributo ou função auxiliar da classe para funcionar! Métodos estáticos são chamados diretamente da classe e não utilizam nada dela."
+
+*** Composição versus Herança
+Em POO, é comum tentar utilizar herança p/ composição. UTILIZE HERENÇA P/ ESPECIALIZAÇÃO E COMPOSIÇÃO P/ COMPARTILHAMENTO DE CÓDIGO.
+
+
+*** Métodos de classe
+Métodos que podem ser chamados diretamente pela classe definida, e não por sua instância, para definirmos quando instanciar um objeto dessa classe for desnecessário! Utilizam, obrigatóriamente, atributos ou métodos internos da classe em seu funcionamento;
+
+*** Métodos estáticos
+Como os métodos de classe, mas não utilizam nada de sua classe em seu funcionamento.
+
+*** Outro pilares da POO
+> HERANÇA
+A herança, como o próprio nome já diz, é o princípio que define que uma classe deve ser capaz de herdar seus atributos e métodos de outra. E embora a classe base possa ter tanto métodos abstratos (que precisam ser implementados) quanto métodos concretos (que já estão implementados), a boa prática diz que a herança deve ser usada apenas para especialização. Se você quer apenas compartilhar código, use composição.
+
+> POLIMORFISMO
+Segundo o dicionário, a palavra "polimorfismo" significa "qualidade ou estado de ser capaz de assumir diferentes formas". Em POO, o polimorfismo é caracterizado quando duas ou mais classes contêm implementações diferentes para métodos com a mesma interface. Nos nossos exemplos de hoje pense, por exemplo, no método serialize , que é definido de forma abstrata na classe Serializer e assume diferentes formas nas classes JSONSerializer e CSVSerializer
+
+> Os quatro pilares em uma frase
+Na Programação Orientada a Objetos, você deve criar entidades ( Abstração ) com as mensagens que escuta bem definidas ( Encapsulamento ), podendo especializar comportamentos de entidades ( Herança ) contanto que garanta que a forma de enviar mensagens é consistente ( Polimorfismo )
