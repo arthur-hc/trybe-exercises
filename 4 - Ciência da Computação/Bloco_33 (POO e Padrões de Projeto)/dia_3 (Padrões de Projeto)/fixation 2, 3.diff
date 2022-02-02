@@ -1,0 +1,15 @@
+# Em seu terminal Python, crie uma nova lista, uma lista normal, com alguns
+# elementos. Agora, chame o método __iter__() desta lista, e veja que é
+# retornado um objeto list_iterator
+=> python3
+=> list = [1, 2, 3, 4]
+=> iter_return = list.__iter__()
+- O resultado seguinte será algo parecido com <list_iterator object at 0x7f6f86cad8b0>
+
+# Guarde este objeto em uma varável, e chame o seu método __next__() para ver
+# o que acontece!
+=> iter_return.__next__()
+- O resultado será sempre o número seguinte, começando com um, até o final, onde retornará algo parecido com
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
