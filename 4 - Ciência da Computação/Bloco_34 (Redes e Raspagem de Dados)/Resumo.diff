@@ -1,0 +1,72 @@
+*** Redes de computadores
+Cojunto de software e hardwares que permite a comunicação entre dispositivos.
+
+*** Classificação de Escala
+> PAN (Personal Area Network)
+rede de pequena área física, bluetooth, mouse sem fio etc
+
+> LAN (Local Area Network)
+redes locais domésticas
+
+> MAN (Metropolitan Area Network)
+Interliga diversas redes a uma área metropolitana. Também conhecida como NAN (Neighborhood Area Network), que se restringe a um bairro ou vizinhança
+
+> WAN (Wide Area Network)
+Rede geograficamente distribuida, em âmbito global. Internet é um exemplo
+
+Wan(Man(LAN(PAN)))
+
+*** Pacotes
+Conceito de como essas mensagens são transmitidas. As informações são convertidas em binários, divididas em pedaços, chamados de "pacotes" e enviados pela rede. A maneira como serão enviadas, distribuidas e remontadas novamente, é definido através dos protocolos
+
+*** Protocolos
+Forma como as informações serão transportadas. Abrange não só o transporte, como o processo de envio e recebimento também. Tudo isso se dá através de um conjunto de regras, que garantirão o funcionamento e padronização.
+
+*** Modelos de Rede
+Há diversos protocolos, com suas responsabilidades. A separação entre os tipo, permite a modularização e a combinação entre protocolos posteriormente.
+Após a divisão dos grupos, cada tipo é agrupado em camadas, com suas responsabilidades.
+
+*** Modelo ISO/OSI
+As informações passam por todas as câmadas antes do envio, recebendo um encapsulamento e tratamento antes de seguir para próxima. Ao chegar no destino, será passada camada a camada, "desencapsulando" as informações, até que o dado se torne legível.
+
+Dividi as redes em 7 camadas:
+> Aplicação
+  - Sintaxe e semântica da mensagem, traduzindo as informações
+
+> Apresentação
+  - Faz a conversão entre os formatos de caracteres, permitindo a utilização na transmissão. Também é responsável pela compreensão e criptografia dos dados
+
+> Sessão
+  - Responsável pela comunicação entre dois processos em máquinas diferente, controlando o status como quando começar, terminar ou reiniciar a comunicação entre origem e destino
+
+> Transporte
+  - Detecta erros de camadas anteriores, assim como pela ordenação, garantindo que os dados serão os mesmo que na origem (inclusive a ordem). Também define a conexão e como estabelecê-la
+
+> Rede
+  - Responsável pelo endereçamento dos dispositivos na rede e rota que os pacotes devem percorrer até o destino
+
+> Enlace
+  - Detecta e corrige erros ocorridos no nível físico. Também controla o fluxo da transmissão entre dispositivos
+
+> Física
+  - Responsável pelo cabeamento, características eletricas como tensão, ópticas, eletromagnéticas... Tudo isso garantindo que a transmissão ocorra por meios físicos (hardware)
+
+*** Modelo TCP/IP
+Utiliza o ISO/OSI como modelo, realizando implementações. Define 4 camadas através da mescla das 7:
+> Aplicação
+Possui os protocolos que dão siginficado as informações. Nele estão o SMTP(Emails), FTP(Arquivos), HTTP
+
+> Transporte
+Responsável pela transferência dos dados entre máquinas. Seus principais protocolos são TCP e UDP.
+O TCP é mais utilizado quando não se pode perder informações, caso de uma consulta ou criação de uma API etc.
+O UDP é indicado para lives, jogos online etc, pois dados podem ser perdidos, não necessitando que ocorra uma pausa e aguarde até o reenvio p/ continuar o proceso. Além disso é mais veloz, facilitando quando há muitos acesso ao mesmo tempo
+
+> Rede
+Principal protocolo dessa camada é o IP. Outros como ICMP, NAT, ARP também fazem parte dessa camdada.
+Aqui a função é de endereçamento, irá identificar o remetente e o destinatário p/ que o pacote possa ser transmitido na rede.
+
+- O DNS permite a nomeação de um endereço IP (domínio)
+
+> Interface / Acesso ao Meio
+Camada física. Faz a Interface com diversos modelos de rede, como por ex Ethernet. Além disso, cuida dos meios de comunicação no nível de hardware como sinais eletronicos, conector, pinagem, níveis de tensão, dimensões físicas, características mecânicas, eletricas etc,
+
