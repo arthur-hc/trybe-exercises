@@ -70,3 +70,9 @@ Aqui a função é de endereçamento, irá identificar o remetente e o destinat�
 > Interface / Acesso ao Meio
 Camada física. Faz a Interface com diversos modelos de rede, como por ex Ethernet. Além disso, cuida dos meios de comunicação no nível de hardware como sinais eletronicos, conector, pinagem, níveis de tensão, dimensões físicas, características mecânicas, eletricas etc,
 
+*** HUB VS Switch
+O HUB para todo o processo enquanto um está ocorrendo, já o Switch é otimizado
+
+*** Integações entre dispositivos
+Em uma rede, caso um dispositivo esteja mais distande da rede (menos de 50% de alcance), a conexão geral será afetada
+

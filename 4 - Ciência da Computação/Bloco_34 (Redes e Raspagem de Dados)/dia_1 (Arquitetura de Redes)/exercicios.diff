@@ -1,0 +1,72 @@
+*** Exercício 1 : O primeiro server que iremos utilizar é o nosso velho amigo HTTP, na camada de aplicação. Você pode tanto criar um quanto utilizar um dos projetos ou exercícios dos módulos anteriores. A ideia é utilizarmos os conhecimentos do conteúdo e a ferramenta cURL para realizarmos uma chamada HTTP para ele. A ideia aqui é que o projeto tenha rotas GET e POST, para que seja possível enviar requisições para os endpoints e receber respostas, assim como já nos acostumamos a receber via browser ou utilizando programas como o Postman.
+- Caso tenha dificuldades maiores, você pode utilizar o Postman para converter uma requisição em cURL, é só fazer a requisição nele como você já sabe e depois clicar no botão code (que fica embaixo do save) e escolher cURL.
+> Faça uma chamada GET, utilizando o cURL.
+curl "https://reqbin.com/echo"
+ou
+curl -X GET "https://reqbin.com/echo"
+
+> Faça uma chamada POST, utilizando o cURL, passando um JSON no body da requisição.
+curl 
+  -d '{"key1":"value1", "key2":"value2"}' 
+  -H "Content-Type: application/json" 
+  -X POST http://localhost:3000/data
+
+
+
+> Faça uma chamada qualquer, utilizando o cURL, passando um header na requisição.
+curl 
+  -d '{"key1":"value1", "key2":"value2"}' 
+  -H "Content-Type: application/json" 
+  -X POST http://localhost:3000/data
+
+*** Exercício 2 : Ainda utilizando o cURL, vamos explorar mais alguns conceitos do HTTP. Relembre que falamos que o HTTP organiza e dá significado aos dados encapsulados nessa camada. Por exemplo: ao vermos um 200 tanto nós quanto um client HTTP sabemos que aquela request foi realizada com sucesso. Vamos explorar isso com o cURL.
+
+> Faça uma chamada GET, utilizando o cURL, para "google.com".
+curl -X GET "https://google.com"
+
+> Perceba que foi retornado um 301 . Isso quer dizer que existem diversos redirecionamentos que nos encaminham para o lugar certo. No caso, o caminho certo para a página do google é www.google.com . Ao acessarmos pelo navegador, não percebemos isso porquê ele faz o redirecionamento para a página certa para nós ao encontrar o 301 , porém, se você inspecionar a network você irá identificar esse redirecionamento. Faça uma nova chamada a "google.com", porém agora utilizando o parâmetro -L ou --location , que serve para "seguir redirecionamentos".
+curl -L -X GET "https://google.com"
+
+
+*** Exercício 3 : Agora utilizando o wget, pegue o conteúdo da página do site da Trybe, depois abra o arquivo HTML baixado em seu navegador. Faça o mesmo processo com outras páginas web.
+wget betrybe.com
+
+O retorno está na pasta como index.html
+
+*** Exercício 5 : Utilizando o comando telnet ou o Netcat (nc):
+> Conecte no server do exercício anterior e envie informações, o server deverá imprimir as mensagens enviadas no console.
+> Pare o servidor e verifique o que aconteceu com a conexão que estava aberta com o comando telnet ou nc.
+nc -t 127.0.0.1 8085
+
+ou
+
+telnet 127.0.0.1 8085
+
+*** Exercício 6 : Reinicie o servidor TCP e agora faça uma requisição utilizando o cURL (HTTP), perceba o que é exibido no console do server já que não estamos utilizando o HTTP nele, perceba também que o comando cURL não recebe uma resposta HTTP com sentido (um status code 200, por exemplo), de modo que ele não sabe que aquela requisição chegou ao fim.
+curl localhost:8085
+
+mais completa:
+
+curl --request POST \
+  --data "{ \"foo\": \"bar\" }" \
+  --header 'Content-Type: application/json' \
+  --header 'Foo-Bar-Header: foo-bar' \
+  localhost:8085/foo-bar
+
+*** Exercício 8 : Envie pacotes para o servidor UDP, utilizando o Netcat (nc). Em seguida pare o servidor e perceba que como não há conexão nada é sentido pelo client .
+ nc -u 127.0.0.1 8084
+
+ Em seguida digite e aperte enter p/ enviar as mensagens
+
+*** Exercício 9 : Faça uma chamada ao server, utilizando o cURL . Lembre que além do HTTP o comando utiliza o protocolo TCP e não o UDP. Repare o que acontece.
+curl localhost:8084
+
+*** Exercício 10 : Identifique o IP interno e externo da sua máquina. 
+
+Para IP externo acesse algum site como o http://meuip.com.br/ ou execute:
+ curl ifconfig.me
+
+Para o interno:
+ip a
+
+ou através das configurações de rede
