@@ -1,0 +1,59 @@
+*** PROTOCOLOS SEGUROS
+> SSL/TLS e HTTPS
+Já implementam uma camada (layer) de segurança na rede. O TLS é o sucessor do SSL. O HTTPS é o HTTP, c/ a camada de segurança adicional utilizando SSL/TLS
+
+Esses protocolos passam segurança e buscam evitar interceptações entre as conexões,evitando um hacker se passsar por quem não é. O Git por exemplo, podemos fazer utilizando HTTPS ou SSH com as chaves
+
+
+*** TIPOS DE ATAQUES
+> Dos/DDoS
+Quando a aplicação é bombardeada por milhares de acessos simultâneos mal intencionados com o objetivo de tirar o serviço do ar.
+
+> Brute Force
+Utilizando robôs e scripts, realiza diversas combinações de usuários e senhas
+
+
+*** TIPOS DE DEFESAS
+> Firewall
+Impedem ou permitem a passagem de determinados trafegos de uma rede, seja entrada ou saída
+
+> Iptables e Netfilter
+Netfliter é o sistema padrão de filtragem do Linux e Iptables é a ferramenta utilizadda para seu gerenciamento, que opera nas camadas OSI 2 e 3 .
+
+O Iptables segue um conjunto de regras pré estabelecidas e analise os pacotes baseado nelas e decidindo se serão aceitos, rejeitados ou regristrado em um arquivo de log.
+
+> Fail2ban
+Ferramenta de IPS que monitora os logs da rede, que ao detectar comportamentos suspeitos, cria regras noiptables que irão rejeitar o IP específico por um tempo
+
+
+*** Proxy
+Camada extra de controle entre internet e dispositivos, com diversos fins.
+
+Filtro, através de caracter;isticas de uma conexão, que determina se o tráfego deve ser feito ou não. Exemplo:
+Escritórios, eles podem bloquear o acesso a redes sociais. 
+Ao conectar pelo sistema de uma faculdade, terá acesso ao benefício de alunos que não seria possível através de uma máquina pessoal.
+Utiliza um proxy para "esconder" o IP original
+
+
+*** Comandos Aula
+ping google.com
+ping -c 5 google.com
+
+# indica o caminho até o destino
+traceroute google.com
+
+# mostra as politicas e sua cadeia de regras 
+# INPUT => Cadeia de regras impedindo a entradas na rede
+# FOWARD => Coloca uma regra em cima dos pacotes que estão rodando
+# OUTPUT => Regra de saída
+sudo iptables -L
+
+# Cria regra que bloqueia a verificação de ping próprio (própria placa de rede). Aparecerá em INPUT
+# Com REJECT NO LUGAR DO DROP, a resposta continua retornando, mas dizendo que está inacessível
+iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
+
+# Limpa as regras. EVITAR EM AMB PROFISSIONAIS
+iptables --flush
+
+# Bloqueia o acesso ao FB hehehe
+iptables -A FOWARD -d www.facebook.com -j DROP
