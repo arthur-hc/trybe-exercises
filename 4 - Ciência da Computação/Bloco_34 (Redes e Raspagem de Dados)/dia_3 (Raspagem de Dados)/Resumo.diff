@@ -1,0 +1,70 @@
+*** RASPAGEM DE DADOS
+Técnica para extrair dados de um serviço ou aplicação, estruturando-os em banco de dados, planilhas etc.
+
+*** Comandos passo a passo alberto
+
+# desativa amb virtual
+deactivate
+
+# novo amb virtual
+python3 -m venv .venv
+
+# ativa amb
+source .venv/bin/activate
+
+# baixa dependencia p/ raspagem
+python3 -m pip install requests
+
+python3
+import requests
+requests.get("https://www.betrybe.com/")
+request = requests.get("https://www.betrybe.com/")
+request.status_code
+request.headers
+request.headers['Content-Type']
+request.text
+request.content
+
+response = requests.post("http://httpbin.org/post", data="some content")
+response.text
+
+response = requests.get("http://httpbin.org/image/png")
+response.content
+
+# Equivalente ao json.loads(response.content)
+print(response.json())
+
+*** Arquivo de requisição em crawler.py
+executar com:
+  pyhton3 crawler.py
+
+*** Analisando responsta
+python3 -m pip install parsel
+
+*** Fatiamento
+# Quando não incluso o valor inicial, iniciaremos do índice 0
+# e do índice 2 em diante, os elementos não são incluídos
+(1, 2, 3, 4)[:2]  # Saída: (1, 2)
+
+# Quando omitimos o valor final
+# o fatiamento ocorre até o fim da sequência
+(1, 2, 3, 4)[1:]  # Saída: (2, 3, 4)
+
+# Vá do índice 3 até o 7.
+# O item no índice 7 não é incluído
+"palavra"[3:7]  # Saída: "avra"
+
+# Começando do elemento de índice 1, vá até o último,
+# saltando de 2 em 2
+[1, 2, 3, 4][1::2]  # Saída: [2, 4]
+
+- À partir da versão 3.9 do Python, teremos uma função chamada removesuffix , que é equivalente a palavra[:-len(suffix)] .
+
+*** Banco de dados
+
+*** Comando para instalar mongo
+ python3 -m venv .venv && source .venv/bin/activate
+ python3 -m pip install pymongo
+
+*** Scrapy (bônus)
+É uma ferramenta de raspagem
