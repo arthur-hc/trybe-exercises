@@ -1,0 +1,198 @@
+*** Ordem de Complexidade
+Tempo de execução do algoritmo que varia na medida que a entrada cresce, O(1). É linermanete proporcional.Ex: func demora 0,5 segundos * n entradas.
+
+# Aqui será 0,5 * n
+func(n)
+
+# Aqui será 0,5 * 10
+func(10)
+
+# Aqui será 0,5 * 30
+func(30)
+
+*** Complexidade de tempo e de espaço
+> Complexidade de tempo:
+  Quando afeta o tempo de execução, por n operação, n números de entradas etc. O ex anterior se encaixa na complexidade de tempo
+
+> Complexidade de espaço:
+  Quando o espaço que será utilziado depende de n entradas e operações.
+
+# No exemplo a seguir, será um 0(n). A cada entrada, será gerada mais uma saída, 0(n), ao contrario do anterior, que possuia apenas 1 independentemente de n entradas 0(1). Por isso, trata-se de uma compelxidade de espaço e tempo
+def squared_array(numbers):
+    array_of_squares = []
+    for number in numbers:
+            array_of_squares.append(number * number)
+
+    return array_of_squares
+
+
+*** FIXAÇÃO:
+> Exercício 1: Qual a Ordem de Complexidade (complexidade de tempo) do algoritmo abaixo? E a complexidade de espaço?
+def multiply_array(numbers):
+    result = 0
+    for number in numbers:
+            result *= number
+
+    return result
+R: É uma complexidade de tempo 0(n) pois tendo n como entradas, tem uma complexidade que dependerá desse n. Já em relação a complexidade de espaço, retornar apenas 1 dado independentemente de quantas entradas, será 0(1).
+
+
+*** Complexidade quadrática
+Quando a demanda de tempo pode ser levada a entrada ao quadrado. Ex:
+
+# Os arrays tem sempre o mesmo tamanho
+def multiply_arrays(array1, array2):
+    result = []
+    for number1 in array1:
+        for number2 in array2:
+            result.append(number1 + number2)
+
+    return result
+  
+# Nesse caso, para cada valor em array1, será produzido uma quantidade equivalente a multiplicação pela quantidade de elementos em array2. ***PS: AMBOS ARRAY COM A MESMA QUANTIDADE
+
+# 2 arrays c/ 2 elementos produzem 4 elementos
+[1, 2], [3, 4] => [3, 4, 6, 8]
+
+# 2 arrays c/ 3 elementos produzem 9 elementos
+[1, 2, 3], [4, 5, 6] => [4, 5, 6, 8, 10, 12, 12, 15, 18]
+
+# 2 arrays c/ 4 elementos produzem 16 elementos
+[1, 2, 3, 4], [5, 6, 7, 8] => [5, 6, 7, 8, 10, 12, 14, 16, 15, 18, 21, 24, 20, 24, 28, 32]
+
+Perceba então (SE POSSUIREM A MESMA QTD), será uma razão de n², portanto, 0(n²)
+
+*** FIXAÇÃO
+> Exercício 2: Para desembaraçar a sopa de letrinhas que a seção anterior criou, meça o tempo de execução do algoritmo acima e, mudando o tamanho das entradas, veja como, se você aumenta a entrada em n vezes, o tempo de execução aumenta em n² vezes!
+
+sum_array(array_com_dois_mil_numeros)
+# O tempo de execução deste algoritmo foi 0.45s
+
+sum_array(array_com_quatro_mil_numeros)
+# Já esse teve tempo de execução de 1.8s, cerca de quatro vezes maior.
+
+sum_array(array_com_oito_mil_numeros)
+# Já esse teve tempo de execução de 7.2s, cerca de dezesseis vezes maior.
+# 2 p/ 4 é resultado da multiplicação por 2.
+# 2² = 4
+# 0.45 * 4 = 1,8s
+# Seguindo o mesmo raciocínio, 2 p/ 8, é a multi por 4
+# 4² = 16
+# 0,45 * 16 = 7,2
+
+É possível observar também chamando a função em fixacao2.py
+
+> Exercício 3: Faça um algoritmo qualquer com três loops aninhados um dentro do outro. Entenda como ele terá uma complexidade de O(n³) !
+def multiply_arrays(array1, array2, array3):
+    result = []
+    for number1 in array1:
+        for number2 in array2:
+            for number3 in array1:
+              result.append(number1 + number2 + number3)
+
+    return result
+
+Outro exemplo fixacao3.py
+
+*** RECAPITULANDO
+> Ordem de Complexidade
+Quanto tempo de execução (ou espaço de memória ocupado)o algoritmo demanda
+
+> O(1)
+Independentemente de n entradas, o tempo e qtde de saída será o mesmo
+
+> O(n)
+O tempo e qtde de saída aumentará na mesma proporção a entrada
+
+> O(n²)
+O tempo e qtde será quadrático. 3, demandará 9
+
+> O(1³)
+O tempo e qtde será cúbico. 2, demandará 8
+
+*** Perigo
+n = 1000 em um 0(n²) produzirá um milhão de resultados
+n = 100 em 0(n³) produzirá o mesmo efeito
+
+Isso demonstra como alguns algoritmos podem se tornar inviáveis
+
+*** Complexidade logarítmica
+No exemplo do algoritmo de busca binária, o problema sempre é cortado ao meio, proporcionando um padrão de loraitmo na base dois (O(log n))
+
+- O exemplo está em algobin.py
+
+*** FIXAÇÃO
+> Exercício 4: Imagine que você recebe dois arrays de tamanho igual, array1 e array2 . Para cada elemento do array1 , realize uma busca binária no array2 . Mostre que a ordem de complexidade do algoritmo resultante é O(n * log n) , ou O(n log n) 
+(n * log n)
+
+
+*** Complexidade exponencial e fatorial
+Um pequeno aumento na entrada possui um efeito gigante em seu tempo de execução. São eles:
+> Exponencial
+    2ⁿ
+> Fatoria
+    n!
+
+Exemplo de um caso fatorial: "Dada uma lista de cidades e a distância entre cada par de cidades, qual é a rota mais curta possível que visita todas as cidades exatamente uma vez e volta para a cidade de origem?"
+
+A solução é testar todas as possiblidades. 3! == 3 * 2 * 1 = 6 
+Mas pense se englobasse os 5570 municípios...
+
+Algoritmos que não tem solução conhecida em tempo polinomial, ou seja, que são fatoriais ou exponenciais , resolvíveis somente com força bruta, pertencem a uma categoria de problemas na computação chamada problemas NP Completos.
+
+
+*** Analisando algoritmos com várias estruturas de repetição
+def calculations(n):
+    number1 = 0
+    for n1 in range(n):
+        number1 += n1
+
+    number2 = 0
+    for n1 in range(n):
+       for n2 in range(n):
+            number2 += n1 + n2
+
+    number3 = 0
+    for n1 in range(n):
+       for n2 in range(n):
+           for n3 in range(n):
+               number3 += n1 + n2 + n3
+
+    return number1, number2, number3
+
+n1, n2, n3 = calculations(100)
+print(f'{n1}, {n2}, {n3}')
+
+# A rigor, ela seria O(n + n² + n³) . Se os loops estão aninhados você os multiplica, e se estão paralelos você os soma
+
+# No entanto, geralmente simplificam-se essas notações. Estamos vendo, ao longo dos nossos estudos, que ordens de complexidade diferentes, para entradas grandes, tem valores absurdamente diferentes. Imagine escrever O(n! + log(n)) . Ora, para uma entrada de tamanho 8 esse número seria O(40320 + 3) . Observe como o componente fatorial da equação, n! = 40320 , domina completamente a ordem de complexidade. Nesse cenário dizemos que a complexidade menor é desprezível , então a omitimos. Ou seja: para valores grandes, dizer a maior ordem de complexidade do conjunto já basta para uma boa análise
+
+*** Melhor caso, pior caso e caso médio
+Algoritmos além de sua forma, podem se enquadrar nos tipos dependendo de sua entrada. Ex:
+ Em um array de números infinitos, e o que procuramos será logo o primeiro, nesse caso
+ a complexidade será 0(1). Esse é o melhor caso. Em compensação, o pior caso é o último elemento do array 0(n). No médio seria algo como  O(n * 1/2).
+
+*** Resumo
+> Constantes:
+    O(1) ;
+
+> Logarítmicos:
+    O(log n) ;
+
+> Linear: 
+    O(n) ;
+
+> Quadráticos:
+    O(n²) ;
+
+> Cúbicos:
+    O(n³) ;
+
+> Exponencial: 
+    O(2ⁿ) ;
+
+> Fatorial: 
+    O(n!) .
+
+> Sem solução conhecida em tempo polinomial, sendo apenas exponenciais ou fatoriais, em algoritmos de força bruta
+    NP Completo
