@@ -1,0 +1,50 @@
+*** Recursividade
+Quando uma função chama a si mesma
+
+*** Pontos Chaves da recursividade
+> Um algoritmo recursivo deve ter um caso base
+Será o ponto de parada, pois sem ele, será executado infinitivamente. É o menor problema, sendo possível resolvê-lo de forma direta
+
+> Um algoritmo recursivo deve mudar o seu estado e se aproximar do caso base
+Ao chamar novamente ele mesmo, deve se aproximar cada vez mais do seu caso base.
+
+> Um algoritmo recursivo deve chamar a si mesmo, recursivamente
+O que caracteriza um algoritmo recursivo
+
+EXEMPLOS EM baseRecursividade.py
+
+*** Estrutura
+Nome da função e parâmetro:
+    Condição de parada
+
+    Chamada de si mesma
+
+*** Observações
+- Ao chamar uma func, o Sistema reserva memória p/ var e params da função
+
+- Ao ser executada, é guardada na pilha
+
+- Ao terminar, é retirada da pilha
+
+*** Recursividade VS Iteratividade
+Recursividade = +Legibilidade(na maioria dos casos)
+Iteratividade = +Performático(na maioria dos casos)
+
+*** Árvore de Recursão
+Busca estimar o custo de um algoritmo, permitindo a validação de sua necessidade
+
+Será feita o caminho até cada raíz e retornando a origem com os resultados, até chegar a chamada inicial
+
+*** Estratégias
+> Iterativa
+Repete determinada operação, utilizando resultados anteriores para chegar no valor final deseja(ou próximo dele)
+
+> Força bruta
+Testa todas as possíbilidades, como no exemplo das viagens
+
+> Dividir e conquistar
+Divisão: dividir o original em dois ou mais, facilitando sua resolução
+
+Conquista: resolver cada subproblema
+
+Combinação: une todas as soluções encontradas, chegando a principal
