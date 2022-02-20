@@ -1,0 +1,69 @@
+*** Algoritmos de Ordenação
+Colocam elementos em uma sequencia, para que respeitem uma ordem de acordo com uma regra definida. Isso pode acontecer de algumas formas:
+
+*** Algoritmos de ordenação que usam força bruta
+Irão testar todas as possíbilidades possíveis. Ex: ao tentar descobrir uma senha que possuirá 4 digitos de 0-9, testando 0001, 0002, 0003... podendo chegar a 10⁴ ou 10.000 tentativas
+
+*** Selection Sort
+Adicionará a uma nova lista o menor número (ou maior) contido em uma lista desordenada. Após isso, esse número será retirado da lista desordenada. Esse processo será repetido até que a lista desordenada fique vazia e a nova lista esteja ordenada e contendo todos os elementos.
+
+Por percorrer o array completamente p/ todos os casos, possuirá a uma complexidade O(n²) 
+
+*** Insertion Sort
+Inicia-se no primeiro elemento e irá até o último. Caso o elemento verificado seja menor que o da esquerda, será movido para antes dele enquanto essa condição for atendida.
+ Ex: [5, 8, 3, 6]
+
+ - Pega o 5. Como não há elemento na esqueda, encerra
+ [5, 8, 3, 6]
+
+ - Pega o 8. Verifica e o elemento a esquerda (5) é menor, então encerra
+ [5, 8, 3, 6]
+
+ - Pega o elemento 3. Verifica que o elemento a esquerda (8), então move para antes dele. O mesmo acontece ao verificar o próximo (5). Como não há elemento na esquerda, encerra
+ [3, 5, 8, 6]
+
+ - Pega o elemento 6. Verifica que é menor que o 8, então move. Verifica que que maior que o 5, então encerra
+ [3, 5, 6, 8]
+
+ Por percorrer cada um dos elementos e compará-los com os da esquerda, no pior dos casos será um O(n²), no melhor  O(n).
+
+*** Algoritmos de ordenação que usam soluções iterativas
+Realizam operações repetidas vezes. As anteriores são iterativas, e todas solução iterativa pode ser reescrita de forma recursiva.
+
+*** Bubble Sort
+A ordenação será feita através da comparação da dupla, movendo o item até que a condição não seja atendida, e rodará por vezes, até que o array seja todo percorrido e a condição não seja atendida nenhuma vez. Ex:
+[4, 12, 1, 3]
+
+ - 4 e 12 => 4 > 12 ? NÃO
+ - 12 e 1 => 12 > 1 ? SIM, então invertem-se as posições
+ - 12 e 5 => 12 > 3 ? SIM, então invertem-se as posições
+ Para a rodagem pois chegou ao fim. [4, 1, 3, 12]
+ - 4 e 1 => 4 > 1 ? SIM, então invertem-se as posições
+ - 4 e 3 => 4 > 3 ? SIM, então invertem-se as posições
+ - 4 e 12 => 4 > 12 ? NÃO
+ Para a rodagem pois chegou ao fim. [1, 3, 4, 12]
+ - RODA TODO O ARRAY E ENCERRA
+
+*** Algoritmos de ordenação que usam dividir e conquistar
+Dividem o problema em partes menores, encontrando suas soluções, e juntando tudo ao fim. Será eficiente caso a divisão e conquista também sejam. Os próximos terão essa caracteristica. Eles foram feitos de forma recursiva, mas também poderiam ser escritos de forma iterativa
+
+*** Merge sort
+Serara todos na mínima parte possível para depois ir juntando da forma correta. Ex:
+  - [7 5 1 2 8 4 6 3]
+  - 7 5 1 2 8 4 6 3
+  - 57 12 48 36
+  - 1257 3468
+  - 12345678
+
+Traz uma complexidade, com a separação entre as partes de O(log n), e misturando O(n). Em relação ao espaço, será 0(n), pois, quanto maior a entrada, mais espaço ocupará
+
+*** Quick Sort
+A lista será dividida e pegará o elemento do meio. Os menor que ele serão jogados para a esquerda (ou inverso), e os maiores p/ direita. Essas listas menores, farão o mesmo processo até que não seja mais possível. Em seguida, serão juntadas
+
+*** ALGORITIMOS DE BUSCA
+
+*** Busca Linear
+Será comparado item a item até encontrar o correspondente.
+
+*** Busca binária
+SE A LISTA ESTIVER ORDENADA, é dividida ao meio. Verifica se o item do meio é o procurado, se não for, fará a comparação. Se o número procurado for menor, utilizará a lista da esquerda, se não, a da direita. Fará esse processo até encontrar o número.
