@@ -1,0 +1,33 @@
+*** Hashing em computação
+Procedimento que converte dados em uma representação numérica
+
+*** Estruturando dados
+Os dados são submetidos a um procedimento matematico(hash function) p/ obter um endereço único (address) onde será guardado nos buckets(baldes).
+
+Assim, com a chave, será possível encontrar o dado quando necessário
+
+*** Colisão de Hash
+Quando duas hash ao serem codificadas, são direcioadas para ocupar o mesmo espaço. Ex, caso os funcionarios tenham Id 14 e 24, seus endereços serão 4.
+P/ solucionar esse problema, utiliza-se Separte Chaining
+
+*** Separte Chaining
+Agora, não é apenas um valor é guardado no endereço, será um array em cada endereço, permitindo assim, armazenar tanto o 14 quanto o 24. Não será armazenado a hash(4) e sim o valor (14 e 24).
+
+Ao buscar, será passado ao hash fuction, com o retorno do hash, será buscado naquela posição p/ fazer a busca do array, apesar de não ser tão perfomático como em sua forma pura, ainda é melhor que apenas um array com todos os dados.
+
+*** Open Addressing com Linear Probing
+Nesse sistema, com a hash gerada, o sistema busca o endereço. Caso esteja ocupado pula para o próximo ou para o que foi determinado pelo sistema (2 em 2, 3 em 3 etc...), até encontrar um vazio.
+
+Para pesquisar, irá procurar pela hash e bater em cada endereço da ordem até encontrar. Caso chegue em um vazio, assume que ele não existe.
+
+*** A classe Dict de Python
+Estrutura chave-valor que utiliza hashmaps por baixo dos panos.
+
+  !!! Apenas objetos imutáveis podem ser utilizados como chave !!!
+  - int;
+  - float;
+  - string;
+  - tuple;
+  - range;
+  - byte;
+  - frozenset.
