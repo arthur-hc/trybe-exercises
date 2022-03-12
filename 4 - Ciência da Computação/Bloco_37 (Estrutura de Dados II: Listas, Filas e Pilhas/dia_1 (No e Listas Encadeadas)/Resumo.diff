@@ -1,0 +1,57 @@
+*** Nó
+Formam listas encadeadas (LinkedLists), que possuem estrutura mais dinâmica e redimensionável em tempo de execução, com inserções e exclusão mais eficientes e fácis de serem implementadas.
+
+*** Formação do Nó
+Contém pelo menos:
+> Valor (qualquer tipo)
+> Ponteiro (indica espaço de memória de outro Nó)
+
+*** Lista Encadeada
+Forma-se através ligações de vários nós.
+
+Diferenças em relação ao array:
+
+> Inicialização
+  Em arrays, é necessário escolher o tamanho inicial/ Já com listas encadeadas, os espaço são criados conforme novos itens.
+
+> Busca e Acesso
+  O array possui vantagem de poder ser acessado diretamente. Já em uma lista, será necessário percorrer os n números.
+
+> Inserção
+Casos com array:
+-  Espaço vago: será simples e rápido
+-  Espaço já ocupado: será necessário mover todos de posição para alocar, muito custo
+-  Espaço não existe: será necessário criar um novo espaço, muito custo
+
+Com lista, será apenas criado um novo nó e fazendo os apontamentos necessários, justificando sua vantagem.
+
+*** Operações Comuns
+> insert_first
+  permite adicionar um Node no início da lista;
+
+> insert_last
+  permite adicionar um Node no final da lista;
+
+> insert_at
+  permite adicionar um Node em qualquer posição da lista;
+
+> remove_first
+  permite remover um Node do início da lista;
+
+> remove_last
+  permite remover um Node do final da lista;
+
+> remove_at
+  permite remover um Node em qualquer posição da lista;
+
+> clear
+  permite remover todos os Nodes da lista;
+
+> get_element_at
+  permite visualizar o Node em qualquer posição da lista;
+
+> is_empty
+  permite identificar se existe ao menos um Node na lista.
+
+*** Encadeamento Duplo
+Permite o caminho oposto, porém, por possuir um ponteiro a mais, ocupa mais memória.
