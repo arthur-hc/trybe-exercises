@@ -1,0 +1,30 @@
+*** Estrutura de pilhas
+ Do tipo LIFO(Last In First Out), o último elemento será o primeiro a sair.
+
+*** Operações Comuns
+> push
+  Adiciona um item no topo da pilha
+
+> pop
+  Remove o item do topo da pilha
+
+> peek
+  Lê o item
+
+*** Operações
+> infixa
+  (A + B) * C
+
+> pós fixa
+  A B + C *
+
+*** Estrutura Filas
+  Do tipo FIFO (First In First Out), o primeiro elemento será o primeiro a sair.
+
+*** Operações Comuns
+> push
+  Adiciona um item ao final da fila
+
+> pop
+  Remove e retorna o primeiro elemento da fila
+
