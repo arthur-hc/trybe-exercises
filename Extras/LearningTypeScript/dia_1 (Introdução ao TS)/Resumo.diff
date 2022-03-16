@@ -1,0 +1,138 @@
+*** TypeScript
+Surgiu com intuito de resolver limitações do JS, podendo consumir também um JS.
+
+*** Tipagem (TS tem)
+Forma como descrevemos qual será o valor de um componente do nosso código (ex: variáveis, expressões, funções, módulos).
+
+*** Tipagem Estática
+Não permite alterar após o tipo ser declarado, com verificação geralmente em tempo de compilação.
+
+*** Tipagem Dinâmica
+Habilidade da linguagem em "escolher o tipo de dado" de acordo co, o valor atribuído à variável em tempo de execução
+
+*** Tipagem Forte (TS tem)
+Não realizam conversões automaticamente.
+
+*** Tipagem Fraca
+Realiza conversões automaticamente entre diferentes tipos de dados, contudo, o resultado pode não ser o esperado.
+
+*** Inferência de tipo
+Algumas linguagens com tipagem estática, podem fazer a inferência de tipo na declaração de variáveis, mas não permite que o tipo seja alterado após a declaração, o TS é assim. Ele realiza a inferência do tipo inicial , depois ficando com tipagem estática e não permitindo alteração no tipo.
+
+Então TypeScript é uma linguagem fortemente tipada e estaticamente tipada que possui inferência de tipo
+
+*** Compilador e Transpilador
+> Compilador
+  Traduz um código de alto nível (mais próxima de seres humanos) em um código de um programa de mais baixo nível (mais próximo do processor). Ex: GCC da C e Javac da Java
+
+> Transpilador
+  Traduz um código de alto nível em outro equivalente também de alto nível, ou versão diferente da mesma linguagem. Ex: J2CL que vai de Java p/ JS ou Babel que vai de ES6 p/ ES5
+
+Entretanto, o TS utiliza um COMPILADOR (TSC ou TypeScript Compiler) para fazer a tradução
+
+*** TSC - TypeScript Compiler
+Ferramenta de tradução entre TS e JS.
+
+# P/ instalar globalmente
+-  npm install -g typescript
+
+# P/ executar
+-  tsc nomeDoArquivo.ts
+
+# P/ executar, caso não tenha instalado globalmente
+-  npx tsc nomeDoArquivo.ts
+
+Ao rodar, caso não haja problema, um novo arquivo será criado com o mesmo nome em formato de JS com o compilado. Após isso, será possível rodar esse novo arquivo com Node. Após isso basta executar:
+  node nomeDoArquivo.js
+
+*** TSConfig
+O indicador do projeto ser em TS é a presença do TSConfig. O tsconfig.json possuirá variáveis de configuração com orientações p/ compilação.
+
+P/ utilizar o ts em um projeto, orienta-se instalá-lo como uma devDependency, através de:
+-  npm i -D typescript
+Em seguida, utilizá-lo através do npx. ISSO GARANTE QUE TODOS UTILIZARÃO DA MESMA VERSÃO DE TS, não a instalada na máquina
+
+> Iniciando o tsconfig.json
+-   tsc --init
+ou
+-   npx tsc --init
+
+
+> Versão base p/ amb JS (versão do node)
+Os mais recentes contam com essa opção. Ex, se o projeto utiliza a versão 12 do Node, é possível utilizar o @typescript/node12. O tsconfig.json ficaria assim:
+    {
+      "extends": "@tsconfig/node12/tsconfig.json", // estendemos a configuração base para o Node 12
+      "compilerOptions": {
+        "preserveConstEnums": true // Não apaga as declarações const enum no código gerado
+      },
+      "include": ["src/**/*"], // incluimos na compilação todos os arquivos dentro do diretório "src"
+      "exclude": ["node_modules", "**/*.spec.ts"] // excluímos da compilação a pasta node_modules e nossos arquivos de testes
+    }
+
+*** Tipos e Subtipos
+Em ts, todos os tipos são subtipos de um tipo principal chamado any, que pode representar qualquer valor em JS. Os demais serão:
+
+> Primitive types
+-   boolean
+-   number
+-   string
+-   enum
+-   void
+
+-   null
+-   undefined
+
+> Object types
+-   class
+-   interface
+-   array
+-   literals
+
+> Type
+-   parameters
+
+
+
+*** Utizando Inferência de Tipo
+Ao utilizar, é possível declarar a variável sem especificar o tipo, e o compilador fará a inferência
+let flag = true; // o compilador irá inferir o tipo boolean
+const numberPI = 3.1416; // o compilador irá inferir o tipo number
+let message = "Hello World!"; // o compilador irá inferir o tipo string
+
+*** Exportações
+Caso uma função seja criada e não seja colocada como export, ela será exportada em contexto global, assim, uma com o mesmo nome não poderá ser criada em outros arquivos. Entretanto, mesmo em escopo global, não poderá ser utilizada sem importação.
+
+*** Mais de uma tipagem aceita
+export function printar(valor: string | number): string | number {
+  return valor.toUpperCase()
+}
+
+# Só de array só de numbers
+export function arrNumber: number[] = [];
+
+# Numbers e strings
+export function arrNumber: (number|string)[] = [];
+
+# Aceita todas estruturas no array
+export functiom arrNumber: (any)[] = []; 
+
+# Tipando objeto
+export let user: { first: string, age: number } = {
+  first: "",
+  age: 29
+}
+
+# Tipando um hash
+export let hash = (): void => {
+  let hashmap = new Map<number, string>(
+    [
+      [1, "first"],
+      [2, "second"],
+      [3, "third"],
+    ]
+  )
+
+  hashmap.forEach((Element: string, id: number): void => {
+    console.log(id, Element)
+  })
+}
