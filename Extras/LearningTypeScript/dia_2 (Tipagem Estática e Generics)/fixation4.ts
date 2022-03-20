@@ -43,12 +43,20 @@ console.log(Ozzy)
 
 type Size = "Small"| "Medium" | "Big"
 
+type Address2 = {
+  street: string,
+  nubmer: number,
+  neighborhood: string,
+  city: string,
+  state: string,
+}
+
 class House {
-  address: Address
+  address: Address2
   size: string
   price: number
 
-  constructor(address: Address, size: string, price: number) {
+  constructor(address: Address2, size: string, price: number) {
     this.address = address,
     this.size = size,
     this.price = price

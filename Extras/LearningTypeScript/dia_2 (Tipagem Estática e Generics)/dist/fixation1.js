@@ -45,3 +45,9 @@ console.log(weekDays[4]); // Expected wednesday
 // Rainbow
 console.log(rainbowCollors.red); // Expected vermelho
 console.log(rainbowCollors["red"]); // Expected vermelho
+// Functions
+console.log(functions.save); // Expected 0
+console.log(functions[0]); // Expected vermelho
+// Directions
+console.log(directions.north); // Expected n
+console.log(directions["north"]); // Expected n

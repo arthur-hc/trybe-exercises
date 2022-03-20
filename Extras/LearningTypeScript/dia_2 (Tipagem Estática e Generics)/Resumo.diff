@@ -166,3 +166,10 @@ numberArray.push("This is not a number"); // Isto vai gerar um erro de compilaç
 let stringArray = getArray<string>(["Cats", "Dogs", "Birds"]);
 stringArray.push("Rabbits");
 stringArray.push(30); // Isto vai gerar um erro de compilação
+
+
+*** ts-node
+Executa automaticamente ts + node, transpilar um novo arquivo
+- npx ts-node <nome-do-arquivo>
+
+P/ compilar também, verificar documentação
