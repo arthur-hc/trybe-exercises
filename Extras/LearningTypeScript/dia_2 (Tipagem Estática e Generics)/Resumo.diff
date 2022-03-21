@@ -173,3 +173,4 @@ Executa automaticamente ts + node, transpilar um novo arquivo
 - npx ts-node <nome-do-arquivo>
 
 P/ compilar também, verificar documentação
+.
