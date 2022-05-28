@@ -1,0 +1,138 @@
+*** Passo a passo Express + TypeScript
+
+- mkdir express-typescript && cd express-typescript
+
+- npm init -y
+
+# Instalar como Dev Dep, garante que todos que trabalharão neste projeto, utilizarão a mesma versão
+- npm install -D typescript
+
+- Criar tsconfig.json com a configuração:
+  {
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "rootDir": "./",
+        "outDir": "./dist",
+        "esModuleInterop": true,
+        "strict": true
+    }
+  }
+
+> module:
+  especifica o sistema de módulo a ser utilizado no código JavaScript que será gerado pelo compilador como sendo o CommonJS;
+> target:
+  define a versão do JavaScript do código compilado como ES6 ;
+> rootDir:
+  define a localização raiz dos arquivos do projeto;
+> outDir:
+  define a pasta onde ficará nosso código compilado;
+> esModuleInterop:
+  habilitamos essa opção para ser possível compilar módulos ES6 para módulos CommonJS;
+> strict:
+  habilitamos essa opção para ativar a verificação estrita de tipo.
+
+# Instala Dev Dep declarações de tipos p/ módulos padrões do node
+- npm install -D @types/node
+
+# Auxilia executar o servidor em desenvolvimento, escrito em TS, diretamente, sem a necessidade de compilar p/ JS, além de reiniciar o servidor a cada alteração (similar ao nodemon)
+- npm install -D ts-node-dev
+
+- npm install -D typescript @types/node ts-node-dev
+
+- npm install express
+
+- npm install -D @types/express
+
+- touch index.ts
+// ./index.ts
+
+import express, { Request, Response } from "express";
+
+const app = express();
+
+const PORT = 8000;
+
+app.get("/", (req: Request, res: Response) => {
+    res.send("Express + TypeScript")
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}`);
+});
+
+- Alterando package.json:
+...
+"scripts": {
+    "start": "npm run build && node ./dist/index.js",
+    "dev": "tsnd index.ts",
+    "build": "tsc"
+ },
+...
+
+> start:
+  executa o build da aplicação e depois roda o arquivo compilado dentro da pasta dist;
+> dev:
+  executa a aplicação em modo de desenvolvimento utilizando o ts-node-dev;
+> build:
+  executa a compilação do projeto utilizando o TSC.
+
+# Servidor poderá ser acessado através de http://localhost:8000/
+- npm start
+
+*** Criando um CRUD de livros:
+
+- Criando uma interface p/ os livros
+// ./interfaces/Book.ts
+interface Book {
+    type: string;
+    name: string;
+    price: number;
+    image: string;
+    author: string;
+    publishingCompany: string;
+    isbn: string;
+}
+
+export default Book;
+
+- Rotas para utilizar no index.ts
+// ./routes/books.ts
+
+import { Router, Request, Response } from "express";
+
+const router = Router();
+
+router.get("/books", (req: Request, res: Response) => {
+
+});
+
+router.get("/books/:isbn",(req: Request, res: Response) => {
+
+});
+
+router.post("/books", (req: Request, res: Response) => {
+
+});
+
+router.put("/books/:isbn", (req: Request, res: Response) => {
+
+});
+
+router.delete("/books/:isbn", (req: Request, res: Response) => {
+
+});
+
+export default router;
+
+- Adicionar rotas ao index
+// ./index.ts
+...
+import BooksRoutes from "./routes/books";
+...
+app.use(BooksRoutes);
+...
+
+- Base estará em books.json
+
+- ... Continuação de configuração, criação de rotas e funções do backend
